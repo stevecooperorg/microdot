@@ -2,12 +2,14 @@ microdot
 
 Commands:
 
- - i <label>       insert new node
- - d <id>          delete node
- - l <id> <id>     link nodes by creating an edge
- - u <id> <id>     unlink nodes by removing an edge
- - h               show this help
- - help
- - p               print info on the graph
- - print
- - exit            quit the program
+    - i <label>       insert new node
+    - d <id>          delete node
+    - l <id> <id>     link nodes by creating an edge
+    - u <id> <id>     unlink nodes by removing an edge
+    - h               show this help
+    - help
+    - p               print dot for the graph
+    - print
+    - j               print json for the graph
+    - json
+    - exit            quit the program
