@@ -149,6 +149,7 @@ pub fn parse_line(line: Line) -> Command {
     if let Ok(()) = print_dot().parse(text) {
         return Command::PrintDot;
     }
+
     if let Ok(()) = print_json().parse(text) {
         return Command::PrintJson;
     }
