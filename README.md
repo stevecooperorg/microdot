@@ -1,4 +1,4 @@
-# Microdot - a terminal ui for dot and graphics
+# Microdot - a terminal ui for dot and graphviz
 
 [Dot](https://graphviz.org/doc/info/lang.html) is a great DSL for describing graphs, and it works fine until you get to about ten nodes. Beyond that things get tricky: since you write node names and edges using long human names, things like a rename can get really annoyingly complex, with lots of find/replace over a file that's just too noisy.
 
