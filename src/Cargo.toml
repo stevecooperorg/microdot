@@ -1,0 +1,20 @@
+[package]
+name = "microdot"
+version = "0.1.0"
+edition = "2018"
+
+[[bin]]
+name="microdot"
+path="src/main.rs"
+
+[lib]
+name="libmicrodot"
+path="src/lib.rs"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+rustyline = "9.0"
+regex = "1.5"
+lazy_static = "1.4"
+pom = "3.2"
