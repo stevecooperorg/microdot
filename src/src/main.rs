@@ -20,11 +20,12 @@ fn main() {
                 rl.add_history_entry(line.as_str());
                 let line = Line::new(line);
                 let command = parse_line(line);
-                if let Command::GraphCommand(graph_command) = command {
-                    let result = graph.apply_command(graph_command);
-                    println!("{}", result);
-                } else {
-                    println!("Command: {:?}", command);
+                match command {
+                    Command::GraphCommand(graph_command) => println!("{}", graph.apply_command(graph_command)),
+                    Command::ShowHelp => println!(include_str!("help.txt")),
+                    Command::PrintGraph => println!("cannot yet print graph"),
+                    Command::ParseError { .. } => println!("could not understand command; try 'h' for help"),
+                    Command::Exit => break
                 }
             },
             Err(ReadlineError::Interrupted) => {

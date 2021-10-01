@@ -1,5 +1,6 @@
 pub mod parser;
 pub mod graph;
+pub mod graphviz;
 
 macro_rules! new_string_type {
     ($id: ident) => {
@@ -32,6 +33,7 @@ pub enum Command {
     GraphCommand(GraphCommand),
     ShowHelp,
     PrintGraph,
+    Exit,
     ParseError { line: Line }
 }
 

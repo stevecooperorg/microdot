@@ -66,6 +66,11 @@ fn print_graph<'a>() -> Parser<'a, u8, ()> {
     (keyword(b"print") | keyword(b"p")).discard()
 }
 
+fn exit<'a>() -> Parser<'a, u8, ()> {
+    // i foo bar baz
+    keyword(b"exit").discard()
+}
+
 
 fn keyword<'a>(keyword: &'static [u8]) -> Parser<'a, u8, ()> {
     literal(keyword).discard().name("keyword")
@@ -119,6 +124,10 @@ pub fn parse_line(line: Line) -> Command {
         return GraphCommand::RenameNode { id: Id::new(&id), label: Label::new(&label)  }.into()
     }
 
+    if let Ok(()) = exit().parse(text) {
+        return Command::Exit
+    }
+
     if let Ok(()) = show_help().parse(text) {
         return Command::ShowHelp
     }
@@ -170,6 +179,7 @@ mod tests {
         assert_consumes_all![show_help(), b"help", ()];
         assert_consumes_all![print_graph(), b"p", ()];
         assert_consumes_all![print_graph(), b"print", ()];
+        assert_consumes_all![exit(), b"exit", ()];
     }
 
     #[test]
@@ -185,6 +195,7 @@ mod tests {
         assert_parse_command!("i", Command::ParseError { line: Line::new("i") });
         assert_parse_command!("h", Command::ShowHelp);
         assert_parse_command!("p", Command::PrintGraph);
+        assert_parse_command!("exit", Command::Exit);
         assert_parse_command!("i foo", GraphCommand::InsertNode { label: Label::new("foo") }.into());
         assert_parse_command!("d foo", GraphCommand::DeleteNode { id: Id::new("foo") }.into());
         assert_parse_command!("l foo bar", GraphCommand::LinkEdge { from: Id::new("foo"), to: Id::new("bar") }.into());

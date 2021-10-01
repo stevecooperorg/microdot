@@ -6,7 +6,7 @@ watch:
 	cd src; cargo watch -x run
 
 run:
-	cd src; cargo build
+	cd src; cargo run
 
 build:
 	cd src; cargo build

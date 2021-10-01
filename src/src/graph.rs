@@ -1,4 +1,5 @@
 use crate::{CommandResult, GraphCommand, Id, Label};
+use crate::graphviz::Exporter;
 
 pub struct Graph {
     node_high_water: usize,
@@ -51,16 +52,26 @@ impl Graph {
         self.edges
             .iter()
             .enumerate()
-            .find(|(idx, e)| &e.id == id)
-            .map(|(idx, e)| idx)
+            .find(|(_, e)| &e.id == id)
+            .map(|(idx, _)| idx)
     }
 
     fn find_node_idx(&self, id: &Id) -> Option<usize> {
         self.nodes
             .iter()
             .enumerate()
-            .find(|(idx, e)| &e.id == id)
-            .map(|(idx, e)| idx)
+            .find(|(_, e)| &e.id == id)
+            .map(|(idx, _)| idx)
+    }
+
+    pub fn export(&self, exporter: &mut Exporter) {
+        for node in &self.nodes {
+            exporter.add_node(&node.id, &node.label);
+        }
+
+        for edge in &self.edges {
+            exporter.add_edge(&edge.from, &edge.to);
+        }
     }
 
     pub fn apply_command(&mut self, command: GraphCommand) -> CommandResult {
@@ -75,12 +86,26 @@ impl Graph {
                 CommandResult::new(format!("(inserted node {}: '{}')", id, label))
             }
             GraphCommand::DeleteNode { id } => {
-                match self.find_edge_idx(&id) {
+                match self.find_node_idx(&id) {
                     Some(idx) => {
-                        self.edges.remove(idx);
-                        CommandResult::new(format!("edge {} removed", id))
+                        // delete all edges to or from this node
+                        let mut edges_touching: Vec<Id> = vec![];
+                        for edge in &self.edges {
+                            if (edge.from == id || edge.to == id) && !edges_touching.contains(&&edge.id) {
+                                edges_touching.push(edge.id.clone())
+                            }
+                        }
+
+                        for delete in &edges_touching {
+                            if let Some(idx) = self.find_edge_idx(delete) {
+                                self.edges.remove(idx);
+                            }
+                        }
+
+                        self.nodes.remove(idx);
+                        CommandResult::new(format!("node {} removed", id))
                     },
-                    None => CommandResult::new(format!("edge {} not found", id))
+                    None => CommandResult::new(format!("node {} not found", id))
                 }
             }
             GraphCommand::LinkEdge { from, to } => {
@@ -124,11 +149,3 @@ impl Graph {
         }
     }
 }
-
-// #[cfg(test)]
-// mod tests {
-//     #[test]
-//     fn x() {
-//
-//     }
-// }
