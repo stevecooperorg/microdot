@@ -22,12 +22,13 @@ fn main() {
                 let line = Line::new(line);
                 let command = parse_line(line);
                 match command {
-                    Command::GraphCommand(graph_command) => println!("{}", graph.apply_command(graph_command)),
+                    Command::GraphCommand(graph_command) => println!("({})", graph.apply_command(graph_command)),
                     Command::ShowHelp => println!(include_str!("help.txt")),
                     Command::PrintGraph => {
                         let mut exporter = Exporter::new();
                         let dot = exporter.export(&graph);
-                        println!("{}", dot);
+                        eprintln!("{}", dot);
+                        println!("Graph printed");
                     },
                     Command::ParseError { .. } => println!("could not understand command; try 'h' for help"),
                     Command::Exit => break

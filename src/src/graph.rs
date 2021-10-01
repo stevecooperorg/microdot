@@ -83,7 +83,7 @@ impl Graph {
                     label: label.clone()
                 };
                 self.nodes.push(node);
-                CommandResult::new(format!("(inserted node {}: '{}')", id, label))
+                CommandResult::new(format!("inserted node {}: '{}'", id, label))
             }
             GraphCommand::DeleteNode { id } => {
                 match self.find_node_idx(&id) {
