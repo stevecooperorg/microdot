@@ -135,7 +135,6 @@ impl Graph {
                 } else {
                     CommandResult::new(format!("Could not find node {}", id))
                 }
-
             }
             GraphCommand::UnlinkEdge { id } => {
                 match self.find_edge_idx(&id) {

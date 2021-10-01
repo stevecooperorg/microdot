@@ -6,7 +6,7 @@ pub struct Exporter {
 }
 
 impl Exporter {
-    fn new() -> Self {
+    pub fn new() -> Self {
         Self {
             inner_content: "".into()
         }
@@ -18,7 +18,7 @@ impl Exporter {
     }
 
     pub fn add_edge(&mut self, from: &Id, to: &Id) {
-        let line = format!("    {} -> {};", escape_id(&from.0), escape_id(&to.0));
+        let line = format!("    {} -> {};\n", escape_id(&from.0), escape_id(&to.0));
         self.inner_content.push_str(&line);
     }
 

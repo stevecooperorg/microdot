@@ -2,6 +2,7 @@ use rustyline::error::ReadlineError;
 use rustyline::Editor;
 use libmicrodot::graph::Graph;
 use libmicrodot::{Command, Line};
+use libmicrodot::graphviz::Exporter;
 use libmicrodot::parser::parse_line;
 
 fn main() {
@@ -23,7 +24,11 @@ fn main() {
                 match command {
                     Command::GraphCommand(graph_command) => println!("{}", graph.apply_command(graph_command)),
                     Command::ShowHelp => println!(include_str!("help.txt")),
-                    Command::PrintGraph => println!("cannot yet print graph"),
+                    Command::PrintGraph => {
+                        let mut exporter = Exporter::new();
+                        let dot = exporter.export(&graph);
+                        println!("{}", dot);
+                    },
                     Command::ParseError { .. } => println!("could not understand command; try 'h' for help"),
                     Command::Exit => break
                 }
