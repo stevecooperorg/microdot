@@ -1,6 +1,7 @@
 pub mod parser;
 pub mod graph;
 pub mod graphviz;
+pub mod json;
 
 macro_rules! new_string_type {
     ($id: ident) => {
@@ -21,8 +22,6 @@ macro_rules! new_string_type {
     }
 }
 
-
-
 new_string_type!(CommandResult);
 new_string_type!(Label);
 new_string_type!(Id);
@@ -32,7 +31,8 @@ new_string_type!(Line);
 pub enum Command {
     GraphCommand(GraphCommand),
     ShowHelp,
-    PrintGraph,
+    PrintDot,
+    PrintJson,
     Exit,
     ParseError { line: Line }
 }
@@ -50,4 +50,9 @@ impl From<GraphCommand> for Command {
     fn from(c: GraphCommand) -> Self {
         Command::GraphCommand(c)
     }
+}
+
+pub trait Exporter {
+    fn add_node(&mut self, id: &Id, label: &Label);
+    fn add_edge(&mut self, from: &Id, to: &Id);
 }

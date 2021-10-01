@@ -2,7 +2,8 @@ use rustyline::error::ReadlineError;
 use rustyline::Editor;
 use libmicrodot::graph::Graph;
 use libmicrodot::{Command, Line};
-use libmicrodot::graphviz::Exporter;
+use libmicrodot::graphviz::GraphVizExporter;
+use libmicrodot::json::JsonExporter;
 use libmicrodot::parser::parse_line;
 
 fn main() {
@@ -22,14 +23,27 @@ fn main() {
                 let line = Line::new(line);
                 let command = parse_line(line);
                 match command {
-                    Command::GraphCommand(graph_command) => println!("({})", graph.apply_command(graph_command)),
-                    Command::ShowHelp => println!(include_str!("help.txt")),
-                    Command::PrintGraph => {
-                        let mut exporter = Exporter::new();
+                    Command::GraphCommand(graph_command) => {
+                        println!("({})", graph.apply_command(graph_command));
+                        let mut exporter = GraphVizExporter::new();
                         let dot = exporter.export(&graph);
+                        eprintln!("// START.DOT //\n");
                         eprintln!("{}", dot);
-                        println!("Graph printed");
+                        eprintln!("// END.DOT //\n");
                     },
+                    Command::ShowHelp => println!(include_str!("help.txt")),
+                    Command::PrintDot => {
+                        let mut exporter = GraphVizExporter::new();
+                        let out = exporter.export(&graph);
+                        println!("{}", out);
+                        println!("Dot printed");
+                    }
+                    Command::PrintJson => {
+                        let mut exporter = JsonExporter::new();
+                        let out = exporter.export(&graph);
+                        println!("{}", out);
+                        println!("Json printed");
+                    }
                     Command::ParseError { .. } => println!("could not understand command; try 'h' for help"),
                     Command::Exit => break
                 }

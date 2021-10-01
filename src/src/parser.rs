@@ -61,9 +61,14 @@ fn show_help<'a>() -> Parser<'a, u8, ()> {
     (keyword(b"help") | keyword(b"h")).discard()
 }
 
-fn print_graph<'a>() -> Parser<'a, u8, ()> {
+fn print_dot<'a>() -> Parser<'a, u8, ()> {
     // i foo bar baz
     (keyword(b"print") | keyword(b"p")).discard()
+}
+
+fn print_json<'a>() -> Parser<'a, u8, ()> {
+    // i foo bar baz
+    (keyword(b"json") | keyword(b"j")).discard()
 }
 
 fn exit<'a>() -> Parser<'a, u8, ()> {
@@ -132,8 +137,11 @@ pub fn parse_line(line: Line) -> Command {
         return Command::ShowHelp
     }
 
-    if let Ok(()) = print_graph().parse(text) {
-        return Command::PrintGraph
+    if let Ok(()) = print_dot().parse(text) {
+        return Command::PrintDot
+    }
+    if let Ok(()) = print_json().parse(text) {
+        return Command::PrintJson
     }
 
     Command::ParseError { line }
@@ -177,8 +185,10 @@ mod tests {
         assert_consumes_all![rename_node(), b"r f new name", ("f".to_string(), "new name".to_string())];
         assert_consumes_all![show_help(), b"h", ()];
         assert_consumes_all![show_help(), b"help", ()];
-        assert_consumes_all![print_graph(), b"p", ()];
-        assert_consumes_all![print_graph(), b"print", ()];
+        assert_consumes_all![print_dot(), b"p", ()];
+        assert_consumes_all![print_dot(), b"print", ()];
+        assert_consumes_all![print_json(), b"j", ()];
+        assert_consumes_all![print_json(), b"json", ()];
         assert_consumes_all![exit(), b"exit", ()];
     }
 
@@ -194,7 +204,8 @@ mod tests {
 
         assert_parse_command!("i", Command::ParseError { line: Line::new("i") });
         assert_parse_command!("h", Command::ShowHelp);
-        assert_parse_command!("p", Command::PrintGraph);
+        assert_parse_command!("p", Command::PrintDot);
+        assert_parse_command!("j", Command::PrintJson);
         assert_parse_command!("exit", Command::Exit);
         assert_parse_command!("i foo", GraphCommand::InsertNode { label: Label::new("foo") }.into());
         assert_parse_command!("d foo", GraphCommand::DeleteNode { id: Id::new("foo") }.into());

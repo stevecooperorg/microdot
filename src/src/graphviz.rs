@@ -1,25 +1,28 @@
 use crate::graph::Graph;
-use crate::{Id, Label};
+use crate::{Exporter, Id, Label};
 
-pub struct Exporter {
+pub struct GraphVizExporter {
     inner_content: String
 }
 
-impl Exporter {
-    pub fn new() -> Self {
-        Self {
-            inner_content: "".into()
-        }
-    }
+impl Exporter for GraphVizExporter {
 
-    pub fn add_node(&mut self, id: &Id, label: &Label) {
+    fn add_node(&mut self, id: &Id, label: &Label) {
         let line = format!("    {} [label={}];\n", escape_id(&id.0), escape_label(&label.0));
         self.inner_content.push_str(&line);
     }
 
-    pub fn add_edge(&mut self, from: &Id, to: &Id) {
+    fn add_edge(&mut self, from: &Id, to: &Id) {
         let line = format!("    {} -> {};\n", escape_id(&from.0), escape_id(&to.0));
         self.inner_content.push_str(&line);
+    }
+}
+
+impl GraphVizExporter {
+    pub fn new() -> Self {
+        Self {
+            inner_content: "".into()
+        }
     }
 
     pub fn export(&mut self, graph: &Graph) -> String {
@@ -42,7 +45,7 @@ fn escape_id(id: &str) -> String {
 mod tests {
     use crate::graph::Graph;
     use crate::{GraphCommand, Id, Label};
-    use crate::graphviz::{escape_label, Exporter};
+    use crate::graphviz::{escape_label, GraphVizExporter};
 
     #[test]
     fn escapes_label() {
@@ -59,8 +62,8 @@ mod tests {
             from: Id::new("n0"),
             to: Id::new("n1")
         });
-        let mut exporter = Exporter::new();
+        let mut exporter = GraphVizExporter::new();
         let dot = exporter.export(&graph);
-        assert_eq!(include_str!("../test_data/exports_graph.txt").to_string(), dot);
+        assert_eq!(include_str!("../test_data/exports_graph.dot").to_string(), dot);
     }
 }

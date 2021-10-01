@@ -1,5 +1,3 @@
-// START.DOT //
 digraph {
 ${INNER_CONTENT}
 }
-// END.DOT //

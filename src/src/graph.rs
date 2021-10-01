@@ -1,5 +1,4 @@
-use crate::{CommandResult, GraphCommand, Id, Label};
-use crate::graphviz::Exporter;
+use crate::{CommandResult, Exporter, GraphCommand, Id, Label};
 
 pub struct Graph {
     node_high_water: usize,
@@ -64,7 +63,7 @@ impl Graph {
             .map(|(idx, _)| idx)
     }
 
-    pub fn export(&self, exporter: &mut Exporter) {
+    pub fn export<X: Exporter>(&self, exporter: &mut X) {
         for node in &self.nodes {
             exporter.add_node(&node.id, &node.label);
         }

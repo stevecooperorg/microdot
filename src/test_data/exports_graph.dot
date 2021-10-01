@@ -2,4 +2,5 @@ digraph {
     "n0" [label="abc"];
     "n1" [label="def"];
     "n0" -> "n1";
+
 }
