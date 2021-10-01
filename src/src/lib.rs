@@ -1,7 +1,7 @@
-pub mod parser;
 pub mod graph;
 pub mod graphviz;
 pub mod json;
+pub mod parser;
 
 macro_rules! new_string_type {
     ($id: ident) => {
@@ -19,7 +19,7 @@ macro_rules! new_string_type {
                 f.write_str(&self.0)
             }
         }
-    }
+    };
 }
 
 new_string_type!(CommandResult);
@@ -34,7 +34,7 @@ pub enum Command {
     PrintDot,
     PrintJson,
     Exit,
-    ParseError { line: Line }
+    ParseError { line: Line },
 }
 
 #[derive(PartialEq, Debug)]
@@ -43,7 +43,7 @@ pub enum GraphCommand {
     DeleteNode { id: Id },
     LinkEdge { from: Id, to: Id },
     RenameNode { id: Id, label: Label },
-    UnlinkEdge { id: Id }
+    UnlinkEdge { id: Id },
 }
 
 impl From<GraphCommand> for Command {

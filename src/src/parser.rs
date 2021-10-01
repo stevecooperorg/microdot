@@ -1,6 +1,6 @@
+use crate::{Command, GraphCommand, Id, Label, Line};
 use pom::char_class::{alpha, alphanum, multispace};
 use pom::parser::*;
-use crate::{GraphCommand, Line, Label, Id, Command};
 
 /// space, tab, etc
 fn ws<'a>() -> Parser<'a, u8, ()> {
@@ -14,8 +14,8 @@ fn space<'a>() -> Parser<'a, u8, ()> {
 
 /// a parser wrapped in whitespace
 fn spaced<'a, T>(parser: Parser<'a, u8, T>) -> Parser<'a, u8, T>
-    where
-        T: 'a,
+where
+    T: 'a,
 {
     space() * parser - space()
 }
@@ -27,7 +27,7 @@ fn is_underscore(term: u8) -> bool {
 fn id<'a>() -> Parser<'a, u8, String> {
     let it = ((is_a(alpha) | is_a(is_underscore))
         + (is_a(alphanum) | is_a(is_underscore)).repeat(0..))
-        .map(|(first, rest)| format!("{}{}", first as char, String::from_utf8(rest).unwrap()));
+    .map(|(first, rest)| format!("{}{}", first as char, String::from_utf8(rest).unwrap()));
 
     spaced(it).name("name")
 }
@@ -49,7 +49,6 @@ fn label<'a>() -> Parser<'a, u8, String> {
         .repeat(1..)
         .map(|u8s| String::from_utf8(u8s).expect("can only parse utf"))
 }
-
 
 fn insert_node<'a>() -> Parser<'a, u8, String> {
     // i foo bar baz
@@ -75,7 +74,6 @@ fn exit<'a>() -> Parser<'a, u8, ()> {
     // i foo bar baz
     keyword(b"exit").discard()
 }
-
 
 fn keyword<'a>(keyword: &'static [u8]) -> Parser<'a, u8, ()> {
     literal(keyword).discard().name("keyword")
@@ -110,38 +108,49 @@ fn rename_node<'a>() -> Parser<'a, u8, (String, String)> {
 pub fn parse_line(line: Line) -> Command {
     let text = &line.0.clone().into_bytes();
     if let Ok(res) = insert_node().parse(text) {
-        return GraphCommand::InsertNode { label: Label::new(&res) }.into()
+        return GraphCommand::InsertNode {
+            label: Label::new(&res),
+        }
+        .into();
     }
 
     if let Ok(res) = delete_node().parse(text) {
-        return GraphCommand::DeleteNode { id: Id::new(&res) }.into()
+        return GraphCommand::DeleteNode { id: Id::new(&res) }.into();
     }
 
-    if let Ok((from,to)) = link_edge().parse(text) {
-        return GraphCommand::LinkEdge { from: Id::new(&from), to: Id::new(&to)  }.into()
+    if let Ok((from, to)) = link_edge().parse(text) {
+        return GraphCommand::LinkEdge {
+            from: Id::new(&from),
+            to: Id::new(&to),
+        }
+        .into();
     }
 
     if let Ok(id) = unlink_edge().parse(text) {
-        return GraphCommand::UnlinkEdge { id: Id::new(&id) }.into()
+        return GraphCommand::UnlinkEdge { id: Id::new(&id) }.into();
     }
 
-    if let Ok((id,label)) = rename_node().parse(text) {
-        return GraphCommand::RenameNode { id: Id::new(&id), label: Label::new(&label)  }.into()
+    if let Ok((id, label)) = rename_node().parse(text) {
+        return GraphCommand::RenameNode {
+            id: Id::new(&id),
+            label: Label::new(&label),
+        }
+        .into();
     }
 
     if let Ok(()) = exit().parse(text) {
-        return Command::Exit
+        return Command::Exit;
     }
 
     if let Ok(()) = show_help().parse(text) {
-        return Command::ShowHelp
+        return Command::ShowHelp;
     }
 
     if let Ok(()) = print_dot().parse(text) {
-        return Command::PrintDot
+        return Command::PrintDot;
     }
     if let Ok(()) = print_json().parse(text) {
-        return Command::PrintJson
+        return Command::PrintJson;
     }
 
     Command::ParseError { line }
@@ -180,9 +189,17 @@ mod tests {
         assert_consumes_all![insert_node(), b"i foo", "foo"];
         assert_consumes_all![insert_node(), b"i foo bar baz", "foo bar baz"];
         assert_consumes_all![delete_node(), b"d foo", "foo"];
-        assert_consumes_all![link_edge(), b"l f1 f2", ("f1".to_string(), "f2".to_string())];
+        assert_consumes_all![
+            link_edge(),
+            b"l f1 f2",
+            ("f1".to_string(), "f2".to_string())
+        ];
         assert_consumes_all![unlink_edge(), b"u e1", "e1"];
-        assert_consumes_all![rename_node(), b"r f new name", ("f".to_string(), "new name".to_string())];
+        assert_consumes_all![
+            rename_node(),
+            b"r f new name",
+            ("f".to_string(), "new name".to_string())
+        ];
         assert_consumes_all![show_help(), b"h", ()];
         assert_consumes_all![show_help(), b"help", ()];
         assert_consumes_all![print_dot(), b"p", ()];
@@ -199,19 +216,49 @@ mod tests {
                 let line = Line::new($input);
                 let actual = parse_line(line);
                 assert_eq!(actual, $expected);
-            }
+            };
         }
 
-        assert_parse_command!("i", Command::ParseError { line: Line::new("i") });
+        assert_parse_command!(
+            "i",
+            Command::ParseError {
+                line: Line::new("i")
+            }
+        );
         assert_parse_command!("h", Command::ShowHelp);
         assert_parse_command!("p", Command::PrintDot);
         assert_parse_command!("j", Command::PrintJson);
         assert_parse_command!("exit", Command::Exit);
-        assert_parse_command!("i foo", GraphCommand::InsertNode { label: Label::new("foo") }.into());
-        assert_parse_command!("d foo", GraphCommand::DeleteNode { id: Id::new("foo") }.into());
-        assert_parse_command!("l foo bar", GraphCommand::LinkEdge { from: Id::new("foo"), to: Id::new("bar") }.into());
-        assert_parse_command!("u foo", GraphCommand::UnlinkEdge { id: Id::new("foo") }.into());
-        assert_parse_command!("r foo a new name", GraphCommand::RenameNode { id: Id::new("foo"), label: Label::new("a new name") }.into());
+        assert_parse_command!(
+            "i foo",
+            GraphCommand::InsertNode {
+                label: Label::new("foo")
+            }
+            .into()
+        );
+        assert_parse_command!(
+            "d foo",
+            GraphCommand::DeleteNode { id: Id::new("foo") }.into()
+        );
+        assert_parse_command!(
+            "l foo bar",
+            GraphCommand::LinkEdge {
+                from: Id::new("foo"),
+                to: Id::new("bar")
+            }
+            .into()
+        );
+        assert_parse_command!(
+            "u foo",
+            GraphCommand::UnlinkEdge { id: Id::new("foo") }.into()
+        );
+        assert_parse_command!(
+            "r foo a new name",
+            GraphCommand::RenameNode {
+                id: Id::new("foo"),
+                label: Label::new("a new name")
+            }
+            .into()
+        );
     }
-
 }

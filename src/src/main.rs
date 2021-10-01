@@ -1,10 +1,10 @@
-use rustyline::error::ReadlineError;
-use rustyline::Editor;
 use libmicrodot::graph::Graph;
-use libmicrodot::{Command, Line};
 use libmicrodot::graphviz::GraphVizExporter;
 use libmicrodot::json::JsonExporter;
 use libmicrodot::parser::parse_line;
+use libmicrodot::{Command, Line};
+use rustyline::error::ReadlineError;
+use rustyline::Editor;
 
 fn main() {
     // `()` can be used when no completer is required
@@ -30,7 +30,7 @@ fn main() {
                         eprintln!("// START.DOT //\n");
                         eprintln!("{}", dot);
                         eprintln!("// END.DOT //\n");
-                    },
+                    }
                     Command::ShowHelp => println!(include_str!("help.txt")),
                     Command::PrintDot => {
                         let mut exporter = GraphVizExporter::new();
@@ -44,21 +44,23 @@ fn main() {
                         println!("{}", out);
                         println!("Json printed");
                     }
-                    Command::ParseError { .. } => println!("could not understand command; try 'h' for help"),
-                    Command::Exit => break
+                    Command::ParseError { .. } => {
+                        println!("could not understand command; try 'h' for help")
+                    }
+                    Command::Exit => break,
                 }
-            },
+            }
             Err(ReadlineError::Interrupted) => {
                 println!("CTRL-C");
-                break
-            },
+                break;
+            }
             Err(ReadlineError::Eof) => {
                 println!("CTRL-D");
-                break
-            },
+                break;
+            }
             Err(err) => {
                 println!("Error: {:?}", err);
-                break
+                break;
             }
         }
     }
