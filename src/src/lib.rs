@@ -6,6 +6,7 @@ pub mod parser;
 macro_rules! new_string_type {
     ($id: ident) => {
         #[derive(PartialEq, Debug, Clone)]
+
         pub struct $id(String);
 
         impl $id {
@@ -54,5 +55,6 @@ impl From<GraphCommand> for Command {
 
 pub trait Exporter {
     fn add_node(&mut self, id: &Id, label: &Label);
+
     fn add_edge(&mut self, from: &Id, to: &Id);
 }

@@ -36,13 +36,17 @@ impl Graph {
 
     fn next_node_id(&mut self) -> Id {
         let id = format!("n{}", self.node_high_water);
+
         self.node_high_water += 1;
+
         Id::new(id)
     }
 
     fn next_edge_id(&mut self) -> Id {
         let id = format!("e{}", self.edge_high_water);
+
         self.edge_high_water += 1;
+
         Id::new(id)
     }
 
@@ -74,78 +78,98 @@ impl Graph {
 
     pub fn apply_command(&mut self, command: GraphCommand) -> CommandResult {
         match command {
-            GraphCommand::InsertNode { label } => {
-                let id = self.next_node_id();
-                let node = Node {
-                    id: id.clone(),
-                    label: label.clone(),
-                };
-                self.nodes.push(node);
-                CommandResult::new(format!("inserted node {}: '{}'", id, label))
+            GraphCommand::InsertNode { label } => self.insert_node(label),
+            GraphCommand::DeleteNode { id } => self.delete_node(&id),
+            GraphCommand::LinkEdge { from, to } => self.link_edge(&from, &to),
+            GraphCommand::RenameNode { id, label } => self.rename_node(&id, label),
+            GraphCommand::UnlinkEdge { id } => self.unlink_edge(&id),
+        }
+    }
+
+    fn unlink_edge(&mut self, id: &Id) -> CommandResult {
+        match self.find_edge_idx(&id) {
+            Some(idx) => {
+                self.edges.remove(idx);
+
+                CommandResult::new(format!("edge {} removed", id))
             }
-            GraphCommand::DeleteNode { id } => {
-                match self.find_node_idx(&id) {
-                    Some(idx) => {
-                        // delete all edges to or from this node
-                        let mut edges_touching: Vec<Id> = vec![];
-                        for edge in &self.edges {
-                            if (edge.from == id || edge.to == id)
-                                && !edges_touching.contains(&&edge.id)
-                            {
-                                edges_touching.push(edge.id.clone())
-                            }
-                        }
+            None => CommandResult::new(format!("edge {} not found", id)),
+        }
+    }
 
-                        for delete in &edges_touching {
-                            if let Some(idx) = self.find_edge_idx(delete) {
-                                self.edges.remove(idx);
-                            }
-                        }
+    fn rename_node(&mut self, id: &Id, label: Label) -> CommandResult {
+        if let Some(idx) = self.find_node_idx(&id) {
+            if let Some(node) = self.nodes.get_mut(idx) {
+                node.label = label.clone();
 
-                        self.nodes.remove(idx);
-                        CommandResult::new(format!("node {} removed", id))
+                CommandResult::new(format!("Node {} renamed to '{}'", id, label))
+            } else {
+                CommandResult::new(format!("Could not find node at index {}", idx))
+            }
+        } else {
+            CommandResult::new(format!("Could not find node {}", id))
+        }
+    }
+
+    fn insert_node(&mut self, label: Label) -> CommandResult {
+        let id = self.next_node_id();
+
+        let node = Node {
+            id: id.clone(),
+            label: label.clone(),
+        };
+
+        self.nodes.push(node);
+
+        CommandResult::new(format!("inserted node {}: '{}'", id, label))
+    }
+
+    fn link_edge(&mut self, from: &Id, to: &Id) -> CommandResult {
+        if !self.find_node_idx(&from).is_some() {
+            return CommandResult::new(format!("source node {} not found", from));
+        }
+
+        if !self.find_node_idx(&to).is_some() {
+            return CommandResult::new(format!("target node {} not found", to));
+        }
+
+        // we know both exist; create the edge
+        let id = self.next_edge_id();
+
+        let edge = Edge {
+            id: id.clone(),
+            from: from.clone(),
+            to: to.clone(),
+        };
+
+        self.edges.push(edge);
+
+        CommandResult::new(format!("Added edge {} from {} to {}", id, from, to))
+    }
+
+    fn delete_node(&mut self, id: &Id) -> CommandResult {
+        match self.find_node_idx(&id) {
+            Some(idx) => {
+                // delete all edges to or from this node
+                let mut edges_touching: Vec<Id> = vec![];
+
+                for edge in &self.edges {
+                    if (edge.from == id || edge.to == id) && !edges_touching.contains(&&edge.id) {
+                        edges_touching.push(edge.id.clone())
                     }
-                    None => CommandResult::new(format!("node {} not found", id)),
-                }
-            }
-            GraphCommand::LinkEdge { from, to } => {
-                if !self.find_node_idx(&from).is_some() {
-                    return CommandResult::new(format!("source node {} not found", from));
                 }
 
-                if !self.find_node_idx(&to).is_some() {
-                    return CommandResult::new(format!("target node {} not found", to));
-                }
-
-                // we know both exist; create the edge
-                let id = self.next_edge_id();
-                let edge = Edge {
-                    id: id.clone(),
-                    from: from.clone(),
-                    to: to.clone(),
-                };
-                self.edges.push(edge);
-                CommandResult::new(format!("Added edge {} from {} to {}", id, from, to))
-            }
-            GraphCommand::RenameNode { id, label } => {
-                if let Some(idx) = self.find_node_idx(&id) {
-                    if let Some(node) = self.nodes.get_mut(idx) {
-                        node.label = label.clone();
-                        CommandResult::new(format!("Node {} renamed to '{}'", id, label))
-                    } else {
-                        CommandResult::new(format!("Could not find node at index {}", idx))
+                for delete in &edges_touching {
+                    if let Some(idx) = self.find_edge_idx(delete) {
+                        self.edges.remove(idx);
                     }
-                } else {
-                    CommandResult::new(format!("Could not find node {}", id))
                 }
+
+                self.nodes.remove(idx);
+
+                CommandResult::new(format!("node {} removed", id))
             }
-            GraphCommand::UnlinkEdge { id } => match self.find_edge_idx(&id) {
-                Some(idx) => {
-                    self.edges.remove(idx);
-                    CommandResult::new(format!("edge {} removed", id))
-                }
-                None => CommandResult::new(format!("edge {} not found", id)),
-            },
+            None => CommandResult::new(format!("node {} not found", id)),
         }
     }
 }

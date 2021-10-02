@@ -6,6 +6,9 @@ all:
 watch:
 	cd src; cargo watch -x run 2> /dev/null
 
+fmt:
+	cd src; cargo +nightly fmt
+
 run: src/target/debug/microdot
 	if [ ! -f md.out ]; then mkfifo md.out; fi
 	src/target/debug/microdot 2> md.out

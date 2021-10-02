@@ -107,6 +107,7 @@ fn rename_node<'a>() -> Parser<'a, u8, (String, String)> {
 
 pub fn parse_line(line: Line) -> Command {
     let text = &line.0.clone().into_bytes();
+
     if let Ok(res) = insert_node().parse(text) {
         return GraphCommand::InsertNode {
             label: Label::new(&res),
@@ -164,14 +165,18 @@ mod tests {
     macro_rules! assert_consumes_all {
         ( $ parser: expr, $input: expr ) => {
             let terminating_parser = $parser - space() - end();
+
             let res = terminating_parser.parse($input);
+
             if let Err(_) = res {
                 panic!("parser failed to match and consume everything")
             }
         };
         ( $ parser: expr, $input: expr, $expected: expr) => {
             let terminating_parser = $parser - space() - end();
+
             let res = terminating_parser.parse($input);
+
             match res {
                 Ok(answer) => {
                     // it parsed, but was it right?
@@ -186,36 +191,52 @@ mod tests {
     }
 
     #[test]
+
     fn parser_bits() {
         assert_consumes_all![insert_node(), b"i foo", "foo"];
+
         assert_consumes_all![insert_node(), b"i foo bar baz", "foo bar baz"];
+
         assert_consumes_all![delete_node(), b"d foo", "foo"];
+
         assert_consumes_all![
             link_edge(),
             b"l f1 f2",
             ("f1".to_string(), "f2".to_string())
         ];
+
         assert_consumes_all![unlink_edge(), b"u e1", "e1"];
+
         assert_consumes_all![
             rename_node(),
             b"r f new name",
             ("f".to_string(), "new name".to_string())
         ];
+
         assert_consumes_all![show_help(), b"h", ()];
+
         assert_consumes_all![show_help(), b"help", ()];
+
         assert_consumes_all![print_dot(), b"p", ()];
+
         assert_consumes_all![print_dot(), b"print", ()];
+
         assert_consumes_all![print_json(), b"j", ()];
+
         assert_consumes_all![print_json(), b"json", ()];
+
         assert_consumes_all![exit(), b"exit", ()];
     }
 
     #[test]
+
     fn parse_line_works() {
         macro_rules! assert_parse_command {
             ($input: expr, $expected: expr) => {
                 let line = Line::new($input);
+
                 let actual = parse_line(line);
+
                 assert_eq!(actual, $expected);
             };
         }
@@ -226,10 +247,15 @@ mod tests {
                 line: Line::new("i")
             }
         );
+
         assert_parse_command!("h", Command::ShowHelp);
+
         assert_parse_command!("p", Command::PrintDot);
+
         assert_parse_command!("j", Command::PrintJson);
+
         assert_parse_command!("exit", Command::Exit);
+
         assert_parse_command!(
             "i foo",
             GraphCommand::InsertNode {
@@ -237,10 +263,12 @@ mod tests {
             }
             .into()
         );
+
         assert_parse_command!(
             "d foo",
             GraphCommand::DeleteNode { id: Id::new("foo") }.into()
         );
+
         assert_parse_command!(
             "l foo bar",
             GraphCommand::LinkEdge {
@@ -249,10 +277,12 @@ mod tests {
             }
             .into()
         );
+
         assert_parse_command!(
             "u foo",
             GraphCommand::UnlinkEdge { id: Id::new("foo") }.into()
         );
+
         assert_parse_command!(
             "r foo a new name",
             GraphCommand::RenameNode {

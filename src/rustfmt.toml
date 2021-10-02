@@ -1,0 +1,7 @@
+blank_lines_lower_bound = 0
+blank_lines_upper_bound = 1
+comment_width = 120
+indent_style = "Block"
+reorder_impl_items = true
+reorder_imports = true
+wrap_comments = true
