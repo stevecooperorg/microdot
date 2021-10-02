@@ -78,7 +78,7 @@ impl Graph {
 
     pub fn apply_command(&mut self, command: GraphCommand) -> CommandResult {
         match command {
-            GraphCommand::InsertNode { label } => self.insert_node(label),
+            GraphCommand::InsertNode { label } => self.insert_node(label).1,
             GraphCommand::DeleteNode { id } => self.delete_node(&id),
             GraphCommand::LinkEdge { from, to } => self.link_edge(&from, &to),
             GraphCommand::RenameNode { id, label } => self.rename_node(&id, label),
@@ -111,7 +111,7 @@ impl Graph {
         }
     }
 
-    fn insert_node(&mut self, label: Label) -> CommandResult {
+    pub fn insert_node(&mut self, label: Label) -> (Id, CommandResult) {
         let id = self.next_node_id();
 
         let node = Node {
@@ -121,10 +121,13 @@ impl Graph {
 
         self.nodes.push(node);
 
-        CommandResult::new(format!("inserted node {}: '{}'", id, label))
+        (
+            id.clone(),
+            CommandResult::new(format!("inserted node {}: '{}'", id, label)),
+        )
     }
 
-    fn link_edge(&mut self, from: &Id, to: &Id) -> CommandResult {
+    pub fn link_edge(&mut self, from: &Id, to: &Id) -> CommandResult {
         if !self.find_node_idx(&from).is_some() {
             return CommandResult::new(format!("source node {} not found", from));
         }
@@ -154,7 +157,7 @@ impl Graph {
                 let mut edges_touching: Vec<Id> = vec![];
 
                 for edge in &self.edges {
-                    if (edge.from == id || edge.to == id) && !edges_touching.contains(&&edge.id) {
+                    if (&edge.from == id || &edge.to == id) && !edges_touching.contains(&&edge.id) {
                         edges_touching.push(edge.id.clone())
                     }
                 }

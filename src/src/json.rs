@@ -1,7 +1,8 @@
 use crate::graph::Graph;
-use crate::{Exporter, GraphCommand, Id, Importer, Label};
+use crate::{Exporter, GraphCommand, Id, Label};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
+use std::collections::HashMap;
 use std::fs::File;
 use std::path::Path;
 
@@ -56,7 +57,6 @@ pub struct JsonImporter {
 }
 
 #[derive(Serialize, Deserialize)]
-
 struct JsonNode {
     id: Id,
     label: Label,
@@ -85,13 +85,23 @@ impl JsonImporter {
     pub fn import(&self) -> Result<Graph, anyhow::Error> {
         let value: JsonGraph = serde_json::from_str(&self.content)?;
 
+        let mut translate = HashMap::new();
         let mut graph = Graph::new();
 
         for node in &value.nodes {
-            unimplemented!("how should I deal with internal IDs?");
-
-            graph.apply_command(GraphCommand::InsertNode { label })
+            let (new_id, _) = graph.insert_node(node.label.clone());
+            translate.insert(node.id.clone(), new_id);
         }
+
+        for edge in &value.edges {
+            let new_from_id = translate.get(&edge.from);
+            let new_to_id = translate.get(&edge.to);
+            if let (Some(new_from_id), Some(new_to_id)) = (new_from_id, new_to_id) {
+                graph.link_edge(new_from_id, new_to_id);
+            }
+        }
+
+        Ok(graph)
     }
 }
 
@@ -104,32 +114,8 @@ mod tests {
 
     #[test]
     fn imports_graph() {
-        let content = include_str!("../test_data/exports_graph.json").to_string();
-
+        let content = include_str!("../test_data/imports_graph.json").to_string();
         let importer = JsonImporter::new(content);
-
-        let mut graph = Graph::new();
-
-        graph.apply_command(GraphCommand::InsertNode {
-            label: Label::new("abc"),
-        });
-
-        graph.apply_command(GraphCommand::InsertNode {
-            label: Label::new("def"),
-        });
-
-        graph.apply_command(GraphCommand::LinkEdge {
-            from: Id::new("n0"),
-            to: Id::new("n1"),
-        });
-
-        let mut exporter = JsonExporter::new();
-
-        let dot = exporter.export(&graph);
-
-        assert_eq!(
-            include_str!("../test_data/exports_graph.json").to_string(),
-            dot
-        );
+        let graph = importer.import().expect("could not import");
     }
 }

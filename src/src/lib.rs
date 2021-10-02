@@ -5,8 +5,7 @@ pub mod parser;
 
 macro_rules! new_string_type {
     ($id: ident) => {
-        #[derive(PartialEq, Debug, Clone)]
-
+        #[derive(PartialEq, Eq, Hash, Debug, Clone, serde::Serialize, serde::Deserialize)]
         pub struct $id(String);
 
         impl $id {
