@@ -1,3 +1,4 @@
 digraph {
+    node [shape=box style=filled width=2]
 ${INNER_CONTENT}
 }

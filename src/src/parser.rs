@@ -51,27 +51,26 @@ fn label<'a>() -> Parser<'a, u8, String> {
 }
 
 fn insert_node<'a>() -> Parser<'a, u8, String> {
-    // i foo bar baz
     keyword(b"i") * label()
 }
 
 fn show_help<'a>() -> Parser<'a, u8, ()> {
-    // i foo bar baz
     (keyword(b"help") | keyword(b"h")).discard()
 }
 
 fn print_dot<'a>() -> Parser<'a, u8, ()> {
-    // i foo bar baz
     (keyword(b"print") | keyword(b"p")).discard()
 }
 
 fn print_json<'a>() -> Parser<'a, u8, ()> {
-    // i foo bar baz
     (keyword(b"json") | keyword(b"j")).discard()
 }
 
+fn save<'a>() -> Parser<'a, u8, ()> {
+    (keyword(b"save") | keyword(b"s")).discard()
+}
+
 fn exit<'a>() -> Parser<'a, u8, ()> {
-    // i foo bar baz
     keyword(b"exit").discard()
 }
 
@@ -155,6 +154,10 @@ pub fn parse_line(line: Line) -> Command {
         return Command::PrintJson;
     }
 
+    if let Ok(()) = save().parse(text) {
+        return Command::Save;
+    }
+
     Command::ParseError { line }
 }
 
@@ -226,6 +229,10 @@ mod tests {
         assert_consumes_all![print_json(), b"json", ()];
 
         assert_consumes_all![exit(), b"exit", ()];
+
+        assert_consumes_all![save(), b"s", ()];
+
+        assert_consumes_all![save(), b"save", ()];
     }
 
     #[test]
@@ -291,5 +298,7 @@ mod tests {
             }
             .into()
         );
+
+        assert_parse_command!("s", Command::Save);
     }
 }

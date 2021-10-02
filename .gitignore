@@ -17,3 +17,9 @@ Cargo.lock
 
 history.txt
 .idea/
+
+graph.dot
+graph.json
+graph.jpg
+graph.png
+graph.svg

@@ -1,10 +1,8 @@
 use crate::graph::Graph;
-use crate::{Exporter, GraphCommand, Id, Label};
+use crate::{Exporter, Id, Label};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 use std::collections::HashMap;
-use std::fs::File;
-use std::path::Path;
 
 pub struct JsonExporter {
     nodes: Vec<Value>,
@@ -21,7 +19,7 @@ impl Exporter for JsonExporter {
         self.nodes.push(node);
     }
 
-    fn add_edge(&mut self, from: &Id, to: &Id) {
+    fn add_edge(&mut self, _id: &Id, from: &Id, to: &Id) {
         let edge = json! { {
             "from": from.0.clone(),
             "to": to.0.clone()
@@ -109,13 +107,11 @@ impl JsonImporter {
 mod tests {
 
     use super::*;
-    use crate::graph::Graph;
-    use crate::{GraphCommand, Id, Label};
 
     #[test]
     fn imports_graph() {
         let content = include_str!("../test_data/imports_graph.json").to_string();
         let importer = JsonImporter::new(content);
-        let graph = importer.import().expect("could not import");
+        importer.import().expect("could not import");
     }
 }

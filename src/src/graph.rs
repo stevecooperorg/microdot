@@ -72,7 +72,7 @@ impl Graph {
         }
 
         for edge in &self.edges {
-            exporter.add_edge(&edge.from, &edge.to);
+            exporter.add_edge(&edge.id, &edge.from, &edge.to);
         }
     }
 

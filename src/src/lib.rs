@@ -33,6 +33,7 @@ pub enum Command {
     ShowHelp,
     PrintDot,
     PrintJson,
+    Save,
     Exit,
     ParseError { line: Line },
 }
@@ -55,5 +56,5 @@ impl From<GraphCommand> for Command {
 pub trait Exporter {
     fn add_node(&mut self, id: &Id, label: &Label);
 
-    fn add_edge(&mut self, from: &Id, to: &Id);
+    fn add_edge(&mut self, id: &Id, from: &Id, to: &Id);
 }
