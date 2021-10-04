@@ -1,3 +1,4 @@
+use clap::{AppSettings, Clap, ValueHint};
 use libmicrodot::graph::Graph;
 use libmicrodot::graphviz::GraphVizExporter;
 use libmicrodot::json::{JsonExporter, JsonImporter};
@@ -7,24 +8,29 @@ use rustyline::error::ReadlineError;
 use rustyline::Editor;
 use std::fs::File;
 use std::io::Read;
-use std::path::{Path, PathBuf};
-use std::str::FromStr;
+use std::path::PathBuf;
+
+#[derive(Clap)]
+#[clap(version = "1.0", author = "Kevin K. <kbknapp@gmail.com>")]
+#[clap(setting = AppSettings::ColoredHelp)]
+struct Opts {
+    /// Sets a custom config file. Could have been an Option<T> with no default too
+    #[clap(short, long, default_value = "~/microdot_graph.json", value_hint = ValueHint::FilePath)]
+    file: PathBuf,
+
+    /// Sets a custom config file. Could have been an Option<T> with no default too
+    #[clap(short, long, default_value = "~/.microdot_history", value_hint = ValueHint::FilePath)]
+    history: PathBuf,
+}
 
 fn main() -> Result<(), anyhow::Error> {
     // `()` can be used when no completer is required
     let mut rl = Editor::<()>::new();
 
-    // TODO: grab this from args?
-    let (history, json_file) = match dirs::home_dir() {
-        Some(home_dir) => (
-            home_dir.join(".microdot_history"),
-            home_dir.join("microdot_graph.json"),
-        ),
-        None => (
-            PathBuf::from_str(".microdot_history").unwrap(),
-            PathBuf::from_str("microdot_graph.json").unwrap(),
-        ),
-    };
+    let Opts {
+        history,
+        file: json_file,
+    } = Opts::parse();
 
     if rl.load_history(&history).is_err() {
         println!("No previous history.");
