@@ -52,7 +52,7 @@ impl Exporter for GraphVizExporter {
 
         let wrapping_options: Options<OptimalFit, UnicodeBreakProperties, Standard> = {
             let dictionary = Standard::from_embedded(Language::EnglishUS).unwrap();
-            Options::new(30).word_splitter(dictionary)
+            Options::new(50).word_splitter(dictionary)
         };
 
         let label_text = if self.debug_mode {
