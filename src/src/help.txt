@@ -2,14 +2,22 @@ microdot
 
 Commands:
 
-    - i <label>       insert new node
     - d <id>          delete node
-    - l <id> <id>     link nodes by creating an edge
-    - u <id> <id>     unlink nodes by removing an edge
-    - h               show this help
-    - help
-    - p               print dot for the graph
-    - print
-    - j               print json for the graph
-    - json
     - exit            quit the program
+    - h               show this help
+    - help            show this help
+    - i <label>       insert new node
+    - j               print json for the graph
+    - json            print json for the graph
+    - l <id> <id>     link nodes by creating an edge
+    - lr              render the graph left to right mode
+    - p               print dot for the graph
+    - print           print dot for the graph
+    - tb              render the graph top to bottom
+    - u <id> <id>     unlink nodes by removing an edge
+
+Usage:
+
+  - run the app to build a graph. It'll save to graph.json, and load from that file next time.
+  - if you've got graphviz installed, it'll save an svg to the same dir as your graph file with the .svg extension.
+  - if you've got an auto-reloading svg viewer, use it! eg https://apps.apple.com/app/coteditor/id768053424

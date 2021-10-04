@@ -5,6 +5,8 @@ use std::collections::HashMap;
 use textwrap::word_separators::UnicodeBreakProperties;
 use textwrap::wrap_algorithms::OptimalFit;
 use textwrap::{fill, Options};
+use command_macros::cmd;
+use regex::Regex;
 
 macro_rules! hashmap {
     (@single $($x:tt)*) => (());
@@ -39,6 +41,17 @@ fn colors() -> HashMap<String, String> {
       "empire".to_string() => "#821499".to_string(),
       "rain".to_string() => "#A136B4".to_string(),
     }
+}
+
+pub fn installed_graphviz_version() -> Option<String> {
+    // dot - graphviz version 2.49.1 (20210923.0004)
+    let stdout = cmd!(dot ("-V")).output().ok().unwrap().stderr;
+    let stdout = String::from_utf8_lossy(&stdout).to_string();
+    let rx = Regex::new(r#"^dot - graphviz version (?P<ver>[0-9\.]+)"#)
+        .expect("not a valid rx");
+    let caps = rx.captures(&stdout)
+        .map(|c| c.name("ver").expect("should have named group").as_str().into());
+    caps
 }
 
 pub struct GraphVizExporter {
@@ -129,8 +142,8 @@ fn escape_id(id: &str) -> String {
 #[cfg(test)]
 mod tests {
 
+    use super::*;
     use crate::graph::Graph;
-    use crate::graphviz::{escape_label, GraphVizExporter};
     use crate::{GraphCommand, Id, Label};
 
     #[test]
@@ -164,5 +177,11 @@ mod tests {
             include_str!("../test_data/exports_graph.dot").to_string(),
             dot
         );
+    }
+
+    #[test]
+    fn test_graphviz_installed() {
+        let version = installed_graphviz_version();
+        assert_eq!(version, Some("2.49.1".to_string()));
     }
 }
