@@ -14,7 +14,7 @@ src/target/debug/microdot:
 	cd src; cargo build
 
 watch:
-	cd src; cargo watch -x run 2> /dev/null
+	nodemon --exec "make run"
 
 build:
 	cd src
