@@ -45,6 +45,7 @@ pub enum GraphCommand {
     LinkEdge { from: Id, to: Id },
     RenameNode { id: Id, label: Label },
     UnlinkEdge { id: Id },
+    SetDirection { is_left_right: bool },
 }
 
 impl From<GraphCommand> for Command {
@@ -54,6 +55,8 @@ impl From<GraphCommand> for Command {
 }
 
 pub trait Exporter {
+    fn set_direction(&mut self, is_left_right: bool);
+
     fn add_node(&mut self, id: &Id, label: &Label);
 
     fn add_edge(&mut self, id: &Id, from: &Id, to: &Id);

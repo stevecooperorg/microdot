@@ -7,9 +7,14 @@ use std::collections::HashMap;
 pub struct JsonExporter {
     nodes: Vec<Value>,
     edges: Vec<Value>,
+    is_left_right: bool,
 }
 
 impl Exporter for JsonExporter {
+    fn set_direction(&mut self, is_left_right: bool) {
+        self.is_left_right = is_left_right;
+    }
+
     fn add_node(&mut self, id: &Id, label: &Label) {
         let node = json!({
             "id": id.0.clone(),
@@ -34,6 +39,7 @@ impl JsonExporter {
         Self {
             nodes: vec![],
             edges: vec![],
+            is_left_right: false,
         }
     }
 
@@ -42,7 +48,8 @@ impl JsonExporter {
 
         let content = json! {{
         "nodes": self.nodes,
-        "edges": self.edges
+        "edges": self.edges,
+        "is_left_right": self.is_left_right
         }}
         .to_string();
 
@@ -61,7 +68,6 @@ struct JsonNode {
 }
 
 #[derive(Serialize, Deserialize)]
-
 struct JsonEdge {
     from: Id,
     to: Id,
@@ -71,6 +77,7 @@ struct JsonEdge {
 struct JsonGraph {
     nodes: Vec<JsonNode>,
     edges: Vec<JsonEdge>,
+    is_left_right: bool,
 }
 
 impl JsonImporter {
@@ -105,13 +112,40 @@ impl JsonImporter {
 
 #[cfg(test)]
 mod tests {
-
     use super::*;
+    use crate::GraphCommand;
 
     #[test]
     fn imports_graph() {
         let content = include_str!("../test_data/imports_graph.json").to_string();
         let importer = JsonImporter::new(content);
         importer.import().expect("could not import");
+    }
+
+    #[test]
+    fn exports_graph() {
+        let mut graph = Graph::new();
+
+        graph.apply_command(GraphCommand::InsertNode {
+            label: Label::new("abc"),
+        });
+
+        graph.apply_command(GraphCommand::InsertNode {
+            label: Label::new("def"),
+        });
+
+        graph.apply_command(GraphCommand::LinkEdge {
+            from: Id::new("n0"),
+            to: Id::new("n1"),
+        });
+
+        let mut exporter = JsonExporter::new();
+
+        let dot = exporter.export(&graph);
+
+        assert_eq!(
+            include_str!("../test_data/exports_graph.json").to_string(),
+            dot
+        );
     }
 }

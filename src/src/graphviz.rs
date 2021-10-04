@@ -47,6 +47,14 @@ pub struct GraphVizExporter {
 }
 
 impl Exporter for GraphVizExporter {
+    fn set_direction(&mut self, is_left_right: bool) {
+        let graph_line = format!(
+            r#"    graph [fontname = "helvetica" rankdir={} ranksep=0.8 nodesep=0.4];"#,
+            if is_left_right { "LR" } else { "TB" }
+        );
+        self.inner_content.push_str(&graph_line);
+    }
+
     fn add_node(&mut self, id: &Id, label: &Label) {
         // TODO: probably horrific perf.
 

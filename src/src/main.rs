@@ -7,21 +7,31 @@ use rustyline::error::ReadlineError;
 use rustyline::Editor;
 use std::fs::File;
 use std::io::Read;
-use std::path::Path;
+use std::path::{Path, PathBuf};
+use std::str::FromStr;
 
 fn main() -> Result<(), anyhow::Error> {
     // `()` can be used when no completer is required
     let mut rl = Editor::<()>::new();
 
-    if rl.load_history("history.txt").is_err() {
+    // TODO: grab this from args?
+    let (history, json_file) = match dirs::home_dir() {
+        Some(home_dir) => (
+            home_dir.join(".microdot_history"),
+            home_dir.join("microdot_graph.json"),
+        ),
+        None => (
+            PathBuf::from_str(".microdot_history").unwrap(),
+            PathBuf::from_str("microdot_graph.json").unwrap(),
+        ),
+    };
+
+    if rl.load_history(&history).is_err() {
         println!("No previous history.");
     }
 
-    // TODO: grab this from args?
-    let json_file = Path::new("graph.json");
-
     let json_content = if json_file.exists() {
-        let mut f = File::open(json_file)?;
+        let mut f = File::open(&json_file)?;
         let mut s = "".to_string();
         f.read_to_string(&mut s)?;
         s
@@ -93,7 +103,7 @@ fn main() -> Result<(), anyhow::Error> {
     Ok(())
 }
 
-fn save_file(json_file: &&Path, graph: &Graph) -> Result<(), anyhow::Error> {
+fn save_file(json_file: &PathBuf, graph: &Graph) -> Result<(), anyhow::Error> {
     let mut json_exporter = JsonExporter::new();
     let json = json_exporter.export(&graph);
     let mut dot_exporter = GraphVizExporter::new();

@@ -5,6 +5,7 @@ pub struct Graph {
     edge_high_water: usize,
     nodes: Vec<Node>,
     edges: Vec<Edge>,
+    is_left_right: bool,
 }
 
 struct Node {
@@ -25,6 +26,7 @@ impl Default for Graph {
             edge_high_water: 0,
             nodes: vec![],
             edges: vec![],
+            is_left_right: false,
         }
     }
 }
@@ -67,6 +69,8 @@ impl Graph {
     }
 
     pub fn export<X: Exporter>(&self, exporter: &mut X) {
+        exporter.set_direction(self.is_left_right);
+
         for node in &self.nodes {
             exporter.add_node(&node.id, &node.label);
         }
@@ -83,7 +87,16 @@ impl Graph {
             GraphCommand::LinkEdge { from, to } => self.link_edge(&from, &to),
             GraphCommand::RenameNode { id, label } => self.rename_node(&id, label),
             GraphCommand::UnlinkEdge { id } => self.unlink_edge(&id),
+            GraphCommand::SetDirection { is_left_right } => self.set_direction(is_left_right),
         }
+    }
+
+    fn set_direction(&mut self, is_left_right: bool) -> CommandResult {
+        self.is_left_right = is_left_right;
+        CommandResult::new(format!(
+            "Direction changed to {}",
+            if is_left_right { "LR" } else { "TB" }
+        ))
     }
 
     fn unlink_edge(&mut self, id: &Id) -> CommandResult {

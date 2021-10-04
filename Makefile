@@ -1,3 +1,6 @@
+DEFAULT_DOT=$(HOME)/microdot_graph.dot
+DEFAULT_JSON=$(HOME)/microdot_graph.dot
+DEFAULT_SVG=$(HOME)/microdot_graph.svg
 
 .PHONY: all
 all:
@@ -26,7 +29,7 @@ test:
 
 dot:
 	#dot graph.dot -Tpng -o graph.png
-	dot graph.dot -Tsvg -o graph.svg
+	dot "$(DEFAULT_DOT)" -Tsvg -o "$(DEFAULT_SVG)"
 
 watchdot:
-	nodemon --exec "make dot"
+	nodemon --exec "make dot" --watch "$(DEFAULT_DOT)"

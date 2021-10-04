@@ -89,6 +89,14 @@ fn delete_node<'a>() -> Parser<'a, u8, String> {
     keyword(b"d") * id()
 }
 
+fn lr<'a>() -> Parser<'a, u8, ()> {
+    keyword(b"lr")
+}
+
+fn tb<'a>() -> Parser<'a, u8, ()> {
+    keyword(b"tb")
+}
+
 fn link_edge<'a>() -> Parser<'a, u8, (String, String)> {
     // e bar baz
     keyword(b"l") * id() + id()
@@ -134,6 +142,20 @@ pub fn parse_line(line: Line) -> Command {
         return GraphCommand::RenameNode {
             id: Id::new(&id),
             label: Label::new(&label),
+        }
+        .into();
+    }
+
+    if let Ok(()) = lr().parse(text) {
+        return GraphCommand::SetDirection {
+            is_left_right: true,
+        }
+        .into();
+    }
+
+    if let Ok(()) = tb().parse(text) {
+        return GraphCommand::SetDirection {
+            is_left_right: false,
         }
         .into();
     }
@@ -202,6 +224,9 @@ mod tests {
 
         assert_consumes_all![delete_node(), b"d foo", "foo"];
 
+        assert_consumes_all![lr(), b"lr"];
+        assert_consumes_all![tb(), b"tb"];
+
         assert_consumes_all![
             link_edge(),
             b"l f1 f2",
@@ -262,6 +287,21 @@ mod tests {
         assert_parse_command!("j", Command::PrintJson);
 
         assert_parse_command!("exit", Command::Exit);
+
+        assert_parse_command!(
+            "lr",
+            GraphCommand::SetDirection {
+                is_left_right: true
+            }
+            .into()
+        );
+        assert_parse_command!(
+            "tb",
+            GraphCommand::SetDirection {
+                is_left_right: false
+            }
+            .into()
+        );
 
         assert_parse_command!(
             "i foo",
