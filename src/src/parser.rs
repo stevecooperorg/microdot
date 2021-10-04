@@ -112,6 +112,22 @@ fn rename_node<'a>() -> Parser<'a, u8, (String, String)> {
     keyword(b"r") * id() + label()
 }
 
+fn insert_after_node<'a>() -> Parser<'a, u8, (String, String)> {
+    // e bar baz
+    keyword(b"aft") * id() + label()
+}
+
+fn insert_before<'a>() -> Parser<'a, u8, (String, String)> {
+    // e bar baz
+    keyword(b"bef") * id() + label()
+}
+
+fn expand_edge<'a>() -> Parser<'a, u8, (String, String)> {
+    // e bar baz
+    keyword(b"exp") * id() + label()
+}
+
+
 pub fn parse_line(line: Line) -> Command {
     let text = &line.0.clone().into_bytes();
 
@@ -158,6 +174,29 @@ pub fn parse_line(line: Line) -> Command {
             is_left_right: false,
         }
         .into();
+    }
+
+
+    if let Ok((id, label)) = expand_edge().parse(text) {
+        return GraphCommand::ExpandEdge {
+            id: Id::new(id),
+            label: Label::new(label)
+        }
+            .into();
+    }
+    if let Ok((id, label)) = insert_after_node().parse(text) {
+        return GraphCommand::InsertAfterNode {
+            id: Id::new(id),
+            label: Label::new(label)
+        }
+            .into();
+    }
+    if let Ok((id, label)) = insert_before().parse(text) {
+        return GraphCommand::InsertBeforeNode {
+            id: Id::new(id),
+            label: Label::new(label)
+        }
+            .into();
     }
 
     if let Ok(()) = exit().parse(text) {
@@ -240,6 +279,21 @@ mod tests {
             b"r f new name",
             ("f".to_string(), "new name".to_string())
         ];
+        assert_consumes_all![
+            insert_after_node(),
+            b"aft f new name",
+            ("f".to_string(), "new name".to_string())
+        ];
+        assert_consumes_all![
+            insert_before(),
+            b"bef f new name",
+            ("f".to_string(), "new name".to_string())
+        ];
+        assert_consumes_all![
+            expand_edge(),
+            b"exp f new name",
+            ("f".to_string(), "new name".to_string())
+        ];
 
         assert_consumes_all![show_help(), b"h", ()];
 
@@ -287,6 +341,9 @@ mod tests {
         assert_parse_command!("j", Command::PrintJson);
 
         assert_parse_command!("exit", Command::Exit);
+        assert_parse_command!("exp e1 foo", GraphCommand::ExpandEdge { id: Id::new("e1"), label: Label::new("foo") }.into());
+        assert_parse_command!("aft n1 foo", GraphCommand::InsertAfterNode { id: Id::new("n1"), label: Label::new("foo") }.into());
+        assert_parse_command!("bef n1 foo", GraphCommand::InsertBeforeNode { id: Id::new("n1"), label: Label::new("foo") }.into());
 
         assert_parse_command!(
             "lr",

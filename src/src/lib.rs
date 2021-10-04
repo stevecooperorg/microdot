@@ -44,6 +44,9 @@ pub enum GraphCommand {
     DeleteNode { id: Id },
     LinkEdge { from: Id, to: Id },
     RenameNode { id: Id, label: Label },
+    InsertAfterNode { id: Id, label: Label },
+    InsertBeforeNode { id: Id, label: Label },
+    ExpandEdge { id: Id, label: Label },
     UnlinkEdge { id: Id },
     SetDirection { is_left_right: bool },
 }

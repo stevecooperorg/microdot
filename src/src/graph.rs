@@ -88,6 +88,9 @@ impl Graph {
             GraphCommand::RenameNode { id, label } => self.rename_node(&id, label),
             GraphCommand::UnlinkEdge { id } => self.unlink_edge(&id),
             GraphCommand::SetDirection { is_left_right } => self.set_direction(is_left_right),
+            GraphCommand::InsertAfterNode { id, label } => self.inject_after_node(&id, &label),
+            GraphCommand::InsertBeforeNode {id, label } => self.inject_before_node(&id,&label),
+            GraphCommand::ExpandEdge { id, label} => self.expand_edge(&id,&label)
         }
     }
 
@@ -138,6 +141,46 @@ impl Graph {
             id.clone(),
             CommandResult::new(format!("inserted node {}: '{}'", id, label)),
         )
+    }
+
+    pub fn inject_after_node(&mut self, from: &Id, label: &Label) -> CommandResult {
+        if !self.find_node_idx(&from).is_some() {
+            return CommandResult::new(format!("source node {} not found", from));
+        }
+
+        let (id, _) = self.insert_node(label.clone());
+
+        self.link_edge(from, &id);
+
+        CommandResult::new(format!("inserted node {}: '{}' after {}", id, label, from))
+    }
+
+    pub fn inject_before_node(&mut self, to: &Id, label: &Label) -> CommandResult {
+        if !self.find_node_idx(&to).is_some() {
+            return CommandResult::new(format!("target node {} not found", to));
+        }
+
+        let (id, _) = self.insert_node(label.clone());
+
+        self.link_edge(&id, to);
+
+        CommandResult::new(format!("inserted node {}: '{}' before {}", id, label, to))
+    }
+
+    pub fn expand_edge(&mut self, edge_id: &Id, label: &Label) -> CommandResult {
+        let (from, to) =  match self.find_edge_idx(&edge_id) {
+            Some(idx) => {
+                let edge = &self.edges[idx];
+                (edge.from.clone(), edge.to.clone())
+            }
+            None => return CommandResult::new(format!("edge {} not found", edge_id)),
+        };
+
+        self.unlink_edge(edge_id);
+        let (new_id, _) = self.insert_node(label.clone());
+        self.link_edge(&from, &new_id);
+        self.link_edge(&new_id, &to);
+        CommandResult::new(format!("injected {}: '{}' between {} and {}", new_id, label, from, to))
     }
 
     pub fn link_edge(&mut self, from: &Id, to: &Id) -> CommandResult {
