@@ -1,1 +1,1 @@
-{"edges":[{"from":"x0","to":"y1"}],"nodes":[{"id":"x0","label":"abc"},{"id":"y1","label":"def"}],"is_left_right":false}
+{"edges":[{"from":"n0","to":"n1"}],"is_left_right":true,"nodes":[{"id":"n0","label":"abc"},{"id":"n1","label":"def"}]}

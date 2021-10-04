@@ -91,7 +91,7 @@ impl Graph {
         }
     }
 
-    fn set_direction(&mut self, is_left_right: bool) -> CommandResult {
+    pub fn set_direction(&mut self, is_left_right: bool) -> CommandResult {
         self.is_left_right = is_left_right;
         CommandResult::new(format!(
             "Direction changed to {}",

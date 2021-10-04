@@ -93,6 +93,8 @@ impl JsonImporter {
         let mut translate = HashMap::new();
         let mut graph = Graph::new();
 
+        graph.set_direction(value.is_left_right);
+
         for node in &value.nodes {
             let (new_id, _) = graph.insert_node(node.label.clone());
             translate.insert(node.id.clone(), new_id);
@@ -123,6 +125,19 @@ mod tests {
     }
 
     #[test]
+    fn round_trips_graph() {
+        let content = include_str!("../test_data/imports_graph.json").to_string();
+        let importer = JsonImporter::new(content.clone());
+        let graph = importer.import().expect("could not import");
+        let mut exporter = JsonExporter::new();
+        let exported = exporter.export(&graph);
+        assert_eq!(
+            content, exported,
+            "round-trip should have lost or changed nothing"
+        );
+    }
+
+    #[test]
     fn exports_graph() {
         let mut graph = Graph::new();
 
@@ -140,12 +155,11 @@ mod tests {
         });
 
         let mut exporter = JsonExporter::new();
-
-        let dot = exporter.export(&graph);
+        let exported = exporter.export(&graph);
 
         assert_eq!(
             include_str!("../test_data/exports_graph.json").to_string(),
-            dot
+            exported
         );
     }
 }
