@@ -3,9 +3,6 @@
 all:
 	echo "nothing yet"
 
-watch:
-	cd src; cargo watch -x run 2> /dev/null
-
 fmt:
 	cd src; cargo +nightly fmt
 
@@ -15,6 +12,9 @@ run: src/target/debug/microdot
 .PHONY: src/target/debug/microdot
 src/target/debug/microdot:
 	cd src; cargo build
+
+watch:
+	cd src; cargo watch -x run 2> /dev/null
 
 build:
 	cd src

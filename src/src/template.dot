@@ -1,4 +1,4 @@
 digraph {
-    node [shape=box style=filled width=2]
+    node [shape=box style=filled width=2 fillcolor="${NODE_COLOR}" fontcolor="${NODE_FONT_COLOR}"]
 ${INNER_CONTENT}
 }
