@@ -73,11 +73,16 @@ struct JsonEdge {
     to: Id,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Default)]
 struct JsonGraph {
     nodes: Vec<JsonNode>,
     edges: Vec<JsonEdge>,
     is_left_right: bool,
+}
+
+pub fn empty_json_graph() -> String {
+    let empty = JsonGraph::default();
+    serde_json::to_string(&empty).expect("should be infallible")
 }
 
 impl JsonImporter {
@@ -135,6 +140,11 @@ mod tests {
             content, exported,
             "round-trip should have lost or changed nothing"
         );
+    }
+
+    #[test]
+    fn creates_empty_graph() {
+        assert_eq!(empty_json_graph(), r#"{"nodes":[],"edges":[],"is_left_right":false}"#.to_string());
     }
 
     #[test]

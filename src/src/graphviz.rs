@@ -2,6 +2,7 @@ use crate::graph::Graph;
 use crate::{Exporter, Id, Label};
 use hyphenation::{Language, Load, Standard};
 use std::collections::HashMap;
+use std::path::PathBuf;
 use textwrap::word_separators::UnicodeBreakProperties;
 use textwrap::wrap_algorithms::OptimalFit;
 use textwrap::{fill, Options};
@@ -45,13 +46,28 @@ fn colors() -> HashMap<String, String> {
 
 pub fn installed_graphviz_version() -> Option<String> {
     // dot - graphviz version 2.49.1 (20210923.0004)
-    let stdout = cmd!(dot ("-V")).output().ok().unwrap().stderr;
-    let stdout = String::from_utf8_lossy(&stdout).to_string();
+    let stderr = match cmd!(dot ("-V")).output().ok() {
+        Some(output) => output.stderr,
+        None => return None
+    };
+    let stderr = String::from_utf8_lossy(&stderr).to_string();
     let rx = Regex::new(r#"^dot - graphviz version (?P<ver>[0-9\.]+)"#)
         .expect("not a valid rx");
-    let caps = rx.captures(&stdout)
+    let caps = rx.captures(&stderr)
         .map(|c| c.name("ver").expect("should have named group").as_str().into());
     caps
+}
+
+pub fn compile_dot(path: &PathBuf) -> Result<(), anyhow::Error> {
+    if !installed_graphviz_version().is_some() {
+        return Err(anyhow::Error::msg("graphviz not installed"))
+    }
+
+    let out = path.with_extension("svg");
+    // dot "$(DEFAULT_DOT)" -Tsvg -o "$(DEFAULT_SVG)"
+    cmd!(dot (path) ("-Tsvg") ("-o") (out)).output()?;
+
+    Ok(())
 }
 
 pub struct GraphVizExporter {
