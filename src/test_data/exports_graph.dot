@@ -5,8 +5,10 @@ digraph {
     edge [fontname = "helvetica" penwidth=3 color="#b25dc6"];
 
     "n0" [label="n0: abc" fillcolor="#73DBE6" color="#2BBDCB" fontcolor="#242D48"]
-    "n1" [label="n1: def" fillcolor="#73DBE6" color="#2BBDCB" fontcolor="#242D48"]
+    "n1" [label="n1: def" fillcolor="#C882D9" color="#B25DC6" fontcolor="#242D48"]
+    "n2" [label="n2: hij" fillcolor="#C882D9" color="#B25DC6" fontcolor="#242D48"]
 
     "n0" -> "n1" [label="e0"];
+    "n1" -> "n2" [label="e1"];
 
 }

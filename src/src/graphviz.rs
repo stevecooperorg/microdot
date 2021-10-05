@@ -97,8 +97,8 @@ impl ColorScheme {
     fn highlight() -> Self {
         Self {
             font_color: MARTINIQUE.to_string(),
-            fill_color: IRIS.to_string(),
-            stroke_color: ORCHID.to_string(),
+            fill_color: JULEP.to_string(),
+            stroke_color: PACIFICA.to_string(),
             node_border_width: 3.0f64,
             edge_border_width: 3.0f64,
         }
@@ -107,8 +107,8 @@ impl ColorScheme {
     fn normal() -> Self {
         Self {
             font_color: MARTINIQUE.to_string(),
-            fill_color: JULEP.to_string(),
-            stroke_color: PACIFICA.to_string(),
+            fill_color: IRIS.to_string(),
+            stroke_color: ORCHID.to_string(),
             node_border_width: 2.0f64,
             edge_border_width: 2.0f64,
         }
@@ -254,10 +254,21 @@ mod tests {
             label: Label::new("def"),
         });
 
+        graph.apply_command(GraphCommand::InsertNode {
+            label: Label::new("hij"),
+        });
+
         graph.apply_command(GraphCommand::LinkEdge {
             from: Id::new("n0"),
             to: Id::new("n1"),
         });
+
+        graph.apply_command(GraphCommand::LinkEdge {
+            from: Id::new("n1"),
+            to: Id::new("n2"),
+        });
+
+        graph.search(Label::new("abc"));
 
         let mut exporter = GraphVizExporter::new();
 
@@ -271,7 +282,8 @@ mod tests {
 
     #[test]
     fn test_graphviz_compiles() {
-        let dot_file = Path::new("/Users/stevecooper/src/github.com/stevecooperorg/microdot/src/test_data/exports_graph.dot");
+
+        let dot_file = dirs::home_dir().unwrap().join("src/github.com/stevecooperorg/microdot/src/test_data/exports_graph.dot");
 
         assert!(
             dot_file.exists(),
