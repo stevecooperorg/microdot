@@ -97,8 +97,8 @@ impl ColorScheme {
     fn highlight() -> Self {
         Self {
             font_color: MARTINIQUE.to_string(),
-            fill_color: JULEP.to_string(),
-            stroke_color: PACIFICA.to_string(),
+            fill_color: IRIS.to_string(),
+            stroke_color: ORCHID.to_string(),
             node_border_width: 3.0f64,
             edge_border_width: 3.0f64,
         }
@@ -107,8 +107,8 @@ impl ColorScheme {
     fn normal() -> Self {
         Self {
             font_color: MARTINIQUE.to_string(),
-            fill_color: IRIS.to_string(),
-            stroke_color: ORCHID.to_string(),
+            fill_color: JULEP.to_string(),
+            stroke_color: PACIFICA.to_string(),
             node_border_width: 2.0f64,
             edge_border_width: 2.0f64,
         }
