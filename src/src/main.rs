@@ -3,7 +3,7 @@ use libmicrodot::graph::Graph;
 use libmicrodot::graphviz::GraphVizExporter;
 use libmicrodot::json::{empty_json_graph, JsonExporter, JsonImporter};
 use libmicrodot::parser::parse_line;
-use libmicrodot::{Command, CommandResult, graphviz, Line};
+use libmicrodot::{graphviz, Command, CommandResult, Line};
 use rustyline::error::ReadlineError;
 use rustyline::Editor;
 use std::fs::File;
@@ -33,14 +33,23 @@ fn main() -> Result<(), anyhow::Error> {
     } = Opts::parse();
 
     let history = history.unwrap_or_else(|| dirs::home_dir().unwrap().join(".microdot_history"));
-    let json_file = json_file.unwrap_or_else(|| dirs::home_dir().unwrap().join("microdot_graph.json"));
+    let json_file =
+        json_file.unwrap_or_else(|| dirs::home_dir().unwrap().join("microdot_graph.json"));
 
     if rl.load_history(&history).is_err() {
-        println!("No previous history.");
+        println!("No previous history at {}.", history.to_string_lossy());
+    } else {
+        println!(
+            "Loaded previous history from {}.",
+            history.to_string_lossy()
+        );
     }
 
     let json_content = if json_file.exists() {
-        println!("loading existing graph from {}", json_file.to_string_lossy());
+        println!(
+            "loading existing graph from {}",
+            json_file.to_string_lossy()
+        );
         let mut f = File::open(&json_file)?;
         let mut s = "".to_string();
         f.read_to_string(&mut s)?;
@@ -82,6 +91,13 @@ fn main() -> Result<(), anyhow::Error> {
                         println!("{}", out);
                         println!("Json printed");
                     }
+                    Command::Search { sub_label } => {
+                        println!("({})", graph.search(sub_label));
+
+                        // save the file so we get color highlights.
+                        let dot_file = save_file(&json_file, &graph)?;
+                        compile_dot(dot_file);
+                    }
                     Command::Save => {
                         let dot_file = save_file(&json_file, &graph)?;
                         compile_dot(dot_file);
@@ -110,7 +126,7 @@ fn main() -> Result<(), anyhow::Error> {
         }
     }
 
-    rl.save_history("history.txt").unwrap();
+    rl.save_history(&history).unwrap();
 
     Ok(())
 }
@@ -134,6 +150,6 @@ fn save_file(json_file: &PathBuf, graph: &Graph) -> Result<PathBuf, anyhow::Erro
 fn compile_dot(dot_file: PathBuf) -> CommandResult {
     match graphviz::compile_dot(&dot_file) {
         Ok(_) => CommandResult::new(format!("compiled dot: {}", dot_file.to_string_lossy())),
-        Err(e) => CommandResult::new(format!("failed to compile dot: {}", e.to_string()))
+        Err(e) => CommandResult::new(format!("failed to compile dot: {}", e.to_string())),
     }
 }

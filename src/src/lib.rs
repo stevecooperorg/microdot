@@ -31,6 +31,7 @@ new_string_type!(Line);
 pub enum Command {
     GraphCommand(GraphCommand),
     ShowHelp,
+    Search { sub_label: Label },
     PrintDot,
     PrintJson,
     Save,
@@ -60,7 +61,7 @@ impl From<GraphCommand> for Command {
 pub trait Exporter {
     fn set_direction(&mut self, is_left_right: bool);
 
-    fn add_node(&mut self, id: &Id, label: &Label);
+    fn add_node(&mut self, id: &Id, label: &Label, highlight: bool);
 
     fn add_edge(&mut self, id: &Id, from: &Id, to: &Id);
 }

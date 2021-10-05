@@ -67,7 +67,11 @@ fn print_json<'a>() -> Parser<'a, u8, ()> {
 }
 
 fn save<'a>() -> Parser<'a, u8, ()> {
-    (keyword(b"save") | keyword(b"s")).discard()
+    (keyword(b"save")).discard()
+}
+
+fn search<'a>() -> Parser<'a, u8, String> {
+    (keyword(b"search") | keyword(b"s") | keyword(b"/")) * label()
 }
 
 fn exit<'a>() -> Parser<'a, u8, ()> {
@@ -127,7 +131,6 @@ fn expand_edge<'a>() -> Parser<'a, u8, (String, String)> {
     keyword(b"exp") * id() + label()
 }
 
-
 pub fn parse_line(line: Line) -> Command {
     let text = &line.0.clone().into_bytes();
 
@@ -176,27 +179,26 @@ pub fn parse_line(line: Line) -> Command {
         .into();
     }
 
-
     if let Ok((id, label)) = expand_edge().parse(text) {
         return GraphCommand::ExpandEdge {
             id: Id::new(id),
-            label: Label::new(label)
+            label: Label::new(label),
         }
-            .into();
+        .into();
     }
     if let Ok((id, label)) = insert_after_node().parse(text) {
         return GraphCommand::InsertAfterNode {
             id: Id::new(id),
-            label: Label::new(label)
+            label: Label::new(label),
         }
-            .into();
+        .into();
     }
     if let Ok((id, label)) = insert_before().parse(text) {
         return GraphCommand::InsertBeforeNode {
             id: Id::new(id),
-            label: Label::new(label)
+            label: Label::new(label),
         }
-            .into();
+        .into();
     }
 
     if let Ok(()) = exit().parse(text) {
@@ -217,6 +219,12 @@ pub fn parse_line(line: Line) -> Command {
 
     if let Ok(()) = save().parse(text) {
         return Command::Save;
+    }
+
+    if let Ok(sub_label) = search().parse(text) {
+        return Command::Search {
+            sub_label: Label::new(sub_label),
+        };
     }
 
     Command::ParseError { line }
@@ -309,7 +317,9 @@ mod tests {
 
         assert_consumes_all![exit(), b"exit", ()];
 
-        assert_consumes_all![save(), b"s", ()];
+        assert_consumes_all![search(), b"search foo", "foo"];
+        assert_consumes_all![search(), b"s foo", "foo"];
+        assert_consumes_all![search(), b"/foo", "foo"];
 
         assert_consumes_all![save(), b"save", ()];
     }
@@ -341,9 +351,30 @@ mod tests {
         assert_parse_command!("j", Command::PrintJson);
 
         assert_parse_command!("exit", Command::Exit);
-        assert_parse_command!("exp e1 foo", GraphCommand::ExpandEdge { id: Id::new("e1"), label: Label::new("foo") }.into());
-        assert_parse_command!("aft n1 foo", GraphCommand::InsertAfterNode { id: Id::new("n1"), label: Label::new("foo") }.into());
-        assert_parse_command!("bef n1 foo", GraphCommand::InsertBeforeNode { id: Id::new("n1"), label: Label::new("foo") }.into());
+        assert_parse_command!(
+            "exp e1 foo",
+            GraphCommand::ExpandEdge {
+                id: Id::new("e1"),
+                label: Label::new("foo")
+            }
+            .into()
+        );
+        assert_parse_command!(
+            "aft n1 foo",
+            GraphCommand::InsertAfterNode {
+                id: Id::new("n1"),
+                label: Label::new("foo")
+            }
+            .into()
+        );
+        assert_parse_command!(
+            "bef n1 foo",
+            GraphCommand::InsertBeforeNode {
+                id: Id::new("n1"),
+                label: Label::new("foo")
+            }
+            .into()
+        );
 
         assert_parse_command!(
             "lr",
@@ -396,6 +427,26 @@ mod tests {
             .into()
         );
 
-        assert_parse_command!("s", Command::Save);
+        assert_parse_command!("save", Command::Save);
+
+        assert_parse_command!(
+            "search foo",
+            Command::Search {
+                sub_label: Label::new("foo")
+            }
+        );
+
+        assert_parse_command!(
+            "s foo",
+            Command::Search {
+                sub_label: Label::new("foo")
+            }
+        );
+        assert_parse_command!(
+            "/foo",
+            Command::Search {
+                sub_label: Label::new("foo")
+            }
+        );
     }
 }

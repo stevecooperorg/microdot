@@ -15,7 +15,7 @@ impl Exporter for JsonExporter {
         self.is_left_right = is_left_right;
     }
 
-    fn add_node(&mut self, id: &Id, label: &Label) {
+    fn add_node(&mut self, id: &Id, label: &Label, _highlight: bool) {
         let node = json!({
             "id": id.0.clone(),
             "label": label.0.clone()
@@ -144,7 +144,10 @@ mod tests {
 
     #[test]
     fn creates_empty_graph() {
-        assert_eq!(empty_json_graph(), r#"{"nodes":[],"edges":[],"is_left_right":false}"#.to_string());
+        assert_eq!(
+            empty_json_graph(),
+            r#"{"nodes":[],"edges":[],"is_left_right":false}"#.to_string()
+        );
     }
 
     #[test]

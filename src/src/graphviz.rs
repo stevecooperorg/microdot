@@ -1,13 +1,27 @@
 use crate::graph::Graph;
 use crate::{Exporter, Id, Label};
+use command_macros::cmd;
 use hyphenation::{Language, Load, Standard};
+use regex::Regex;
 use std::collections::HashMap;
-use std::path::PathBuf;
+use std::path::Path;
 use textwrap::word_separators::UnicodeBreakProperties;
 use textwrap::wrap_algorithms::OptimalFit;
 use textwrap::{fill, Options};
-use command_macros::cmd;
-use regex::Regex;
+
+const JULEP: &str = "#73DBE6";
+const PACIFICA: &str = "#2BBDCB";
+const LEMONADE: &str = "#FFDD99";
+const BRIGHT_SUN: &str = "#FFBB16";
+const ATHENS: &str = "#F8F8FA";
+const LINKWATER: &str = "#E6EBF8";
+const GHOST: &str = "#DFE2EB";
+const COMET: &str = "#485478";
+const MARTINIQUE: &str = "#242D48";
+const IRIS: &str = "#C882D9";
+const ORCHID: &str = "#B25DC6";
+const EMPIRE: &str = "#821499";
+const RAIN: &str = "#A136B4";
 
 macro_rules! hashmap {
     (@single $($x:tt)*) => (());
@@ -26,46 +40,31 @@ macro_rules! hashmap {
     };
 }
 
-fn colors() -> HashMap<String, String> {
-    hashmap! {
-      "julep".to_string() => "#73DBE6".to_string(),
-      "pacifica".to_string() => "#2BBDCB".to_string(),
-      "lemonade".to_string() => "#FFDD99".to_string(),
-      "bright_sun".to_string() => "#FFBB16".to_string(),
-      "athens".to_string() => "#F8F8FA".to_string(),
-      "linkwater".to_string() => "#E6EBF8".to_string(),
-      "ghost".to_string() => "#DFE2EB".to_string(),
-      "comet".to_string() => "#485478".to_string(),
-      "martinique".to_string() => "#242D48".to_string(),
-      "iris".to_string() => "#C882D9".to_string(),
-      "orchid".to_string() => "#B25DC6".to_string(),
-      "empire".to_string() => "#821499".to_string(),
-      "rain".to_string() => "#A136B4".to_string(),
-    }
-}
-
 pub fn installed_graphviz_version() -> Option<String> {
     // dot - graphviz version 2.49.1 (20210923.0004)
-    let stderr = match cmd!(dot ("-V")).output().ok() {
+    let stderr = match cmd!(dot("-V")).output().ok() {
         Some(output) => output.stderr,
-        None => return None
+        None => return None,
     };
     let stderr = String::from_utf8_lossy(&stderr).to_string();
-    let rx = Regex::new(r#"^dot - graphviz version (?P<ver>[0-9\.]+)"#)
-        .expect("not a valid rx");
-    let caps = rx.captures(&stderr)
-        .map(|c| c.name("ver").expect("should have named group").as_str().into());
+    let rx = Regex::new(r#"^dot - graphviz version (?P<ver>[0-9\.]+)"#).expect("not a valid rx");
+    let caps = rx.captures(&stderr).map(|c| {
+        c.name("ver")
+            .expect("should have named group")
+            .as_str()
+            .into()
+    });
     caps
 }
 
-pub fn compile_dot(path: &PathBuf) -> Result<(), anyhow::Error> {
+pub fn compile_dot(path: &Path) -> Result<(), anyhow::Error> {
     if !installed_graphviz_version().is_some() {
-        return Err(anyhow::Error::msg("graphviz not installed"))
+        return Err(anyhow::Error::msg("graphviz not installed"));
     }
 
     let out = path.with_extension("svg");
     // dot "$(DEFAULT_DOT)" -Tsvg -o "$(DEFAULT_SVG)"
-    cmd!(dot (path) ("-Tsvg") ("-o") (out)).output()?;
+    cmd!(dot(path)("-Tsvg")("-o")(out)).output()?;
 
     Ok(())
 }
@@ -73,24 +72,75 @@ pub fn compile_dot(path: &PathBuf) -> Result<(), anyhow::Error> {
 pub struct GraphVizExporter {
     inner_content: String,
     debug_mode: bool,
+    is_left_right: bool,
+    is_first_edge: bool,
+}
+
+fn template(template_str: &str, variables: &HashMap<&str, String>) -> String {
+    let mut result = template_str.to_string();
+    for (k, v) in variables.iter() {
+        let search_for = format!("${{{}}}", k);
+        result = result.replace(&search_for, v);
+    }
+    result
+}
+
+struct ColorScheme {
+    font_color: String,
+    fill_color: String,
+    stroke_color: String,
+    node_border_width: f64,
+    edge_border_width: f64,
+}
+
+impl ColorScheme {
+    fn highlight() -> Self {
+        Self {
+            font_color: MARTINIQUE.to_string(),
+            fill_color: IRIS.to_string(),
+            stroke_color: ORCHID.to_string(),
+            node_border_width: 3.0f64,
+            edge_border_width: 3.0f64,
+        }
+    }
+
+    fn normal() -> Self {
+        Self {
+            font_color: MARTINIQUE.to_string(),
+            fill_color: JULEP.to_string(),
+            stroke_color: PACIFICA.to_string(),
+            node_border_width: 2.0f64,
+            edge_border_width: 2.0f64,
+        }
+    }
 }
 
 impl Exporter for GraphVizExporter {
     fn set_direction(&mut self, is_left_right: bool) {
-        let graph_line = format!(
-            r#"    graph [fontname = "helvetica" rankdir={} ranksep=0.8 nodesep=0.4];"#,
-            if is_left_right { "LR" } else { "TB" }
-        );
-        self.inner_content.push_str(&graph_line);
+        self.is_left_right = is_left_right;
     }
 
-    fn add_node(&mut self, id: &Id, label: &Label) {
+    fn add_node(&mut self, id: &Id, label: &Label, highlight: bool) {
         // TODO: probably horrific perf.
 
         let wrapping_options: Options<OptimalFit, UnicodeBreakProperties, Standard> = {
             let dictionary = Standard::from_embedded(Language::EnglishUS).unwrap();
             Options::new(40).word_splitter(dictionary)
         };
+
+        let color_scheme = if highlight {
+            ColorScheme::highlight()
+        } else {
+            ColorScheme::normal()
+        };
+
+        let ColorScheme {
+            font_color,
+            fill_color,
+            stroke_color,
+            node_border_width,
+            edge_border_width,
+        } = color_scheme;
 
         let label_text = if self.debug_mode {
             let unwrapped = format!("{}: {}", id.0, label.0);
@@ -99,27 +149,50 @@ impl Exporter for GraphVizExporter {
         } else {
             label.0.clone()
         };
-        let line = format!(
-            "    {} [label={}];\n",
-            escape_id(&id.0),
-            escape_label(&label_text)
-        );
+
+        let node_params = hashmap! {
+            "id" => id.0.clone(),
+            "label" => label.0.clone(),
+            "escaped_id" => escape_id(&id.0),
+            "label_text" => label_text,
+            "stroke_color" => stroke_color,
+            "fill_color" => fill_color,
+            "font_color" => font_color,
+            "width" => node_border_width.to_string()
+        };
+
+        const LINE_TEMPLATE: &str = r#"    ${escaped_id} [label="${label_text}" fillcolor="${fill_color}" color="${stroke_color}" fontcolor="${font_color}"]"#;
+
+        let line = template(LINE_TEMPLATE, &node_params);
+
         self.inner_content.push_str(&line);
+        self.inner_content.push_str("\n");
     }
 
     fn add_edge(&mut self, id: &Id, from: &Id, to: &Id) {
-        let edge_label = if self.debug_mode {
-            format!(" [label={}]", id.0)
-        } else {
-            "".to_string()
+        if self.is_first_edge {
+            self.inner_content.push_str("\n");
+            self.is_first_edge = false;
+        }
+
+        let edge_params = hashmap! {
+            "id" => id.0.clone(),
+            "escaped_id" => escape_id(&id.0),
+            "escaped_from" => escape_id(&from.0),
+            "escaped_to" => escape_id(&to.0),
         };
-        let line = format!(
-            "    {} -> {}{};\n",
-            escape_id(&from.0),
-            escape_id(&to.0),
-            edge_label
-        );
+
+        let line = if self.debug_mode {
+            template(
+                r#"    ${escaped_from} -> ${escaped_to} [label=${escaped_id}];"#,
+                &edge_params,
+            )
+        } else {
+            template(r#"    ${escaped_from} -> ${escaped_to};"#, &edge_params)
+        };
+
         self.inner_content.push_str(&line);
+        self.inner_content.push_str("\n");
     }
 }
 
@@ -128,6 +201,8 @@ impl GraphVizExporter {
         Self {
             inner_content: "".into(),
             debug_mode: true,
+            is_left_right: false,
+            is_first_edge: true,
         }
     }
 
@@ -136,11 +211,10 @@ impl GraphVizExporter {
 
         graph.export(self);
 
-        let colors = colors();
+        let rankdir = if self.is_left_right { "LR" } else { "TB" };
 
         let content = template
-            .replace("${NODE_COLOR}", colors.get("lemonade").unwrap())
-            .replace("${NODE_FONT_COLOR}", colors.get("martinique").unwrap())
+            .replace("${RANKDIR}", rankdir)
             .replace("${INNER_CONTENT}", &self.inner_content);
 
         content
@@ -157,10 +231,10 @@ fn escape_id(id: &str) -> String {
 
 #[cfg(test)]
 mod tests {
-
     use super::*;
     use crate::graph::Graph;
     use crate::{GraphCommand, Id, Label};
+    use std::path::Path;
 
     #[test]
     fn escapes_label() {
@@ -196,8 +270,28 @@ mod tests {
     }
 
     #[test]
+    fn test_graphviz_compiles() {
+        let dot_file = Path::new("/Users/stevecooper/src/github.com/stevecooperorg/microdot/src/test_data/exports_graph.dot");
+
+        assert!(
+            dot_file.exists(),
+            "dot file does not exist: '{}'",
+            dot_file.to_string_lossy()
+        );
+
+        let compile_result = compile_dot(&dot_file);
+        assert!(compile_result.is_ok());
+    }
+
+    #[test]
     fn test_graphviz_installed() {
-        let version = installed_graphviz_version();
-        assert_eq!(version, Some("2.49.1".to_string()));
+        let version = installed_graphviz_version().expect("could not find graphviz version");
+        let major_version = *version
+            .split(".")
+            .collect::<Vec<_>>()
+            .first()
+            .expect("could not find major version");
+
+        assert_eq!(major_version, "2");
     }
 }

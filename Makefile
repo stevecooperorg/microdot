@@ -19,13 +19,10 @@ src/target/debug/microdot:
 watch:
 	nodemon --exec "make run"
 
-build:
-	cd src
-	cargo build
+build: src/target/debug/microdot
 
 test:
-	cd src
-	cargo watch -x test
+	cd src; cargo watch -x test
 
 dot:
 	#dot graph.dot -Tpng -o graph.png

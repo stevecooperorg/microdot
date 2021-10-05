@@ -1,7 +1,12 @@
 digraph {
-    node [shape=box style=filled width=2 fillcolor="#FFDD99" fontcolor="#242D48"]
-    graph [fontname = "helvetica" rankdir=TB ranksep=0.8 nodesep=0.4];    "n0" [label="n0: abc"];
-    "n1" [label="n1: def"];
-    "n0" -> "n1" [label=e0];
+
+    graph [fontname = "helvetica" rankdir=TB ranksep=0.75 nodesep=0.5];
+    node [fontname = "helvetica" style="filled,rounded" shape=box height=1 width=3.5 color="#b25dc6" fillcolor="#f7eff9" penwidth=3];
+    edge [fontname = "helvetica" penwidth=3 color="#b25dc6"];
+
+    "n0" [label="n0: abc" fillcolor="#73DBE6" color="#2BBDCB" fontcolor="#242D48"]
+    "n1" [label="n1: def" fillcolor="#73DBE6" color="#2BBDCB" fontcolor="#242D48"]
+
+    "n0" -> "n1" [label="e0"];
 
 }
