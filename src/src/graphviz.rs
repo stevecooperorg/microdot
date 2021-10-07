@@ -63,7 +63,7 @@ pub fn compile_dot(path: &Path) -> Result<(), anyhow::Error> {
     }
 
     let out = path.with_extension("svg");
-    // dot "$(DEFAULT_DOT)" -Tsvg -o "$(DEFAULT_SVG)"
+
     cmd!(dot(path)("-Tsvg")("-o")(out)).output()?;
 
     Ok(())
@@ -90,7 +90,6 @@ struct ColorScheme {
     fill_color: String,
     stroke_color: String,
     node_border_width: f64,
-    edge_border_width: f64,
 }
 
 impl ColorScheme {
@@ -100,7 +99,6 @@ impl ColorScheme {
             fill_color: JULEP.to_string(),
             stroke_color: PACIFICA.to_string(),
             node_border_width: 3.0f64,
-            edge_border_width: 3.0f64,
         }
     }
 
@@ -110,7 +108,6 @@ impl ColorScheme {
             fill_color: IRIS.to_string(),
             stroke_color: ORCHID.to_string(),
             node_border_width: 2.0f64,
-            edge_border_width: 2.0f64,
         }
     }
 }
@@ -139,7 +136,7 @@ impl Exporter for GraphVizExporter {
             fill_color,
             stroke_color,
             node_border_width,
-            edge_border_width,
+            ..
         } = color_scheme;
 
         let label_text = if self.debug_mode {
@@ -231,10 +228,13 @@ fn escape_id(id: &str) -> String {
 
 #[cfg(test)]
 mod tests {
+    use std::collections::VecDeque;
     use super::*;
     use crate::graph::Graph;
-    use crate::{GraphCommand, Id, Label};
-    use std::path::Path;
+    use crate::{Command, GraphCommand, Id, Interaction, Label, Line};
+    use std::path::{Path, PathBuf};
+    use crate::parser::parse_line;
+    use crate::repl::repl;
 
     #[test]
     fn escapes_label() {
@@ -293,6 +293,84 @@ mod tests {
 
         let compile_result = compile_dot(&dot_file);
         assert!(compile_result.is_ok());
+    }
+
+    fn git_root() -> PathBuf {
+        dirs::home_dir().unwrap().join("src/github.com/stevecooperorg/microdot")
+    }
+
+    #[test]
+    fn test_graphviz_compile_fellowship() {
+        compile_input_string_content(git_root().join("examples/fellowship.txt"));
+    }
+
+    #[test]
+    fn test_graphviz_compile_readme_example_1() {
+        compile_input_string_content(git_root().join("examples/readme_example_1.txt"));
+    }
+
+    struct AutoInteraction {
+        lines: VecDeque<String>,
+        log: String
+    }
+
+    impl AutoInteraction {
+        fn new(lines: VecDeque<String>) -> Self {
+            Self { lines, log: Default::default() }
+        }
+
+        fn log(&self) -> String {
+            self.log.clone()
+        }
+    }
+
+    impl Interaction for AutoInteraction {
+        fn read(&mut self, prompt: &str) -> rustyline::Result<String> {
+            match self.lines.pop_front() {
+                Some(line) => Ok(line),
+                None => Err(rustyline::error::ReadlineError::Eof)
+            }
+        }
+
+        fn add_history<S: AsRef<str> + Into<String>>(&mut self, history: S) -> bool {
+            self.log.push_str(">> ");
+            self.log.push_str(&history.into());
+            self.log.push_str("\n");
+            true
+        }
+
+        fn log<S: AsRef<str> + Into<String>>(&mut self, message: S) {
+            self.log.push_str(&message.into());
+            self.log.push_str("\n");
+        }
+    }
+
+    fn compile_input_string_content(text_file: PathBuf) {
+        assert!(
+            text_file.exists(),
+            "text file does not exist: '{}'",
+            text_file.to_string_lossy()
+        );
+
+        // read the file as lines and run it through the repl;
+        let mut graph = Graph::new();
+
+
+        let text_content = std::fs::read_to_string(&text_file).expect("could not read file") ;
+        let lines: VecDeque<_> = text_content.lines().map(|l| l.to_string()).collect();
+        let mut auto_interaction = AutoInteraction::new(lines);
+        repl(&mut auto_interaction, &text_file.with_extension("json"), &mut graph);
+
+        let mut exporter = GraphVizExporter::new();
+        let exported = exporter.export(&graph);
+
+        let dot_file = text_file.with_extension("dot");
+        std::fs::write(&dot_file, exported).expect("could not write dot file");
+
+        let log_file = text_file.with_extension("log");
+        std::fs::write(&log_file, auto_interaction.log()).expect("could not write log file");
+
+        compile_dot(&dot_file).expect(&format!("Could not compile '{}'", dot_file.to_string_lossy()));
     }
 
     #[test]

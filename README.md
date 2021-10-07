@@ -1,28 +1,41 @@
-# Microdot - a terminal ui for dot and graphviz
+# Microdot - a REPL and terminal ui for dot and graphviz
 
-[Dot](https://graphviz.org/doc/info/lang.html) is a great DSL for describing graphs, and it works fine until you get to about ten nodes. Beyond that things get tricky: since you write node names and edges using long human names, things like a rename can get really annoyingly complex, with lots of find/replace over a file that's just too noisy.
+The [Dot](https://graphviz.org/doc/info/lang.html) language is a great DSL for describing graphs, and it works fine  until you get to about ten nodes. Beyond that things get tricky: since you write node names and edges using long human names, things like a rename can get really annoyingly complex, with lots of find/replace over a file that's just too noisy.
 
-An interactive editor with full drag and drop would be cool, but... thanks a lot of work. And who doesn't like a good unix-style command line tool?
+Here's a graph;
 
-enter microdot. A repl-driven system for building graphs. The idea is to use language like so;
+![Fellowship of the Ring](./examples/fellowship.svg)
+
+And you can see the dot file used to generate it -
+
+[fellowship.dot](./examples/fellowship.dot)
+
+You'll notice that it's quite noisy; doing things like renaming nodes can be tricky; writing it yourself is a full-on programming experience. Once the graph gets to more than about 10 nodes, it can really start to drag. 
+
+Now, an interactive editor for dot, which did live updates, would be pretty cool -- but I've never found one that really did what I wanted. 
+
+Plus, who doesn't like a good unix-style command line tool?
+
+Enter microdot. A repl-driven system for building graphs. The idea is to use language like so;
 
 ```
 $ microdot my-graph.dot
-> n a cool new node
-(node added n1)
-> n a second node
-(node added n2)
-> e n1 n2
-(edge added; n1->n2)
-> r n1 a new name
-(n1 renamed)
+>> i a cool new node
+(inserted node n0: 'a cool new node')
+>> i a second node
+(inserted node n1: 'a second node')
+>> l n0 n1
+(Added edge e0 from n0 to n1)
+>> r n1 a new name
+(Node n1 renamed to 'a new name')
+>> exit
 ```
 
-This REPL-style app makes editing a large graph easy and interactive. It outputs `dot`, the graphviz language for rendering directed graphs, and importantly it includs a 'draft mode' output so you can see those node IDs;
+This REPL-style app makes editing a large graph easy and interactive. It outputs `dot`, and compiles it to `svg` if you have graphviz installed and on your path. Importantly it defaults to a 'draft mode' output so you can see those node IDs;
 
-[pic to come]
+![x](examples/readme_example_1.svg)
 
-In draft mode, the IDs of nodes and edges are included. This means you can render the graph and show it to the user, and they will see all the IDs they use for their edit commands. This makes it really easy to do things like delete an edge that shouldn't exist, rename a node, or insert a new node onto an edge. The operations that are hard when manually writing dot files.
+In draft mode, the IDs of nodes and edges are included. This means we render a version where every node and edge can be referred to by a very short ID, like `n34` or `e16`. This makes it really easy to do things like delete an edge that shouldn't exist, rename a node, or insert a new node onto an edge. The operations that are hard when manually writing dot files.
 
 Once complete, you can render the real artefact; with the right names, for presenting to people. And it's just a switch between, delivered as, say
 
@@ -32,24 +45,3 @@ Once complete, you can render the real artefact; with the right names, for prese
 > disp
 (display mode)
 ```
-
-Implementation Nodes
-
-- I'm going to write in rust
-- I'll be using https://crates.io/crates/rustyline to give a rich repl experience, with history etc.
-- microdot pushes complete dot files to stdout, with some separator between them. i.e it produces a stream of dot files
-- typically you would redirect stdout to a file descriptor
-- ; in a V1 I'm thinking of doing;
-
-```
-# console 1
-mkfifo md.out
-microdot > md.out
-
-# console 2
-cat md.out
-```
-
-- reading and compiling the dot files is a second app, which would read from the file descriptor. Let's call this `dotcom`, the dot compiler. It'll just invoke graphviz and write the file... somewhere.
-- last step, an auto-refreshing preview window shows the 
-- 

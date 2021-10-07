@@ -1,7 +1,10 @@
+use rustyline::Editor;
+
 pub mod graph;
 pub mod graphviz;
 pub mod json;
 pub mod parser;
+pub mod repl;
 
 macro_rules! new_string_type {
     ($id: ident) => {
@@ -65,3 +68,25 @@ pub trait Exporter {
 
     fn add_edge(&mut self, id: &Id, from: &Id, to: &Id);
 }
+
+// a trait which deals with the R & P of REPL: Read and Print; can be mixed in with a loop
+pub trait Interaction {
+    fn read(&mut self, prompt: &str) -> rustyline::Result<String>;
+    fn add_history<S: AsRef<str> + Into<String>>(&mut self, history: S) -> bool;
+    fn log<S: AsRef<str> + Into<String>>(&mut self, message: S);
+}
+
+impl Interaction for Editor<()> {
+    fn read(&mut self, prompt: &str) -> rustyline::Result<String> {
+        self.readline(prompt)
+    }
+
+    fn add_history<S: AsRef<str> + Into<String>>(&mut self, history: S) -> bool {
+        self.add_history_entry(history)
+    }
+
+    fn log<S: AsRef<str> + Into<String>>(&mut self, message: S) {
+        println!("{}", message.into());
+    }
+}
+

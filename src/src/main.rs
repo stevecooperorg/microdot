@@ -3,12 +3,13 @@ use libmicrodot::graph::Graph;
 use libmicrodot::graphviz::GraphVizExporter;
 use libmicrodot::json::{empty_json_graph, JsonExporter, JsonImporter};
 use libmicrodot::parser::parse_line;
-use libmicrodot::{graphviz, Command, CommandResult, Line};
+use libmicrodot::{graphviz, Command, CommandResult, Line, Interaction};
 use rustyline::error::ReadlineError;
 use rustyline::Editor;
 use std::fs::File;
 use std::io::Read;
 use std::path::PathBuf;
+use libmicrodot::repl::repl;
 
 #[derive(Clap)]
 #[clap(version = "1.0", author = "Kevin K. <kbknapp@gmail.com>")]
@@ -61,95 +62,10 @@ fn main() -> Result<(), anyhow::Error> {
     let importer = JsonImporter::new(json_content);
     let mut graph = importer.import()?;
 
-    loop {
-        let readline = rl.readline(">> ");
-
-        match readline {
-            Ok(line) => {
-                rl.add_history_entry(line.as_str());
-
-                let line = Line::new(line);
-
-                let command = parse_line(line);
-
-                match command {
-                    Command::GraphCommand(graph_command) => {
-                        println!("({})", graph.apply_command(graph_command));
-                        let dot_file = save_file(&json_file, &graph)?;
-                        compile_dot(dot_file);
-                    }
-                    Command::ShowHelp => println!(include_str!("help.txt")),
-                    Command::PrintDot => {
-                        let mut exporter = GraphVizExporter::new();
-                        let out = exporter.export(&graph);
-                        println!("{}", out);
-                        println!("Dot printed");
-                    }
-                    Command::PrintJson => {
-                        let mut exporter = JsonExporter::new();
-                        let out = exporter.export(&graph);
-                        println!("{}", out);
-                        println!("Json printed");
-                    }
-                    Command::Search { sub_label } => {
-                        println!("({})", graph.search(sub_label));
-
-                        // save the file so we get color highlights.
-                        let dot_file = save_file(&json_file, &graph)?;
-                        compile_dot(dot_file);
-                    }
-                    Command::Save => {
-                        let dot_file = save_file(&json_file, &graph)?;
-                        compile_dot(dot_file);
-                    }
-                    Command::ParseError { .. } => {
-                        println!("could not understand command; try 'h' for help")
-                    }
-                    Command::Exit => break,
-                }
-            }
-            Err(ReadlineError::Interrupted) => {
-                println!("CTRL-C");
-
-                break;
-            }
-            Err(ReadlineError::Eof) => {
-                println!("CTRL-D");
-
-                break;
-            }
-            Err(err) => {
-                println!("Error: {:?}", err);
-
-                break;
-            }
-        }
-    }
+    repl(&mut rl, &json_file, &mut graph)?;
 
     rl.save_history(&history).unwrap();
 
     Ok(())
 }
 
-fn save_file(json_file: &PathBuf, graph: &Graph) -> Result<PathBuf, anyhow::Error> {
-    let mut json_exporter = JsonExporter::new();
-    let json = json_exporter.export(&graph);
-    let mut dot_exporter = GraphVizExporter::new();
-    let dot = dot_exporter.export(&graph);
-    let dot_file = json_file.with_extension("dot");
-    std::fs::write(&json_file, json)?;
-    std::fs::write(&dot_file, dot)?;
-    println!(
-        "Saved json: {}, dot: {}",
-        json_file.to_string_lossy(),
-        dot_file.to_string_lossy()
-    );
-    Ok(dot_file)
-}
-
-fn compile_dot(dot_file: PathBuf) -> CommandResult {
-    match graphviz::compile_dot(&dot_file) {
-        Ok(_) => CommandResult::new(format!("compiled dot: {}", dot_file.to_string_lossy())),
-        Err(e) => CommandResult::new(format!("failed to compile dot: {}", e.to_string())),
-    }
-}

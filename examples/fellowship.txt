@@ -1,0 +1,17 @@
+i Gandalf comes to the shire
+aft n0 Frodo departs with the ring
+aft n1 the inn at Bree
+aft n2 the hobbits escape with Aragorn
+aft n3 nazghuls catch up at Weathertop; Frodo is injured
+i Nazghuls move to Bree
+l n5 n2
+aft n2 the Nazghuls move to Weathertop
+l n6 n4
+bef n5 Nazghuls dispatched from Mordor
+aft n4 flight to the ford
+aft n8 the fellowship meets at Rivendell
+l n0 n9
+bef n9 Gimli leaves the mountains
+bef n9 Legolas travels from Mirkwood
+bef n9 Boromir seeks the sword that is broken
+bef n12 Boromir fights in the battle for Osgiliath
