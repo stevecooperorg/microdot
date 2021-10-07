@@ -105,7 +105,13 @@ pub fn installed_graphviz_version() -> Option<String> {
     caps
 }
 
-pub fn compile_dot(path: &Path) -> Result<(), anyhow::Error> {
+#[derive(Copy, Clone)]
+pub enum DisplayMode {
+    Interactive,
+    Presentation,
+}
+
+pub fn compile_dot(path: &Path, display_mode: DisplayMode) -> Result<(), anyhow::Error> {
     if !installed_graphviz_version().is_some() {
         return Err(anyhow::Error::msg("graphviz not installed"));
     }
@@ -119,9 +125,9 @@ pub fn compile_dot(path: &Path) -> Result<(), anyhow::Error> {
 
 pub struct GraphVizExporter {
     inner_content: String,
-    debug_mode: bool,
     is_left_right: bool,
     is_first_edge: bool,
+    display_mode: DisplayMode,
 }
 
 fn template(template_str: &str, variables: &HashMap<&str, String>) -> String {
@@ -160,12 +166,13 @@ impl Exporter for GraphVizExporter {
             ..
         } = color_scheme;
 
-        let label_text = if self.debug_mode {
-            let unwrapped = format!("{}: {}", id.0, label.0);
-            let wrapped = fill(&unwrapped, &wrapping_options);
-            wrapped
-        } else {
-            label.0.clone()
+        let label_text = match self.display_mode {
+            DisplayMode::Interactive => {
+                let unwrapped = format!("{}: {}", id.0, label.0);
+                let wrapped = fill(&unwrapped, &wrapping_options);
+                wrapped
+            }
+            DisplayMode::Presentation => label.0.clone(),
         };
 
         let node_params = hashmap! {
@@ -200,13 +207,14 @@ impl Exporter for GraphVizExporter {
             "escaped_to" => escape_id(&to.0),
         };
 
-        let line = if self.debug_mode {
-            template(
+        let line = match self.display_mode {
+            DisplayMode::Interactive => template(
                 r#"    ${escaped_from} -> ${escaped_to} [label=${escaped_id}];"#,
                 &edge_params,
-            )
-        } else {
-            template(r#"    ${escaped_from} -> ${escaped_to};"#, &edge_params)
+            ),
+            DisplayMode::Presentation => {
+                template(r#"    ${escaped_from} -> ${escaped_to};"#, &edge_params)
+            }
         };
 
         self.inner_content.push_str(&line);
@@ -215,12 +223,12 @@ impl Exporter for GraphVizExporter {
 }
 
 impl GraphVizExporter {
-    pub fn new() -> Self {
+    pub fn new(display_mode: DisplayMode) -> Self {
         Self {
             inner_content: "".into(),
-            debug_mode: true,
             is_left_right: false,
             is_first_edge: true,
+            display_mode,
         }
     }
 
@@ -254,11 +262,10 @@ fn escape_id(id: &str) -> String {
 mod tests {
     use super::*;
     use crate::graph::Graph;
-    use crate::parser::parse_line;
     use crate::repl::repl;
-    use crate::{Command, GraphCommand, Id, Interaction, Label, Line};
+    use crate::{GraphCommand, Id, Interaction, Label};
     use std::collections::VecDeque;
-    use std::path::{Path, PathBuf};
+    use std::path::PathBuf;
 
     #[test]
     fn escapes_label() {
@@ -295,7 +302,7 @@ mod tests {
 
         graph.search(Label::new("abc"));
 
-        let mut exporter = GraphVizExporter::new();
+        let mut exporter = GraphVizExporter::new(DisplayMode::Interactive);
 
         let dot = exporter.export(&graph);
 
@@ -317,7 +324,7 @@ mod tests {
             dot_file.to_string_lossy()
         );
 
-        let compile_result = compile_dot(&dot_file);
+        let compile_result = compile_dot(&dot_file, DisplayMode::Interactive);
         assert!(compile_result.is_ok());
     }
 
@@ -374,6 +381,10 @@ mod tests {
             self.log.push_str(&message.into());
             self.log.push_str("\n");
         }
+
+        fn should_compile_dot(&self) -> bool {
+            false
+        }
     }
 
     fn compile_input_string_content(text_file: PathBuf) {
@@ -395,7 +406,7 @@ mod tests {
             &mut graph,
         );
 
-        let mut exporter = GraphVizExporter::new();
+        let mut exporter = GraphVizExporter::new(DisplayMode::Interactive);
         let exported = exporter.export(&graph);
 
         let dot_file = text_file.with_extension("dot");
@@ -404,7 +415,7 @@ mod tests {
         let log_file = text_file.with_extension("log");
         std::fs::write(&log_file, auto_interaction.log()).expect("could not write log file");
 
-        compile_dot(&dot_file).expect(&format!(
+        compile_dot(&dot_file, DisplayMode::Interactive).expect(&format!(
             "Could not compile '{}'",
             dot_file.to_string_lossy()
         ));

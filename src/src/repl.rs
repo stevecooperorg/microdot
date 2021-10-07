@@ -1,16 +1,16 @@
-use clap::{AppSettings, Clap, ValueHint};
 use crate::graph::Graph;
-use crate::graphviz::GraphVizExporter;
-use crate::json::{empty_json_graph, JsonExporter, JsonImporter};
+use crate::graphviz::{DisplayMode, GraphVizExporter};
+use crate::json::JsonExporter;
 use crate::parser::parse_line;
-use crate::{graphviz, Command, CommandResult, Line, Interaction};
+use crate::{graphviz, Command, CommandResult, Interaction, Line};
 use rustyline::error::ReadlineError;
-use rustyline::Editor;
-use std::fs::File;
-use std::io::Read;
 use std::path::PathBuf;
 
-pub fn repl<I: Interaction>(interaction: &mut I, json_file: &PathBuf, graph: &mut Graph) -> Result<(), anyhow::Error> {
+pub fn repl<I: Interaction>(
+    interaction: &mut I,
+    json_file: &PathBuf,
+    graph: &mut Graph,
+) -> Result<(), anyhow::Error> {
     loop {
         let readline = interaction.read(">> ");
 
@@ -25,12 +25,15 @@ pub fn repl<I: Interaction>(interaction: &mut I, json_file: &PathBuf, graph: &mu
                 match command {
                     Command::GraphCommand(graph_command) => {
                         interaction.log(format!("({})", graph.apply_command(graph_command)));
-                        let dot_file = save_file(&json_file, &graph)?;
-                        compile_dot(dot_file);
+                        let (interactive_dot_file, presentation_dot_file) =
+                            save_file(&json_file, &graph)?;
+                        if interaction.should_compile_dot() {
+                            compile_dot(interactive_dot_file, presentation_dot_file);
+                        }
                     }
                     Command::ShowHelp => interaction.log(format!(include_str!("help.txt"))),
                     Command::PrintDot => {
-                        let mut exporter = GraphVizExporter::new();
+                        let mut exporter = GraphVizExporter::new(DisplayMode::Interactive);
                         let out = exporter.export(&graph);
                         interaction.log(format!("{}", out));
                         interaction.log(format!("Dot printed"));
@@ -45,17 +48,22 @@ pub fn repl<I: Interaction>(interaction: &mut I, json_file: &PathBuf, graph: &mu
                         interaction.log(format!("({})", graph.search(sub_label)));
 
                         // save the file so we get color highlights.
-                        let dot_file = save_file(&json_file, &graph)?;
-                        compile_dot(dot_file);
+                        let (interactive_dot_file, presentation_dot_file) =
+                            save_file(&json_file, &graph)?;
+                        if interaction.should_compile_dot() {
+                            compile_dot(interactive_dot_file, presentation_dot_file);
+                        }
                     }
                     Command::Save => {
-                        let dot_file = save_file(&json_file, &graph)?;
+                        let (interactive_dot_file, presentation_dot_file) =
+                            save_file(&json_file, &graph)?;
                         interaction.log(format!(
-                            "Saved json: {}, dot: {}",
+                            "Saved json: {}, interactive dot: {}, presentation dot: {}",
                             json_file.to_string_lossy(),
-                            dot_file.to_string_lossy()
+                            interactive_dot_file.to_string_lossy(),
+                            presentation_dot_file.to_string_lossy()
                         ));
-                        compile_dot(dot_file);
+                        compile_dot(interactive_dot_file, presentation_dot_file);
                     }
                     Command::ParseError { .. } => {
                         interaction.log(format!("could not understand command; try 'h' for help"))
@@ -84,20 +92,40 @@ pub fn repl<I: Interaction>(interaction: &mut I, json_file: &PathBuf, graph: &mu
     Ok(())
 }
 
-fn save_file(json_file: &PathBuf, graph: &Graph) -> Result<PathBuf, anyhow::Error> {
+fn save_file(json_file: &PathBuf, graph: &Graph) -> Result<(PathBuf, PathBuf), anyhow::Error> {
     let mut json_exporter = JsonExporter::new();
     let json = json_exporter.export(&graph);
-    let mut dot_exporter = GraphVizExporter::new();
-    let dot = dot_exporter.export(&graph);
-    let dot_file = json_file.with_extension("dot");
     std::fs::write(&json_file, json)?;
-    std::fs::write(&dot_file, dot)?;
-    Ok(dot_file)
+
+    let mut dot_exporter = GraphVizExporter::new(DisplayMode::Interactive);
+    let interactive_dot = dot_exporter.export(&graph);
+    let interactive_dot_file = json_file.with_extension("dot");
+    std::fs::write(&interactive_dot_file, interactive_dot)?;
+
+    let mut dot_exporter = GraphVizExporter::new(DisplayMode::Presentation);
+    let presentation_dot = dot_exporter.export(&graph);
+    let presentation_dot_file = json_file.with_extension("presentation.dot");
+    std::fs::write(&presentation_dot_file, presentation_dot)?;
+
+    Ok((interactive_dot_file, presentation_dot_file))
 }
 
-fn compile_dot(dot_file: PathBuf) -> CommandResult {
-    match graphviz::compile_dot(&dot_file) {
-        Ok(_) => CommandResult::new(format!("compiled dot: {}", dot_file.to_string_lossy())),
-        Err(e) => CommandResult::new(format!("failed to compile dot: {}", e.to_string())),
-    }
+fn compile_dot(interactive_dot_file: PathBuf, presentation_dot_file: PathBuf) -> CommandResult {
+    let msg1 = match graphviz::compile_dot(&interactive_dot_file, DisplayMode::Interactive) {
+        Ok(_) => format!(
+            "compiled interactive dot: {}",
+            interactive_dot_file.to_string_lossy()
+        ),
+        Err(e) => format!("failed to compile interactive dot: {}", e.to_string()),
+    };
+
+    let msg2 = match graphviz::compile_dot(&presentation_dot_file, DisplayMode::Presentation) {
+        Ok(_) => format!(
+            "compiled presentation dot: {}",
+            presentation_dot_file.to_string_lossy()
+        ),
+        Err(e) => format!("failed to compile presentation dot: {}", e.to_string()),
+    };
+
+    CommandResult::new(format!("{}\n{}", msg1, msg2))
 }

@@ -3,3 +3,4 @@ i a second node
 l n0 n1
 r n1 a new name
 exit
+save

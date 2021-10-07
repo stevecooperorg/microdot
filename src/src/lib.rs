@@ -81,6 +81,7 @@ pub trait Interaction {
     fn read(&mut self, prompt: &str) -> rustyline::Result<String>;
     fn add_history<S: AsRef<str> + Into<String>>(&mut self, history: S) -> bool;
     fn log<S: AsRef<str> + Into<String>>(&mut self, message: S);
+    fn should_compile_dot(&self) -> bool;
 }
 
 impl Interaction for Editor<()> {
@@ -94,5 +95,9 @@ impl Interaction for Editor<()> {
 
     fn log<S: AsRef<str> + Into<String>>(&mut self, message: S) {
         println!("{}", message.into());
+    }
+
+    fn should_compile_dot(&self) -> bool {
+        true
     }
 }
