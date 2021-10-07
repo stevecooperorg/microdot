@@ -8,20 +8,16 @@ digraph {
     "n1" [label="n1: Frodo departs with the ring" fillcolor="#F8F8FA" color="#485478" fontcolor="#242D48"]
     "n2" [label="n2: the inn at Bree" fillcolor="#F8F8FA" color="#485478" fontcolor="#242D48"]
     "n3" [label="n3: the hobbits escape with Aragorn" fillcolor="#F8F8FA" color="#485478" fontcolor="#242D48"]
-    "n4" [label="n4: nazghuls catch up at Weathertop;
-Frodo is injured" fillcolor="#F8F8FA" color="#485478" fontcolor="#242D48"]
+    "n4" [label="n4: nazghuls catch up at Weathertop;\nFrodo is injured" fillcolor="#F8F8FA" color="#485478" fontcolor="#242D48"]
     "n5" [label="n5: Nazghuls move to Bree" fillcolor="#F8F8FA" color="#485478" fontcolor="#242D48"]
     "n6" [label="n6: the Nazghuls move to Weathertop" fillcolor="#F8F8FA" color="#485478" fontcolor="#242D48"]
     "n7" [label="n7: Nazghuls dispatched from Mordor" fillcolor="#F8F8FA" color="#485478" fontcolor="#242D48"]
     "n8" [label="n8: flight to the ford" fillcolor="#F8F8FA" color="#485478" fontcolor="#242D48"]
-    "n9" [label="n9: the fellowship meets at Rivendell
-"one does not simply walk into mordor"" fillcolor="#F8F8FA" color="#485478" fontcolor="#242D48"]
+    "n9" [label="n9: the fellowship meets at Rivendell\n\"one does not simply walk into mordor\"" fillcolor="#F8F8FA" color="#485478" fontcolor="#242D48"]
     "n10" [label="n10: Gimli leaves the mountains" fillcolor="#F8F8FA" color="#485478" fontcolor="#242D48"]
     "n11" [label="n11: Legolas travels from Mirkwood" fillcolor="#F8F8FA" color="#485478" fontcolor="#242D48"]
-    "n12" [label="n12: Boromir seeks the sword that is
-broken" fillcolor="#F8F8FA" color="#485478" fontcolor="#242D48"]
-    "n13" [label="n13: Boromir fights in the battle for
-Osgiliath" fillcolor="#FFDD99" color="CC851F" fontcolor="#242D48"]
+    "n12" [label="n12: Boromir seeks the sword that is\nbroken" fillcolor="#F8F8FA" color="#485478" fontcolor="#242D48"]
+    "n13" [label="n13: Boromir fights in the battle for\nOsgiliath" fillcolor="#FFDD99" color="CC851F" fontcolor="#242D48"]
 
     "n0" -> "n1" [label="e0"];
     "n1" -> "n2" [label="e1"];

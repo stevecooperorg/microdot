@@ -172,14 +172,14 @@ impl Exporter for GraphVizExporter {
             "id" => id.0.clone(),
             "label" => label.0.clone(),
             "escaped_id" => escape_id(&id.0),
-            "label_text" => label_text,
+            "label_text" => escape_label(&label_text),
             "stroke_color" => stroke_color,
             "fill_color" => fill_color,
             "font_color" => font_color,
             "width" => node_border_width.to_string()
         };
 
-        const LINE_TEMPLATE: &str = r#"    ${escaped_id} [label="${label_text}" fillcolor="${fill_color}" color="${stroke_color}" fontcolor="${font_color}"]"#;
+        const LINE_TEMPLATE: &str = r#"    ${escaped_id} [label=${label_text} fillcolor="${fill_color}" color="${stroke_color}" fontcolor="${font_color}"]"#;
 
         let line = template(LINE_TEMPLATE, &node_params);
 
@@ -243,7 +243,7 @@ impl GraphVizExporter {
 }
 
 fn escape_label(label: &str) -> String {
-    format!("\"{}\"", label.replace("\n", "\\n ").replace("\"", "\\\""))
+    format!("\"{}\"", label.replace("\n", "\\n").replace("\"", "\\\""))
 }
 
 fn escape_id(id: &str) -> String {
@@ -263,7 +263,8 @@ mod tests {
     #[test]
     fn escapes_label() {
         assert_eq!(r#""abc""#, escape_label("abc"));
-        assert_eq!(r#""a\"bc""#, escape_label("a\"bc"));
+        assert_eq!(r#""a\"bc""#, escape_label(r#"a"bc"#));
+        assert_eq!(r#""a\nbc""#, escape_label("a\nbc"));
     }
 
     #[test]
