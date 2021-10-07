@@ -1,4 +1,4 @@
-use crate::{CommandResult, Exporter, GraphCommand, Id, Label};
+use crate::{CommandResult, Exporter, GraphCommand, Id, Label, NodeHighlight};
 
 pub struct Graph {
     node_high_water: usize,
@@ -7,6 +7,7 @@ pub struct Graph {
     edges: Vec<Edge>,
     is_left_right: bool,
     current_search: Option<Label>,
+    current_node: Option<Id>,
 }
 
 struct Node {
@@ -29,6 +30,7 @@ impl Default for Graph {
             edges: vec![],
             is_left_right: false,
             current_search: None,
+            current_node: None,
         }
     }
 }
@@ -74,11 +76,15 @@ impl Graph {
         exporter.set_direction(self.is_left_right);
 
         for node in &self.nodes {
-            exporter.add_node(
-                &node.id,
-                &node.label,
-                self.node_matches_current_search(node),
-            );
+            let highlight = if self.node_matches_current_search(node) {
+                NodeHighlight::SearchResult
+            } else if self.current_node == Some(node.id.clone()) {
+                NodeHighlight::CurrentNode
+            } else {
+                NodeHighlight::Normal
+            };
+
+            exporter.add_node(&node.id, &node.label, highlight);
         }
 
         for edge in &self.edges {
@@ -153,6 +159,8 @@ impl Graph {
 
     fn rename_node(&mut self, id: &Id, label: Label) -> CommandResult {
         if let Some(idx) = self.find_node_idx(&id) {
+            self.current_node = Some(id.clone());
+
             if let Some(node) = self.nodes.get_mut(idx) {
                 node.label = label.clone();
 
@@ -174,6 +182,7 @@ impl Graph {
         };
 
         self.nodes.push(node);
+        self.current_node = Some(id.clone());
 
         (
             id.clone(),
@@ -189,6 +198,7 @@ impl Graph {
         let (id, _) = self.insert_node(label.clone());
 
         self.link_edge(from, &id);
+        self.current_node = Some(id.clone());
 
         CommandResult::new(format!("inserted node {}: '{}' after {}", id, label, from))
     }
@@ -201,6 +211,7 @@ impl Graph {
         let (id, _) = self.insert_node(label.clone());
 
         self.link_edge(&id, to);
+        self.current_node = Some(id.clone());
 
         CommandResult::new(format!("inserted node {}: '{}' before {}", id, label, to))
     }
@@ -218,6 +229,7 @@ impl Graph {
         let (new_id, _) = self.insert_node(label.clone());
         self.link_edge(&from, &new_id);
         self.link_edge(&new_id, &to);
+        self.current_node = Some(new_id.clone());
         CommandResult::new(format!(
             "injected {}: '{}' between {} and {}",
             new_id, label, from, to
@@ -266,6 +278,10 @@ impl Graph {
                 }
 
                 self.nodes.remove(idx);
+
+                if self.current_node == Some(id.clone()) {
+                    self.current_node = None;
+                }
 
                 CommandResult::new(format!("node {} removed", id))
             }

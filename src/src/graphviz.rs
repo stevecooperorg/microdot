@@ -1,5 +1,5 @@
 use crate::graph::Graph;
-use crate::{Exporter, Id, Label};
+use crate::{Exporter, Id, Label, NodeHighlight};
 use command_macros::cmd;
 use hyphenation::{Language, Load, Standard};
 use regex::Regex;
@@ -9,19 +9,67 @@ use textwrap::word_separators::UnicodeBreakProperties;
 use textwrap::wrap_algorithms::OptimalFit;
 use textwrap::{fill, Options};
 
+// teals
 const JULEP: &str = "#73DBE6";
 const PACIFICA: &str = "#2BBDCB";
+const PEACOCK: &str = "#01828E";
+
+// yellows
 const LEMONADE: &str = "#FFDD99";
 const BRIGHT_SUN: &str = "#FFBB16";
+const BUMBLEBEE: &str = "E99823";
+const TUSCAN: &str = "CC851F";
+
+// greys
 const ATHENS: &str = "#F8F8FA";
 const LINKWATER: &str = "#E6EBF8";
 const GHOST: &str = "#DFE2EB";
 const COMET: &str = "#485478";
+
+// ultra-dark blue
 const MARTINIQUE: &str = "#242D48";
+
+// purples
 const IRIS: &str = "#C882D9";
 const ORCHID: &str = "#B25DC6";
-const EMPIRE: &str = "#821499";
 const RAIN: &str = "#A136B4";
+const EMPIRE: &str = "#821499";
+
+struct ColorScheme {
+    font_color: String,
+    fill_color: String,
+    stroke_color: String,
+    node_border_width: f64,
+}
+
+impl ColorScheme {
+    fn search_result() -> Self {
+        Self {
+            font_color: MARTINIQUE.to_string(),
+            fill_color: JULEP.to_string(),
+            stroke_color: PEACOCK.to_string(),
+            node_border_width: 3.0f64,
+        }
+    }
+
+    fn current() -> Self {
+        Self {
+            font_color: MARTINIQUE.to_string(),
+            fill_color: LEMONADE.to_string(),
+            stroke_color: TUSCAN.to_string(),
+            node_border_width: 3.0f64,
+        }
+    }
+
+    fn normal() -> Self {
+        Self {
+            font_color: MARTINIQUE.to_string(),
+            fill_color: ATHENS.to_string(),
+            stroke_color: COMET.to_string(),
+            node_border_width: 2.0f64,
+        }
+    }
+}
 
 macro_rules! hashmap {
     (@single $($x:tt)*) => (());
@@ -85,39 +133,12 @@ fn template(template_str: &str, variables: &HashMap<&str, String>) -> String {
     result
 }
 
-struct ColorScheme {
-    font_color: String,
-    fill_color: String,
-    stroke_color: String,
-    node_border_width: f64,
-}
-
-impl ColorScheme {
-    fn highlight() -> Self {
-        Self {
-            font_color: MARTINIQUE.to_string(),
-            fill_color: JULEP.to_string(),
-            stroke_color: PACIFICA.to_string(),
-            node_border_width: 3.0f64,
-        }
-    }
-
-    fn normal() -> Self {
-        Self {
-            font_color: MARTINIQUE.to_string(),
-            fill_color: IRIS.to_string(),
-            stroke_color: ORCHID.to_string(),
-            node_border_width: 2.0f64,
-        }
-    }
-}
-
 impl Exporter for GraphVizExporter {
     fn set_direction(&mut self, is_left_right: bool) {
         self.is_left_right = is_left_right;
     }
 
-    fn add_node(&mut self, id: &Id, label: &Label, highlight: bool) {
+    fn add_node(&mut self, id: &Id, label: &Label, highlight: NodeHighlight) {
         // TODO: probably horrific perf.
 
         let wrapping_options: Options<OptimalFit, UnicodeBreakProperties, Standard> = {
@@ -125,10 +146,10 @@ impl Exporter for GraphVizExporter {
             Options::new(40).word_splitter(dictionary)
         };
 
-        let color_scheme = if highlight {
-            ColorScheme::highlight()
-        } else {
-            ColorScheme::normal()
+        let color_scheme = match highlight {
+            NodeHighlight::Normal => ColorScheme::normal(),
+            NodeHighlight::SearchResult => ColorScheme::search_result(),
+            NodeHighlight::CurrentNode => ColorScheme::current(),
         };
 
         let ColorScheme {
@@ -210,8 +231,11 @@ impl GraphVizExporter {
 
         let rankdir = if self.is_left_right { "LR" } else { "TB" };
 
+        let edge_color = ColorScheme::normal().stroke_color;
+
         let content = template
             .replace("${RANKDIR}", rankdir)
+            .replace("${EDGECOLOR}", &edge_color)
             .replace("${INNER_CONTENT}", &self.inner_content);
 
         content
@@ -228,13 +252,13 @@ fn escape_id(id: &str) -> String {
 
 #[cfg(test)]
 mod tests {
-    use std::collections::VecDeque;
     use super::*;
     use crate::graph::Graph;
-    use crate::{Command, GraphCommand, Id, Interaction, Label, Line};
-    use std::path::{Path, PathBuf};
     use crate::parser::parse_line;
     use crate::repl::repl;
+    use crate::{Command, GraphCommand, Id, Interaction, Label, Line};
+    use std::collections::VecDeque;
+    use std::path::{Path, PathBuf};
 
     #[test]
     fn escapes_label() {
@@ -282,8 +306,9 @@ mod tests {
 
     #[test]
     fn test_graphviz_compiles() {
-
-        let dot_file = dirs::home_dir().unwrap().join("src/github.com/stevecooperorg/microdot/src/test_data/exports_graph.dot");
+        let dot_file = dirs::home_dir()
+            .unwrap()
+            .join("src/github.com/stevecooperorg/microdot/src/test_data/exports_graph.dot");
 
         assert!(
             dot_file.exists(),
@@ -296,7 +321,9 @@ mod tests {
     }
 
     fn git_root() -> PathBuf {
-        dirs::home_dir().unwrap().join("src/github.com/stevecooperorg/microdot")
+        dirs::home_dir()
+            .unwrap()
+            .join("src/github.com/stevecooperorg/microdot")
     }
 
     #[test]
@@ -311,12 +338,15 @@ mod tests {
 
     struct AutoInteraction {
         lines: VecDeque<String>,
-        log: String
+        log: String,
     }
 
     impl AutoInteraction {
         fn new(lines: VecDeque<String>) -> Self {
-            Self { lines, log: Default::default() }
+            Self {
+                lines,
+                log: Default::default(),
+            }
         }
 
         fn log(&self) -> String {
@@ -328,7 +358,7 @@ mod tests {
         fn read(&mut self, prompt: &str) -> rustyline::Result<String> {
             match self.lines.pop_front() {
                 Some(line) => Ok(line),
-                None => Err(rustyline::error::ReadlineError::Eof)
+                None => Err(rustyline::error::ReadlineError::Eof),
             }
         }
 
@@ -355,11 +385,14 @@ mod tests {
         // read the file as lines and run it through the repl;
         let mut graph = Graph::new();
 
-
-        let text_content = std::fs::read_to_string(&text_file).expect("could not read file") ;
+        let text_content = std::fs::read_to_string(&text_file).expect("could not read file");
         let lines: VecDeque<_> = text_content.lines().map(|l| l.to_string()).collect();
         let mut auto_interaction = AutoInteraction::new(lines);
-        repl(&mut auto_interaction, &text_file.with_extension("json"), &mut graph);
+        repl(
+            &mut auto_interaction,
+            &text_file.with_extension("json"),
+            &mut graph,
+        );
 
         let mut exporter = GraphVizExporter::new();
         let exported = exporter.export(&graph);
@@ -370,7 +403,10 @@ mod tests {
         let log_file = text_file.with_extension("log");
         std::fs::write(&log_file, auto_interaction.log()).expect("could not write log file");
 
-        compile_dot(&dot_file).expect(&format!("Could not compile '{}'", dot_file.to_string_lossy()));
+        compile_dot(&dot_file).expect(&format!(
+            "Could not compile '{}'",
+            dot_file.to_string_lossy()
+        ));
     }
 
     #[test]

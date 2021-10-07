@@ -1,5 +1,5 @@
 use crate::graph::Graph;
-use crate::{Exporter, Id, Label};
+use crate::{Exporter, Id, Label, NodeHighlight};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 use std::collections::HashMap;
@@ -15,7 +15,7 @@ impl Exporter for JsonExporter {
         self.is_left_right = is_left_right;
     }
 
-    fn add_node(&mut self, id: &Id, label: &Label, _highlight: bool) {
+    fn add_node(&mut self, id: &Id, label: &Label, _highlight: NodeHighlight) {
         let node = json!({
             "id": id.0.clone(),
             "label": label.0.clone()

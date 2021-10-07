@@ -20,8 +20,8 @@
 (inserted node n7: 'Nazghuls dispatched from Mordor' before n5)
 >> aft n4 flight to the ford
 (inserted node n8: 'flight to the ford' after n4)
->> aft n8 the fellowship meets at Rivendell
-(inserted node n9: 'the fellowship meets at Rivendell' after n8)
+>> aft n8 the fellowship meets at Rivendell "one does not simply walk into mordor"
+(inserted node n9: 'the fellowship meets at Rivendell "one does not simply walk into mordor"' after n8)
 >> l n0 n9
 (Added edge e10 from n0 to n9)
 >> bef n9 Gimli leaves the mountains
@@ -32,4 +32,8 @@
 (inserted node n12: 'Boromir seeks the sword that is broken' before n9)
 >> bef n12 Boromir fights in the battle for Osgiliath
 (inserted node n13: 'Boromir fights in the battle for Osgiliath' before n12)
+>> /bree
+(Search results for: bree,
+
+)
 CTRL-D

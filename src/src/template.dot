@@ -1,8 +1,8 @@
 digraph {
 
     graph [fontname = "helvetica" rankdir=${RANKDIR} ranksep=0.75 nodesep=0.5];
-    node [fontname = "helvetica" style="filled,rounded" shape=box height=1 width=3.5 color="#b25dc6" fillcolor="#f7eff9" penwidth=3];
-    edge [fontname = "helvetica" penwidth=3 color="#b25dc6"];
+    node [fontname = "helvetica" style="filled,rounded" shape=box height=1 width=3.5 penwidth=3];
+    edge [fontname = "helvetica" penwidth=3 color="${EDGECOLOR}"];
 
 ${INNER_CONTENT}
 }
