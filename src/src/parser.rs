@@ -93,6 +93,11 @@ fn delete_node<'a>() -> Parser<'a, u8, String> {
     keyword(b"d") * id()
 }
 
+fn select_node<'a>() -> Parser<'a, u8, String> {
+    // d foo
+    keyword(b"sel") * id()
+}
+
 fn lr<'a>() -> Parser<'a, u8, ()> {
     keyword(b"lr")
 }
@@ -143,6 +148,10 @@ pub fn parse_line(line: Line) -> Command {
 
     if let Ok(res) = delete_node().parse(text) {
         return GraphCommand::DeleteNode { id: Id::new(&res) }.into();
+    }
+
+    if let Ok(res) = select_node().parse(text) {
+        return GraphCommand::SelectNode { id: Id::new(&res) }.into();
     }
 
     if let Ok((from, to)) = link_edge().parse(text) {
@@ -265,22 +274,11 @@ mod tests {
     #[test]
 
     fn parser_bits() {
-        assert_consumes_all![insert_node(), b"i foo", "foo"];
-
-        assert_consumes_all![insert_node(), b"i foo bar baz", "foo bar baz"];
-
-        assert_consumes_all![delete_node(), b"d foo", "foo"];
-
-        assert_consumes_all![lr(), b"lr"];
-        assert_consumes_all![tb(), b"tb"];
-
         assert_consumes_all![
             link_edge(),
             b"l f1 f2",
             ("f1".to_string(), "f2".to_string())
         ];
-
-        assert_consumes_all![unlink_edge(), b"u e1", "e1"];
 
         assert_consumes_all![
             rename_node(),
@@ -303,25 +301,24 @@ mod tests {
             ("f".to_string(), "new name".to_string())
         ];
 
-        assert_consumes_all![show_help(), b"h", ()];
-
-        assert_consumes_all![show_help(), b"help", ()];
-
-        assert_consumes_all![print_dot(), b"p", ()];
-
-        assert_consumes_all![print_dot(), b"print", ()];
-
-        assert_consumes_all![print_json(), b"j", ()];
-
-        assert_consumes_all![print_json(), b"json", ()];
-
+        assert_consumes_all![delete_node(), b"d foo", "foo"];
         assert_consumes_all![exit(), b"exit", ()];
-
-        assert_consumes_all![search(), b"search foo", "foo"];
-        assert_consumes_all![search(), b"s foo", "foo"];
-        assert_consumes_all![search(), b"/foo", "foo"];
-
+        assert_consumes_all![insert_node(), b"i foo bar baz", "foo bar baz"];
+        assert_consumes_all![insert_node(), b"i foo", "foo"];
+        assert_consumes_all![lr(), b"lr"];
+        assert_consumes_all![print_dot(), b"p", ()];
+        assert_consumes_all![print_dot(), b"print", ()];
+        assert_consumes_all![print_json(), b"j", ()];
+        assert_consumes_all![print_json(), b"json", ()];
         assert_consumes_all![save(), b"save", ()];
+        assert_consumes_all![search(), b"/foo", "foo"];
+        assert_consumes_all![search(), b"s foo", "foo"];
+        assert_consumes_all![search(), b"search foo", "foo"];
+        assert_consumes_all![select_node(), b"sel n1", "n1"];
+        assert_consumes_all![show_help(), b"h", ()];
+        assert_consumes_all![show_help(), b"help", ()];
+        assert_consumes_all![tb(), b"tb"];
+        assert_consumes_all![unlink_edge(), b"u e1", "e1"];
     }
 
     #[test]
@@ -402,6 +399,11 @@ mod tests {
         assert_parse_command!(
             "d foo",
             GraphCommand::DeleteNode { id: Id::new("foo") }.into()
+        );
+
+        assert_parse_command!(
+            "sel foo",
+            GraphCommand::SelectNode { id: Id::new("foo") }.into()
         );
 
         assert_parse_command!(

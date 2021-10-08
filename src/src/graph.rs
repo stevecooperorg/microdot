@@ -94,15 +94,16 @@ impl Graph {
 
     pub fn apply_command(&mut self, command: GraphCommand) -> CommandResult {
         match command {
-            GraphCommand::InsertNode { label } => self.insert_node(label).1,
             GraphCommand::DeleteNode { id } => self.delete_node(&id),
-            GraphCommand::LinkEdge { from, to } => self.link_edge(&from, &to),
-            GraphCommand::RenameNode { id, label } => self.rename_node(&id, label),
-            GraphCommand::UnlinkEdge { id } => self.unlink_edge(&id),
-            GraphCommand::SetDirection { is_left_right } => self.set_direction(is_left_right),
+            GraphCommand::ExpandEdge { id, label } => self.expand_edge(&id, &label),
             GraphCommand::InsertAfterNode { id, label } => self.inject_after_node(&id, &label),
             GraphCommand::InsertBeforeNode { id, label } => self.inject_before_node(&id, &label),
-            GraphCommand::ExpandEdge { id, label } => self.expand_edge(&id, &label),
+            GraphCommand::InsertNode { label } => self.insert_node(label).1,
+            GraphCommand::LinkEdge { from, to } => self.link_edge(&from, &to),
+            GraphCommand::RenameNode { id, label } => self.rename_node(&id, label),
+            GraphCommand::SelectNode { id } => self.select_node(&id),
+            GraphCommand::SetDirection { is_left_right } => self.set_direction(is_left_right),
+            GraphCommand::UnlinkEdge { id } => self.unlink_edge(&id),
         }
     }
 
@@ -188,6 +189,15 @@ impl Graph {
             id.clone(),
             CommandResult::new(format!("inserted node {}: '{}'", id, label)),
         )
+    }
+
+    pub fn select_node(&mut self, id: &Id) -> CommandResult {
+        if !self.find_node_idx(&id).is_some() {
+            return CommandResult::new(format!("node {} not found", id));
+        }
+
+        self.current_node = Some(id.clone());
+        CommandResult::new(format!("node {} selected", id))
     }
 
     pub fn inject_after_node(&mut self, from: &Id, label: &Label) -> CommandResult {
@@ -287,5 +297,31 @@ impl Graph {
             }
             None => CommandResult::new(format!("node {} not found", id)),
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn can_insert_a_node() {
+        let mut graph = Graph::new();
+        let (id, _) = graph.insert_node(Label::new("a node label"));
+
+        assert_eq!(graph.nodes.len(), 1);
+
+        assert_eq!(graph.current_node, Some(id))
+    }
+
+    #[test]
+    fn can_select_a_node() {
+        let mut graph = Graph::new();
+        let (id1, _) = graph.insert_node(Label::new("first node"));
+        let (id2, _) = graph.insert_node(Label::new("second node"));
+
+        assert_eq!(graph.current_node, Some(id2));
+        graph.select_node(&id1);
+        assert_eq!(graph.current_node, Some(id1));
     }
 }
