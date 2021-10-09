@@ -5,6 +5,7 @@ pub mod graphviz;
 pub mod json;
 pub mod parser;
 pub mod repl;
+pub mod colors;
 
 macro_rules! new_string_type {
     ($id: ident) => {
