@@ -92,6 +92,6 @@ mod tests {
     #[test]
     fn can_parse_khroma_data() {
         let data = KhromaData::new();
-        assert_eq!(data.favorites.len(), 90);
+        assert_eq!(data.favorites.len(), 71);
     }
 }

@@ -11,20 +11,20 @@
 <!-- n0 -->
 <g id="node1" class="node">
 <title>n0</title>
-<path fill="#c3b9c3" fill-opacity="0.721569" stroke="#c2bac3" stroke-width="3" stroke-opacity="0.501961" d="M240,-213C240,-213 12,-213 12,-213 6,-213 0,-207 0,-201 0,-201 0,-153 0,-153 0,-147 6,-141 12,-141 12,-141 240,-141 240,-141 246,-141 252,-147 252,-153 252,-153 252,-201 252,-201 252,-207 246,-213 240,-213"/>
-<text text-anchor="middle" x="126" y="-173.3" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#5d6071">n0: a cool new node</text>
+<polygon fill="#383344" stroke="#a9c7fb" stroke-width="3" points="252,-213 0,-213 0,-141 252,-141 252,-213"/>
+<text text-anchor="middle" x="126" y="-173.3" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#a9c7fb">n0: a cool new node</text>
 </g>
 <!-- n1 -->
 <g id="node2" class="node">
 <title>n1</title>
-<path fill="#c3bac3" fill-opacity="0.725490" stroke="#c396c3" stroke-width="3" stroke-opacity="0.549020" d="M240,-72C240,-72 12,-72 12,-72 6,-72 0,-66 0,-60 0,-60 0,-12 0,-12 0,-6 6,0 12,0 12,0 240,0 240,0 246,0 252,-6 252,-12 252,-12 252,-60 252,-60 252,-66 246,-72 240,-72"/>
-<text text-anchor="middle" x="126" y="-32.3" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#6b6607">n1: a new name</text>
+<polygon fill="#f8e135" stroke="#589ecd" stroke-width="3" points="252,-72 0,-72 0,0 252,0 252,-72"/>
+<text text-anchor="middle" x="126" y="-32.3" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#589ecd">n1: a new name</text>
 </g>
 <!-- n0&#45;&gt;n1 -->
 <g id="edge1" class="edge">
 <title>n0&#45;&gt;n1</title>
-<path fill="none" stroke="#c2bac3" stroke-width="3" stroke-opacity="0.501961" d="M126,-140.92C126,-123.15 126,-101.35 126,-82.31"/>
-<polygon fill="#c2bac3" fill-opacity="0.501961" stroke="#c2bac3" stroke-width="3" stroke-opacity="0.501961" points="129.5,-82.06 126,-72.06 122.5,-82.06 129.5,-82.06"/>
+<path fill="none" stroke="#a9c7fb" stroke-width="3" d="M126,-140.92C126,-123.15 126,-101.35 126,-82.31"/>
+<polygon fill="#a9c7fb" stroke="#a9c7fb" stroke-width="3" points="129.5,-82.06 126,-72.06 122.5,-82.06 129.5,-82.06"/>
 <text text-anchor="middle" x="134" y="-102.8" font-family="Helvetica,sans-Serif" font-size="14.00">e0</text>
 </g>
 </g>

@@ -1,11 +1,11 @@
 digraph {
 
     graph [fontname = "helvetica" rankdir=TB ranksep=0.75 nodesep=0.5];
-    node [fontname = "helvetica" style="filled,rounded" shape=box height=1 width=3.5 penwidth=3];
-    edge [fontname = "helvetica" penwidth=3 color="#c2bac380c3a3"];
+    node [fontname = "helvetica" style="filled" shape=box height=1 width=3.5 penwidth=3];
+    edge [fontname = "helvetica" penwidth=3 color="#A9C7FB"];
 
-    "n0" [label="n0: a cool new node" fillcolor="#c3b9c3b8c2ba" color="#c2bac380c3a3" fontcolor="#5d6071"]
-    "n1" [label="n1: a new name" fillcolor="#c3bac3b9c2bf" color="#c396c38c0e" fontcolor="#6b6607"]
+    "n0" [label="n0: a cool new node" fillcolor="#383344" color="#A9C7FB" fontcolor="#A9C7FB"]
+    "n1" [label="n1: a new name" fillcolor="#F8E135" color="#589ECD" fontcolor="#589ECD"]
 
     "n0" -> "n1" [label="e0"];
 

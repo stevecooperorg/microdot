@@ -1,11 +1,11 @@
 use rustyline::{Editor, Helper};
 
+pub mod colors;
 pub mod graph;
 pub mod graphviz;
 pub mod json;
 pub mod parser;
 pub mod repl;
-pub mod colors;
 
 macro_rules! new_string_type {
     ($id: ident) => {
@@ -86,7 +86,10 @@ pub trait Interaction {
     fn should_compile_dot(&self) -> bool;
 }
 
-impl<H> Interaction for Editor<H> where H: Helper {
+impl<H> Interaction for Editor<H>
+where
+    H: Helper,
+{
     fn read(&mut self, prompt: &str) -> rustyline::Result<String> {
         self.readline(prompt)
     }
