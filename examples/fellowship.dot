@@ -1,23 +1,23 @@
 digraph {
 
     graph [fontname = "helvetica" rankdir=TB ranksep=0.75 nodesep=0.5];
-    node [fontname = "helvetica" style="filled,rounded" shape=box height=1 width=3.5 penwidth=3];
-    edge [fontname = "helvetica" penwidth=3 color="#485478"];
+    node [fontname = "helvetica" style="filled" shape=box height=1 width=3.5 penwidth=3];
+    edge [fontname = "helvetica" penwidth=3 color="#A9C7FB"];
 
-    "n0" [label="n0: Gandalf comes to the shire" fillcolor="#F8F8FA" color="#485478" fontcolor="#242D48"]
-    "n1" [label="n1: Frodo departs with the ring" fillcolor="#F8F8FA" color="#485478" fontcolor="#242D48"]
-    "n2" [label="n2: the inn at Bree" fillcolor="#F8F8FA" color="#485478" fontcolor="#242D48"]
-    "n3" [label="n3: the hobbits escape with Aragorn" fillcolor="#F8F8FA" color="#485478" fontcolor="#242D48"]
-    "n4" [label="n4: nazghuls catch up at Weathertop;\nFrodo is injured" fillcolor="#F8F8FA" color="#485478" fontcolor="#242D48"]
-    "n5" [label="n5: Nazghuls move to Bree" fillcolor="#F8F8FA" color="#485478" fontcolor="#242D48"]
-    "n6" [label="n6: the Nazghuls move to Weathertop" fillcolor="#F8F8FA" color="#485478" fontcolor="#242D48"]
-    "n7" [label="n7: Nazghuls dispatched from Mordor" fillcolor="#F8F8FA" color="#485478" fontcolor="#242D48"]
-    "n8" [label="n8: flight to the ford" fillcolor="#F8F8FA" color="#485478" fontcolor="#242D48"]
-    "n9" [label="n9: the fellowship meets at Rivendell\n\"one does not simply walk into mordor\"" fillcolor="#F8F8FA" color="#485478" fontcolor="#242D48"]
-    "n10" [label="n10: Gimli leaves the mountains" fillcolor="#F8F8FA" color="#485478" fontcolor="#242D48"]
-    "n11" [label="n11: Legolas travels from Mirkwood" fillcolor="#F8F8FA" color="#485478" fontcolor="#242D48"]
-    "n12" [label="n12: Boromir seeks the sword that is\nbroken" fillcolor="#F8F8FA" color="#485478" fontcolor="#242D48"]
-    "n13" [label="n13: Boromir fights in the battle for\nOsgiliath" fillcolor="#FFDD99" color="CC851F" fontcolor="#242D48"]
+    "n0" [label="n0: Gandalf comes to the shire" fillcolor="#383344" color="#A9C7FB" fontcolor="#A9C7FB"]
+    "n1" [label="n1: Frodo departs with the ring" fillcolor="#383344" color="#A9C7FB" fontcolor="#A9C7FB"]
+    "n2" [label="n2: the inn at Bree" fillcolor="#383344" color="#A9C7FB" fontcolor="#A9C7FB"]
+    "n3" [label="n3: the hobbits escape with Aragorn" fillcolor="#383344" color="#A9C7FB" fontcolor="#A9C7FB"]
+    "n4" [label="n4: nazghuls catch up at Weathertop;\nFrodo is injured" fillcolor="#383344" color="#A9C7FB" fontcolor="#A9C7FB"]
+    "n5" [label="n5: Nazghuls move to Bree" fillcolor="#383344" color="#A9C7FB" fontcolor="#A9C7FB"]
+    "n6" [label="n6: the Nazghuls move to Weathertop" fillcolor="#383344" color="#A9C7FB" fontcolor="#A9C7FB"]
+    "n7" [label="n7: Nazghuls dispatched from Mordor" fillcolor="#383344" color="#A9C7FB" fontcolor="#A9C7FB"]
+    "n8" [label="n8: flight to the ford" fillcolor="#383344" color="#A9C7FB" fontcolor="#A9C7FB"]
+    "n9" [label="n9: the fellowship meets at Rivendell\n\"one does not simply walk into mordor\"" fillcolor="#383344" color="#A9C7FB" fontcolor="#A9C7FB"]
+    "n10" [label="n10: Gimli leaves the mountains" fillcolor="#383344" color="#A9C7FB" fontcolor="#A9C7FB"]
+    "n11" [label="n11: Legolas travels from Mirkwood" fillcolor="#383344" color="#A9C7FB" fontcolor="#A9C7FB"]
+    "n12" [label="n12: Boromir seeks the sword that is\nbroken" fillcolor="#383344" color="#A9C7FB" fontcolor="#A9C7FB"]
+    "n13" [label="n13: Boromir fights in the battle for\nOsgiliath" fillcolor="#F8E135" color="#589ECD" fontcolor="#589ECD"]
 
     "n0" -> "n1" [label="e0"];
     "n1" -> "n2" [label="e1"];

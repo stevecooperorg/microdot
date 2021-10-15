@@ -1,15 +1,10 @@
 use clap::{AppSettings, Clap, ValueHint};
-use libmicrodot::graph::Graph;
-use libmicrodot::graphviz::GraphVizExporter;
-use libmicrodot::json::{empty_json_graph, JsonExporter, JsonImporter};
-use libmicrodot::parser::parse_line;
-use libmicrodot::{graphviz, Command, CommandResult, Line, Interaction};
-use rustyline::error::ReadlineError;
+use libmicrodot::json::{empty_json_graph, JsonImporter};
+use libmicrodot::repl::repl;
 use rustyline::Editor;
 use std::fs::File;
 use std::io::Read;
 use std::path::PathBuf;
-use libmicrodot::repl::repl;
 
 #[derive(Clap)]
 #[clap(version = "1.0", author = "Kevin K. <kbknapp@gmail.com>")]
@@ -68,4 +63,3 @@ fn main() -> Result<(), anyhow::Error> {
 
     Ok(())
 }
-

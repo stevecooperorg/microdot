@@ -45,3 +45,14 @@ Once complete, you can render the real artefact; with the right names, for prese
 > disp
 (display mode)
 ```
+
+
+--
+
+Color Palettes:
+
+- go to http://khroma.co/train/
+- train it with the 50-color selection
+- on the trained page, pick a bunch of favourites - as many as you want for different node types
+- download trained data (settings cog, download Kharma data button, get json file)
+- copy it into src/my_khroma_data.json

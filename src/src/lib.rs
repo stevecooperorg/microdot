@@ -1,4 +1,4 @@
-use rustyline::Editor;
+use rustyline::{Editor, Helper};
 
 pub mod graph;
 pub mod graphviz;
@@ -86,7 +86,7 @@ pub trait Interaction {
     fn should_compile_dot(&self) -> bool;
 }
 
-impl Interaction for Editor<()> {
+impl<H> Interaction for Editor<H> where H: Helper {
     fn read(&mut self, prompt: &str) -> rustyline::Result<String> {
         self.readline(prompt)
     }

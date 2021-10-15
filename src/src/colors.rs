@@ -1,52 +1,88 @@
-use std::collections::HashMap;
-use serde_json::{json, Value};
-
-struct Palettes {
-}
-
-struct Palette {
-    c0: Color,
-    c1: Color,
-    c2: Color,
-    c3: Color,
-    c4: Color,
-}
-
 #[derive(serde::Deserialize, Copy, Clone)]
-struct Color([u8;3]);
+pub struct Color([u8; 3]);
+
+impl Color {
+    fn r(&self) -> u8 {
+        self.0[0]
+    }
+
+    fn g(&self) -> u8 {
+        self.0[1]
+    }
+
+    fn b(&self) -> u8 {
+        self.0[2]
+    }
+
+    fn mix(&self, other: &Self, fraction: f64) -> Self {
+        let r = Color::blend(self.r(), other.r(), fraction);
+        let g = Color::blend(self.g(), other.g(), fraction);
+        let b = Color::blend(self.b(), other.b(), fraction);
+        Color([r, g, b])
+    }
+
+    pub fn darken(&self, fraction: f64) -> Self {
+        self.mix(&Color::black(), fraction)
+    }
+
+    pub fn lighten(&self, fraction: f64) -> Self {
+        self.mix(&Color::white(), fraction)
+    }
+
+    pub fn black() -> Self {
+        Color([0, 0, 0])
+    }
+
+    pub fn white() -> Self {
+        Color([255, 255, 255])
+    }
+
+    fn blend(c1: u8, c2: u8, fraction: f64) -> u8 {
+        let r = c1 as f64 * fraction + c2 as f64 * (1.0f64 - fraction);
+        r.floor() as u8
+    }
+
+    pub fn to_html_string(&self) -> String {
+        fn push_hex(s: &mut String, byte: u8) {
+            use std::fmt::Write;
+            write!(s, "{:X}", byte).expect("Unable to write");
+        }
+
+        let mut s = String::new();
+        push_hex(&mut s, self.r());
+        push_hex(&mut s, self.g());
+        push_hex(&mut s, self.b());
+
+        format!("#{}", s)
+    }
+}
+
+#[derive(serde::Deserialize)]
+pub struct KhromaData {
+    favorites: Vec<Favorite>,
+}
+
+impl KhromaData {
+    pub fn entry(&self, i: usize) -> [Color; 2] {
+        let i = i % self.favorites.len();
+        self.favorites.get(i).unwrap().colors.clone()
+    }
+
+    pub fn new() -> KhromaData {
+        let json = include_str!("./my_khroma_data.json");
+        serde_json::from_str(json).expect("bad data")
+    }
+}
+
+#[derive(serde::Deserialize)]
+struct Favorite {
+    id: String,
+    colors: [Color; 2],
+}
 
 #[derive(serde::Deserialize)]
 struct JsonPalette {
-    result: [Color;5]
-}
-
-fn parse_palette(json: Value) -> Palette {
-    let colors : JsonPalette = serde_json::from_value(json).expect("bad data");
-    Palette {
-        c0: colors.result[0],
-        c1: colors.result[1],
-        c2: colors.result[2],
-        c3: colors.result[3],
-        c4: colors.result[4],
-    }
-}
-
-macro_rules! palette {
-    ($id: ident, $json: tt) => {
-        fn $id() -> Palette {
-            let item = json!($json);
-            parse_palette(item)
-        }
-    }
-}
-
-impl Palettes {
-    palette!(p1,{"result":[[186,179,203],[153,129,112],[169,54,68],[133,72,97],[62,44,55]]});
-    palette!(p2,{"result":[[28,20,40],[58,84,131],[92,124,155],[118,133,109],[169,215,213]]});
-    palette!(p3,{"result":[[180,130,76],[215,222,157],[134,175,158],[97,137,90],[43,43,37]]});
-    palette!(p4,{"result":[[39,67,86],[88,100,120],[181,215,211],[248,247,243],[234,77,59]]});
-    palette!(p5,{"result":[[191,54,63],[14,77,87],[145,149,120],[225,213,112],[240,231,193]]});
-    palette!(p6,{"result":[[239,188,212],[123,136,97],[254,251,250],[73,151,167],[50,49,50]]});
+    result: [Color; 5],
 }
 
 #[cfg(test)]
@@ -54,11 +90,8 @@ mod tests {
     use super::*;
 
     #[test]
-    fn palettes_load_fine() {
-        let p1 = Palettes::p1();
-        let p2 = Palettes::p2();
-        let p3 = Palettes::p2();
-        let p4 = Palettes::p2();
-        let p5 = Palettes::p2();
+    fn can_parse_khroma_data() {
+        let data = KhromaData::new();
+        assert_eq!(data.favorites.len(), 90);
     }
 }

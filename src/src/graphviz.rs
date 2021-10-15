@@ -9,32 +9,6 @@ use textwrap::word_separators::UnicodeBreakProperties;
 use textwrap::wrap_algorithms::OptimalFit;
 use textwrap::{fill, Options};
 
-// teals
-const JULEP: &str = "#73DBE6";
-const PACIFICA: &str = "#2BBDCB";
-const PEACOCK: &str = "#01828E";
-
-// yellows
-const LEMONADE: &str = "#FFDD99";
-const BRIGHT_SUN: &str = "#FFBB16";
-const BUMBLEBEE: &str = "E99823";
-const TUSCAN: &str = "CC851F";
-
-// greys
-const ATHENS: &str = "#F8F8FA";
-const LINKWATER: &str = "#E6EBF8";
-const GHOST: &str = "#DFE2EB";
-const COMET: &str = "#485478";
-
-// ultra-dark blue
-const MARTINIQUE: &str = "#242D48";
-
-// purples
-const IRIS: &str = "#C882D9";
-const ORCHID: &str = "#B25DC6";
-const RAIN: &str = "#A136B4";
-const EMPIRE: &str = "#821499";
-
 struct ColorScheme {
     font_color: String,
     fill_color: String,
@@ -43,31 +17,30 @@ struct ColorScheme {
 }
 
 impl ColorScheme {
-    fn search_result() -> Self {
+    pub fn from_entry(i: usize) -> Self {
+        let data = crate::colors::KhromaData::new();
+        let card = data.entry(i);
+        let stroke_color = card[1];
+        let fill_color = card[0];
+        let font_color = stroke_color;
         Self {
-            font_color: MARTINIQUE.to_string(),
-            fill_color: JULEP.to_string(),
-            stroke_color: PEACOCK.to_string(),
-            node_border_width: 3.0f64,
-        }
-    }
-
-    fn current() -> Self {
-        Self {
-            font_color: MARTINIQUE.to_string(),
-            fill_color: LEMONADE.to_string(),
-            stroke_color: TUSCAN.to_string(),
+            font_color: font_color.to_html_string(),
+            fill_color: fill_color.to_html_string(),
+            stroke_color: stroke_color.to_html_string(),
             node_border_width: 3.0f64,
         }
     }
 
     fn normal() -> Self {
-        Self {
-            font_color: MARTINIQUE.to_string(),
-            fill_color: ATHENS.to_string(),
-            stroke_color: COMET.to_string(),
-            node_border_width: 2.0f64,
-        }
+        ColorScheme::from_entry(0)
+    }
+
+    fn search_result() -> Self {
+        ColorScheme::from_entry(1)
+    }
+
+    fn current() -> Self {
+        ColorScheme::from_entry(2)
     }
 }
 
@@ -111,7 +84,7 @@ pub enum DisplayMode {
     Presentation,
 }
 
-pub fn compile_dot(path: &Path, display_mode: DisplayMode) -> Result<(), anyhow::Error> {
+pub fn compile_dot(path: &Path, _display_mode: DisplayMode) -> Result<(), anyhow::Error> {
     if !installed_graphviz_version().is_some() {
         return Err(anyhow::Error::msg("graphviz not installed"));
     }
@@ -128,6 +101,7 @@ pub struct GraphVizExporter {
     is_left_right: bool,
     is_first_edge: bool,
     display_mode: DisplayMode,
+    i: usize,
 }
 
 fn template(template_str: &str, variables: &HashMap<&str, String>) -> String {
@@ -229,6 +203,7 @@ impl GraphVizExporter {
             is_left_right: false,
             is_first_edge: true,
             display_mode,
+            i: 0,
         }
     }
 
