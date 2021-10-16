@@ -85,7 +85,7 @@ pub enum DisplayMode {
 }
 
 pub fn compile_dot(path: &Path, _display_mode: DisplayMode) -> Result<(), anyhow::Error> {
-    if !installed_graphviz_version().is_some() {
+    if installed_graphviz_version().is_none() {
         return Err(anyhow::Error::msg("graphviz not installed"));
     }
 
@@ -101,7 +101,6 @@ pub struct GraphVizExporter {
     is_left_right: bool,
     is_first_edge: bool,
     display_mode: DisplayMode,
-    i: usize,
 }
 
 fn template(template_str: &str, variables: &HashMap<&str, String>) -> String {
@@ -143,8 +142,7 @@ impl Exporter for GraphVizExporter {
         let label_text = match self.display_mode {
             DisplayMode::Interactive => {
                 let unwrapped = format!("{}: {}", id.0, label.0);
-                let wrapped = fill(&unwrapped, &wrapping_options);
-                wrapped
+                fill(&unwrapped, &wrapping_options)
             }
             DisplayMode::Presentation => label.0.clone(),
         };
@@ -165,12 +163,11 @@ impl Exporter for GraphVizExporter {
         let line = template(LINE_TEMPLATE, &node_params);
 
         self.inner_content.push_str(&line);
-        self.inner_content.push_str("\n");
     }
 
     fn add_edge(&mut self, id: &Id, from: &Id, to: &Id) {
         if self.is_first_edge {
-            self.inner_content.push_str("\n");
+            self.inner_content.push('\n');
             self.is_first_edge = false;
         }
 
@@ -192,7 +189,7 @@ impl Exporter for GraphVizExporter {
         };
 
         self.inner_content.push_str(&line);
-        self.inner_content.push_str("\n");
+        self.inner_content.push('\n');
     }
 }
 
@@ -203,7 +200,6 @@ impl GraphVizExporter {
             is_left_right: false,
             is_first_edge: true,
             display_mode,
-            i: 0,
         }
     }
 
@@ -216,12 +212,10 @@ impl GraphVizExporter {
 
         let edge_color = ColorScheme::normal().stroke_color;
 
-        let content = template
+        template
             .replace("${RANKDIR}", rankdir)
             .replace("${EDGECOLOR}", &edge_color)
-            .replace("${INNER_CONTENT}", &self.inner_content);
-
-        content
+            .replace("${INNER_CONTENT}", &self.inner_content)
     }
 }
 

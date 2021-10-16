@@ -34,26 +34,29 @@ impl Exporter for JsonExporter {
     }
 }
 
-impl JsonExporter {
-    pub fn new() -> Self {
+impl Default for JsonExporter {
+    fn default() -> Self {
         Self {
             nodes: vec![],
             edges: vec![],
             is_left_right: false,
         }
     }
+}
+impl JsonExporter {
+    pub fn new() -> Self {
+        Default::default()
+    }
 
     pub fn export(&mut self, graph: &Graph) -> String {
         graph.export(self);
 
-        let content = json! {{
+        (json! {{
         "nodes": self.nodes,
         "edges": self.edges,
         "is_left_right": self.is_left_right
-        }}
-        .to_string();
-
-        content
+        }})
+        .to_string()
     }
 }
 

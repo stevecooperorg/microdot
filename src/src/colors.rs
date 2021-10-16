@@ -65,10 +65,16 @@ pub struct KhromaData {
 impl KhromaData {
     pub fn entry(&self, i: usize) -> [Color; 2] {
         let i = i % self.favorites.len();
-        self.favorites.get(i).unwrap().colors.clone()
+        self.favorites.get(i).unwrap().colors
     }
 
     pub fn new() -> KhromaData {
+        Default::default()
+    }
+}
+
+impl Default for KhromaData {
+    fn default() -> Self {
         let json = include_str!("./my_khroma_data.json");
         serde_json::from_str(json).expect("bad data")
     }
@@ -76,13 +82,7 @@ impl KhromaData {
 
 #[derive(serde::Deserialize)]
 struct Favorite {
-    id: String,
     colors: [Color; 2],
-}
-
-#[derive(serde::Deserialize)]
-struct JsonPalette {
-    result: [Color; 5],
 }
 
 #[cfg(test)]

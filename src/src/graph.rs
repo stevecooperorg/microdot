@@ -148,7 +148,7 @@ impl Graph {
     }
 
     fn unlink_edge(&mut self, id: &Id) -> CommandResult {
-        match self.find_edge_idx(&id) {
+        match self.find_edge_idx(id) {
             Some(idx) => {
                 self.edges.remove(idx);
 
@@ -159,7 +159,7 @@ impl Graph {
     }
 
     fn rename_node(&mut self, id: &Id, label: Label) -> CommandResult {
-        if let Some(idx) = self.find_node_idx(&id) {
+        if let Some(idx) = self.find_node_idx(id) {
             self.current_node = Some(id.clone());
 
             if let Some(node) = self.nodes.get_mut(idx) {
@@ -192,7 +192,7 @@ impl Graph {
     }
 
     pub fn select_node(&mut self, id: &Id) -> CommandResult {
-        if !self.find_node_idx(&id).is_some() {
+        if self.find_node_idx(id).is_none() {
             return CommandResult::new(format!("node {} not found", id));
         }
 
@@ -201,7 +201,7 @@ impl Graph {
     }
 
     pub fn inject_after_node(&mut self, from: &Id, label: &Label) -> CommandResult {
-        if !self.find_node_idx(&from).is_some() {
+        if self.find_node_idx(from).is_none() {
             return CommandResult::new(format!("source node {} not found", from));
         }
 
@@ -214,7 +214,7 @@ impl Graph {
     }
 
     pub fn inject_before_node(&mut self, to: &Id, label: &Label) -> CommandResult {
-        if !self.find_node_idx(&to).is_some() {
+        if self.find_node_idx(to).is_none() {
             return CommandResult::new(format!("target node {} not found", to));
         }
 
@@ -227,7 +227,7 @@ impl Graph {
     }
 
     pub fn expand_edge(&mut self, edge_id: &Id, label: &Label) -> CommandResult {
-        let (from, to) = match self.find_edge_idx(&edge_id) {
+        let (from, to) = match self.find_edge_idx(edge_id) {
             Some(idx) => {
                 let edge = &self.edges[idx];
                 (edge.from.clone(), edge.to.clone())
@@ -247,11 +247,11 @@ impl Graph {
     }
 
     pub fn link_edge(&mut self, from: &Id, to: &Id) -> CommandResult {
-        if !self.find_node_idx(&from).is_some() {
+        if self.find_node_idx(from).is_none() {
             return CommandResult::new(format!("source node {} not found", from));
         }
 
-        if !self.find_node_idx(&to).is_some() {
+        if self.find_node_idx(to).is_none() {
             return CommandResult::new(format!("target node {} not found", to));
         }
 
@@ -270,13 +270,13 @@ impl Graph {
     }
 
     fn delete_node(&mut self, id: &Id) -> CommandResult {
-        match self.find_node_idx(&id) {
+        match self.find_node_idx(id) {
             Some(idx) => {
                 // delete all edges to or from this node
                 let mut edges_touching: Vec<Id> = vec![];
 
                 for edge in &self.edges {
-                    if (&edge.from == id || &edge.to == id) && !edges_touching.contains(&&edge.id) {
+                    if (&edge.from == id || &edge.to == id) && !edges_touching.contains(&edge.id) {
                         edges_touching.push(edge.id.clone())
                     }
                 }

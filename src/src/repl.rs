@@ -4,11 +4,11 @@ use crate::json::JsonExporter;
 use crate::parser::parse_line;
 use crate::{graphviz, Command, CommandResult, Interaction, Line};
 use rustyline::error::ReadlineError;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 pub fn repl<I: Interaction>(
     interaction: &mut I,
-    json_file: &PathBuf,
+    json_file: &Path,
     graph: &mut Graph,
 ) -> Result<(), anyhow::Error> {
     loop {
@@ -26,37 +26,37 @@ pub fn repl<I: Interaction>(
                     Command::GraphCommand(graph_command) => {
                         interaction.log(format!("({})", graph.apply_command(graph_command)));
                         let (interactive_dot_file, presentation_dot_file) =
-                            save_file(&json_file, &graph)?;
+                            save_file(json_file, graph)?;
                         if interaction.should_compile_dot() {
                             compile_dot(interactive_dot_file, presentation_dot_file);
                         }
                     }
-                    Command::ShowHelp => interaction.log(format!(include_str!("help.txt"))),
+                    Command::ShowHelp => interaction.log(include_str!("help.txt")),
                     Command::PrintDot => {
                         let mut exporter = GraphVizExporter::new(DisplayMode::Interactive);
-                        let out = exporter.export(&graph);
-                        interaction.log(format!("{}", out));
-                        interaction.log(format!("Dot printed"));
+                        let out = exporter.export(graph);
+                        interaction.log(out);
+                        interaction.log("Dot printed");
                     }
                     Command::PrintJson => {
                         let mut exporter = JsonExporter::new();
-                        let out = exporter.export(&graph);
-                        interaction.log(format!("{}", out));
-                        interaction.log(format!("Json printed"));
+                        let out = exporter.export(graph);
+                        interaction.log(out);
+                        interaction.log("Json printed");
                     }
                     Command::Search { sub_label } => {
                         interaction.log(format!("({})", graph.search(sub_label)));
 
                         // save the file so we get color highlights.
                         let (interactive_dot_file, presentation_dot_file) =
-                            save_file(&json_file, &graph)?;
+                            save_file(json_file, graph)?;
                         if interaction.should_compile_dot() {
                             compile_dot(interactive_dot_file, presentation_dot_file);
                         }
                     }
                     Command::Save => {
                         let (interactive_dot_file, presentation_dot_file) =
-                            save_file(&json_file, &graph)?;
+                            save_file(json_file, graph)?;
                         interaction.log(format!(
                             "Saved json: {}, interactive dot: {}, presentation dot: {}",
                             json_file.to_string_lossy(),
@@ -66,18 +66,18 @@ pub fn repl<I: Interaction>(
                         compile_dot(interactive_dot_file, presentation_dot_file);
                     }
                     Command::ParseError { .. } => {
-                        interaction.log(format!("could not understand command; try 'h' for help"))
+                        interaction.log("could not understand command; try 'h' for help")
                     }
                     Command::Exit => break,
                 }
             }
             Err(ReadlineError::Interrupted) => {
-                interaction.log(format!("CTRL-C"));
+                interaction.log("CTRL-C");
 
                 break;
             }
             Err(ReadlineError::Eof) => {
-                interaction.log(format!("CTRL-D"));
+                interaction.log("CTRL-D");
 
                 break;
             }
@@ -92,18 +92,18 @@ pub fn repl<I: Interaction>(
     Ok(())
 }
 
-fn save_file(json_file: &PathBuf, graph: &Graph) -> Result<(PathBuf, PathBuf), anyhow::Error> {
+fn save_file(json_file: &Path, graph: &Graph) -> Result<(PathBuf, PathBuf), anyhow::Error> {
     let mut json_exporter = JsonExporter::new();
-    let json = json_exporter.export(&graph);
+    let json = json_exporter.export(graph);
     std::fs::write(&json_file, json)?;
 
     let mut dot_exporter = GraphVizExporter::new(DisplayMode::Interactive);
-    let interactive_dot = dot_exporter.export(&graph);
+    let interactive_dot = dot_exporter.export(graph);
     let interactive_dot_file = json_file.with_extension("dot");
     std::fs::write(&interactive_dot_file, interactive_dot)?;
 
     let mut dot_exporter = GraphVizExporter::new(DisplayMode::Presentation);
-    let presentation_dot = dot_exporter.export(&graph);
+    let presentation_dot = dot_exporter.export(graph);
     let presentation_dot_file = json_file.with_extension("presentation.dot");
     std::fs::write(&presentation_dot_file, presentation_dot)?;
 
