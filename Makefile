@@ -27,6 +27,3 @@ test:
 dot:
 	#dot graph.dot -Tpng -o graph.png
 	dot "$(DEFAULT_DOT)" -Tsvg -o "$(DEFAULT_SVG)"
-
-watchdot:
-	nodemon --exec "make dot" --watch "$(DEFAULT_DOT)"

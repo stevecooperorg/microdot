@@ -3,6 +3,7 @@ use rustyline::{Editor, Helper};
 pub mod colors;
 pub mod graph;
 pub mod graphviz;
+pub mod helper;
 pub mod json;
 pub mod parser;
 pub mod repl;

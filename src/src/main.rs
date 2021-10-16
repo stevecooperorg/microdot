@@ -1,7 +1,8 @@
 use clap::{AppSettings, Clap, ValueHint};
+use libmicrodot::helper::MicrodotHelper;
 use libmicrodot::json::{empty_json_graph, JsonImporter};
 use libmicrodot::repl::repl;
-use rustyline::Editor;
+use rustyline::{Config, Editor};
 use std::fs::File;
 use std::io::Read;
 use std::path::PathBuf;
@@ -21,7 +22,12 @@ struct Opts {
 
 fn main() -> Result<(), anyhow::Error> {
     // `()` can be used when no completer is required
-    let mut rl = Editor::<()>::new();
+    let config = Config::builder().build();
+    let h = MicrodotHelper::new();
+    let mut rl = Editor::with_config(config);
+    rl.set_helper(Some(h));
+
+    //let mut rl = Editor::<libmicrodot::helper::MicrodotHelper>::new();
 
     let Opts {
         history,
