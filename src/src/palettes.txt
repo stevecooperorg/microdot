@@ -1,0 +1,17 @@
+# https://applecolors.com/palette/704-mixed-rainbow-for-nothing-brand
+rainbow: #ED4145 #F1B02F #EADE84 #A3D064 #11B2AA #177C99
+
+# https://applecolors.com/palette/99-soft-coral-logo
+soft_coral: #FF7C7C #FFA089 #6BC58C #D3F9CD #F8FDA2
+
+# https://applecolors.com/palette/5941-mother-of-earth-palette
+mother_of_earth: #446E1C #799D31 #BEAF18 #B77A29 #E9A43C #FDEC9E
+
+# https://applecolors.com/palette/11308-fruits-tones-logo
+fruits_tones: #E9692C #ED9121 #FFC324 #FFF000 #66B447 #8EE53F
+
+# https://applecolors.com/palette/11215-antarctica-evening-palette
+antarctica_evening: #F4D3C4 #F2AEBB #D895DA #A091D6 #696FC7 #A7AAE1
+
+# https://applecolors.com/palette/18276-soft-nature-gradient-palette
+soft_nature: #A8B087 #BCC199 #D3CDAE #F9E9DA #E9C9AE #DAB692

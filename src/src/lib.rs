@@ -5,6 +5,7 @@ pub mod graph;
 pub mod graphviz;
 pub mod helper;
 pub mod json;
+pub mod palettes;
 pub mod parser;
 pub mod repl;
 

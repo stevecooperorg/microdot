@@ -56,3 +56,7 @@ Color Palettes:
 - on the trained page, pick a bunch of favourites - as many as you want for different node types
 - download trained data (settings cog, download Kharma data button, get json file)
 - copy it into src/my_khroma_data.json
+
+https://applecolors.com/palettes
+
+#ED4145 #F1B02F #EADE84 #A3D064 #11B2AA #177C99

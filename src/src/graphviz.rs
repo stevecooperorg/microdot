@@ -1,4 +1,6 @@
+use crate::colors::Color;
 use crate::graph::Graph;
+use crate::palettes::PaletteReader;
 use crate::{Exporter, Id, Label, NodeHighlight};
 use command_macros::cmd;
 use hyphenation::{Language, Load, Standard};
@@ -16,12 +18,17 @@ struct ColorScheme {
     node_border_width: f64,
 }
 
+const PALETTE_NAME: &str = "soft_coral";
+
 impl ColorScheme {
     pub fn from_entry(i: usize) -> Self {
-        let data = crate::colors::KhromaData::new();
-        let card = data.entry(i);
-        let stroke_color = card[1];
-        let fill_color = card[0];
+        let content = include_str!("./palettes.txt");
+        let reader = PaletteReader {};
+        let palettes = reader.read(content).expect("couldn't read palette");
+        let palette = palettes.get(PALETTE_NAME).unwrap();
+
+        let stroke_color = Color::black();
+        let fill_color = palette.get_color(i);
         let font_color = stroke_color;
         Self {
             font_color: font_color.to_html_string(),

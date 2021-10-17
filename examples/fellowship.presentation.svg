@@ -11,176 +11,176 @@
 <!-- n0 -->
 <g id="node1" class="node">
 <title>n0</title>
-<polygon fill="#383344" stroke="#a9c7fb" stroke-width="3" points="252,-828 0,-828 0,-756 252,-756 252,-828"/>
-<text text-anchor="middle" x="126" y="-788.3" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#a9c7fb">Gandalf comes to the shire</text>
+<polygon fill="#ff7c7c" stroke="#000000" stroke-width="3" points="252,-828 0,-828 0,-756 252,-756 252,-828"/>
+<text text-anchor="middle" x="126" y="-788.3" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">Gandalf comes to the shire</text>
 </g>
 <!-- n1 -->
 <g id="node2" class="node">
 <title>n1</title>
-<polygon fill="#383344" stroke="#a9c7fb" stroke-width="3" points="342,-702 90,-702 90,-630 342,-630 342,-702"/>
-<text text-anchor="middle" x="216" y="-662.3" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#a9c7fb">Frodo departs with the ring</text>
+<polygon fill="#ff7c7c" stroke="#000000" stroke-width="3" points="342,-702 90,-702 90,-630 342,-630 342,-702"/>
+<text text-anchor="middle" x="216" y="-662.3" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">Frodo departs with the ring</text>
 </g>
 <!-- n0&#45;&gt;n1 -->
 <g id="edge1" class="edge">
 <title>n0&#45;&gt;n1</title>
-<path fill="none" stroke="#a9c7fb" stroke-width="3" d="M151.55,-755.8C161.72,-741.79 173.52,-725.53 184.23,-710.77"/>
-<polygon fill="#a9c7fb" stroke="#a9c7fb" stroke-width="3" points="187.35,-712.44 190.39,-702.29 181.68,-708.33 187.35,-712.44"/>
+<path fill="none" stroke="#000000" stroke-width="3" d="M151.55,-755.8C161.72,-741.79 173.52,-725.53 184.23,-710.77"/>
+<polygon fill="#000000" stroke="#000000" stroke-width="3" points="187.35,-712.44 190.39,-702.29 181.68,-708.33 187.35,-712.44"/>
 </g>
 <!-- n9 -->
 <g id="node10" class="node">
 <title>n9</title>
-<polygon fill="#383344" stroke="#a9c7fb" stroke-width="3" points="754.5,-72 289.5,-72 289.5,0 754.5,0 754.5,-72"/>
-<text text-anchor="middle" x="522" y="-32.3" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#a9c7fb">the fellowship meets at Rivendell &quot;one does not simply walk into mordor&quot;</text>
+<polygon fill="#ff7c7c" stroke="#000000" stroke-width="3" points="754.5,-72 289.5,-72 289.5,0 754.5,0 754.5,-72"/>
+<text text-anchor="middle" x="522" y="-32.3" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">the fellowship meets at Rivendell &quot;one does not simply walk into mordor&quot;</text>
 </g>
 <!-- n0&#45;&gt;n9 -->
 <g id="edge11" class="edge">
 <title>n0&#45;&gt;n9</title>
-<path fill="none" stroke="#a9c7fb" stroke-width="3" d="M100.92,-755.58C90.7,-739.79 79.55,-720.59 72,-702 44.38,-633.97 35,-614.42 35,-541 35,-541 35,-541 35,-287 35,-211.38 33.27,-176 90,-126 120.09,-99.48 197.87,-79.77 279.29,-65.73"/>
-<polygon fill="#a9c7fb" stroke="#a9c7fb" stroke-width="3" points="279.96,-69.16 289.23,-64.04 278.79,-62.26 279.96,-69.16"/>
+<path fill="none" stroke="#000000" stroke-width="3" d="M100.92,-755.58C90.7,-739.79 79.55,-720.59 72,-702 44.38,-633.97 35,-614.42 35,-541 35,-541 35,-541 35,-287 35,-211.38 33.27,-176 90,-126 120.09,-99.48 197.87,-79.77 279.29,-65.73"/>
+<polygon fill="#000000" stroke="#000000" stroke-width="3" points="279.96,-69.16 289.23,-64.04 278.79,-62.26 279.96,-69.16"/>
 </g>
 <!-- n2 -->
 <g id="node3" class="node">
 <title>n2</title>
-<polygon fill="#383344" stroke="#a9c7fb" stroke-width="3" points="495,-576 243,-576 243,-504 495,-504 495,-576"/>
-<text text-anchor="middle" x="369" y="-536.3" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#a9c7fb">the inn at Bree</text>
+<polygon fill="#ff7c7c" stroke="#000000" stroke-width="3" points="495,-576 243,-576 243,-504 495,-504 495,-576"/>
+<text text-anchor="middle" x="369" y="-536.3" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">the inn at Bree</text>
 </g>
 <!-- n1&#45;&gt;n2 -->
 <g id="edge2" class="edge">
 <title>n1&#45;&gt;n2</title>
-<path fill="none" stroke="#a9c7fb" stroke-width="3" d="M259.43,-629.8C277.6,-615.08 298.85,-597.86 317.77,-582.52"/>
-<polygon fill="#a9c7fb" stroke="#a9c7fb" stroke-width="3" points="320.16,-585.09 325.72,-576.07 315.75,-579.65 320.16,-585.09"/>
+<path fill="none" stroke="#000000" stroke-width="3" d="M259.43,-629.8C277.6,-615.08 298.85,-597.86 317.77,-582.52"/>
+<polygon fill="#000000" stroke="#000000" stroke-width="3" points="320.16,-585.09 325.72,-576.07 315.75,-579.65 320.16,-585.09"/>
 </g>
 <!-- n3 -->
 <g id="node4" class="node">
 <title>n3</title>
-<polygon fill="#383344" stroke="#a9c7fb" stroke-width="3" points="648,-450 396,-450 396,-378 648,-378 648,-450"/>
-<text text-anchor="middle" x="522" y="-410.3" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#a9c7fb">the hobbits escape with Aragorn</text>
+<polygon fill="#ff7c7c" stroke="#000000" stroke-width="3" points="648,-450 396,-450 396,-378 648,-378 648,-450"/>
+<text text-anchor="middle" x="522" y="-410.3" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">the hobbits escape with Aragorn</text>
 </g>
 <!-- n2&#45;&gt;n3 -->
 <g id="edge3" class="edge">
 <title>n2&#45;&gt;n3</title>
-<path fill="none" stroke="#a9c7fb" stroke-width="3" d="M412.43,-503.8C430.6,-489.08 451.85,-471.86 470.77,-456.52"/>
-<polygon fill="#a9c7fb" stroke="#a9c7fb" stroke-width="3" points="473.16,-459.09 478.72,-450.07 468.75,-453.65 473.16,-459.09"/>
+<path fill="none" stroke="#000000" stroke-width="3" d="M412.43,-503.8C430.6,-489.08 451.85,-471.86 470.77,-456.52"/>
+<polygon fill="#000000" stroke="#000000" stroke-width="3" points="473.16,-459.09 478.72,-450.07 468.75,-453.65 473.16,-459.09"/>
 </g>
 <!-- n6 -->
 <g id="node7" class="node">
 <title>n6</title>
-<polygon fill="#383344" stroke="#a9c7fb" stroke-width="3" points="360,-450 108,-450 108,-378 360,-378 360,-450"/>
-<text text-anchor="middle" x="234" y="-410.3" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#a9c7fb">the Nazghuls move to Weathertop</text>
+<polygon fill="#ff7c7c" stroke="#000000" stroke-width="3" points="360,-450 108,-450 108,-378 360,-378 360,-450"/>
+<text text-anchor="middle" x="234" y="-410.3" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">the Nazghuls move to Weathertop</text>
 </g>
 <!-- n2&#45;&gt;n6 -->
 <g id="edge6" class="edge">
 <title>n2&#45;&gt;n6</title>
-<path fill="none" stroke="#a9c7fb" stroke-width="3" d="M330.68,-503.8C314.86,-489.27 296.39,-472.31 279.86,-457.13"/>
-<polygon fill="#a9c7fb" stroke="#a9c7fb" stroke-width="3" points="282.15,-454.48 272.42,-450.29 277.42,-459.63 282.15,-454.48"/>
+<path fill="none" stroke="#000000" stroke-width="3" d="M330.68,-503.8C314.86,-489.27 296.39,-472.31 279.86,-457.13"/>
+<polygon fill="#000000" stroke="#000000" stroke-width="3" points="282.15,-454.48 272.42,-450.29 277.42,-459.63 282.15,-454.48"/>
 </g>
 <!-- n4 -->
 <g id="node5" class="node">
 <title>n4</title>
-<polygon fill="#383344" stroke="#a9c7fb" stroke-width="3" points="415.5,-324 90.5,-324 90.5,-252 415.5,-252 415.5,-324"/>
-<text text-anchor="middle" x="253" y="-284.3" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#a9c7fb">nazghuls catch up at Weathertop; Frodo is injured</text>
+<polygon fill="#ff7c7c" stroke="#000000" stroke-width="3" points="415.5,-324 90.5,-324 90.5,-252 415.5,-252 415.5,-324"/>
+<text text-anchor="middle" x="253" y="-284.3" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">nazghuls catch up at Weathertop; Frodo is injured</text>
 </g>
 <!-- n3&#45;&gt;n4 -->
 <g id="edge4" class="edge">
 <title>n3&#45;&gt;n4</title>
-<path fill="none" stroke="#a9c7fb" stroke-width="3" d="M445.99,-377.96C412.48,-362.51 372.94,-344.29 338.41,-328.37"/>
-<polygon fill="#a9c7fb" stroke="#a9c7fb" stroke-width="3" points="339.83,-325.17 329.28,-324.16 336.9,-331.53 339.83,-325.17"/>
+<path fill="none" stroke="#000000" stroke-width="3" d="M445.99,-377.96C412.48,-362.51 372.94,-344.29 338.41,-328.37"/>
+<polygon fill="#000000" stroke="#000000" stroke-width="3" points="339.83,-325.17 329.28,-324.16 336.9,-331.53 339.83,-325.17"/>
 </g>
 <!-- n8 -->
 <g id="node9" class="node">
 <title>n8</title>
-<polygon fill="#383344" stroke="#a9c7fb" stroke-width="3" points="360,-198 108,-198 108,-126 360,-126 360,-198"/>
-<text text-anchor="middle" x="234" y="-158.3" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#a9c7fb">flight to the ford</text>
+<polygon fill="#ff7c7c" stroke="#000000" stroke-width="3" points="360,-198 108,-198 108,-126 360,-126 360,-198"/>
+<text text-anchor="middle" x="234" y="-158.3" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">flight to the ford</text>
 </g>
 <!-- n4&#45;&gt;n8 -->
 <g id="edge9" class="edge">
 <title>n4&#45;&gt;n8</title>
-<path fill="none" stroke="#a9c7fb" stroke-width="3" d="M247.61,-251.8C245.54,-238.32 243.15,-222.74 240.96,-208.43"/>
-<polygon fill="#a9c7fb" stroke="#a9c7fb" stroke-width="3" points="244.38,-207.64 239.41,-198.29 237.46,-208.7 244.38,-207.64"/>
+<path fill="none" stroke="#000000" stroke-width="3" d="M247.61,-251.8C245.54,-238.32 243.15,-222.74 240.96,-208.43"/>
+<polygon fill="#000000" stroke="#000000" stroke-width="3" points="244.38,-207.64 239.41,-198.29 237.46,-208.7 244.38,-207.64"/>
 </g>
 <!-- n5 -->
 <g id="node6" class="node">
 <title>n5</title>
-<polygon fill="#383344" stroke="#a9c7fb" stroke-width="3" points="630,-702 378,-702 378,-630 630,-630 630,-702"/>
-<text text-anchor="middle" x="504" y="-662.3" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#a9c7fb">Nazghuls move to Bree</text>
+<polygon fill="#ff7c7c" stroke="#000000" stroke-width="3" points="630,-702 378,-702 378,-630 630,-630 630,-702"/>
+<text text-anchor="middle" x="504" y="-662.3" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">Nazghuls move to Bree</text>
 </g>
 <!-- n5&#45;&gt;n2 -->
 <g id="edge5" class="edge">
 <title>n5&#45;&gt;n2</title>
-<path fill="none" stroke="#a9c7fb" stroke-width="3" d="M465.68,-629.8C449.86,-615.27 431.39,-598.31 414.86,-583.13"/>
-<polygon fill="#a9c7fb" stroke="#a9c7fb" stroke-width="3" points="417.15,-580.48 407.42,-576.29 412.42,-585.63 417.15,-580.48"/>
+<path fill="none" stroke="#000000" stroke-width="3" d="M465.68,-629.8C449.86,-615.27 431.39,-598.31 414.86,-583.13"/>
+<polygon fill="#000000" stroke="#000000" stroke-width="3" points="417.15,-580.48 407.42,-576.29 412.42,-585.63 417.15,-580.48"/>
 </g>
 <!-- n6&#45;&gt;n4 -->
 <g id="edge7" class="edge">
 <title>n6&#45;&gt;n4</title>
-<path fill="none" stroke="#a9c7fb" stroke-width="3" d="M239.39,-377.8C241.46,-364.32 243.85,-348.74 246.04,-334.43"/>
-<polygon fill="#a9c7fb" stroke="#a9c7fb" stroke-width="3" points="249.54,-334.7 247.59,-324.29 242.62,-333.64 249.54,-334.7"/>
+<path fill="none" stroke="#000000" stroke-width="3" d="M239.39,-377.8C241.46,-364.32 243.85,-348.74 246.04,-334.43"/>
+<polygon fill="#000000" stroke="#000000" stroke-width="3" points="249.54,-334.7 247.59,-324.29 242.62,-333.64 249.54,-334.7"/>
 </g>
 <!-- n7 -->
 <g id="node8" class="node">
 <title>n7</title>
-<polygon fill="#383344" stroke="#a9c7fb" stroke-width="3" points="630,-828 378,-828 378,-756 630,-756 630,-828"/>
-<text text-anchor="middle" x="504" y="-788.3" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#a9c7fb">Nazghuls dispatched from Mordor</text>
+<polygon fill="#ff7c7c" stroke="#000000" stroke-width="3" points="630,-828 378,-828 378,-756 630,-756 630,-828"/>
+<text text-anchor="middle" x="504" y="-788.3" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">Nazghuls dispatched from Mordor</text>
 </g>
 <!-- n7&#45;&gt;n5 -->
 <g id="edge8" class="edge">
 <title>n7&#45;&gt;n5</title>
-<path fill="none" stroke="#a9c7fb" stroke-width="3" d="M504,-755.8C504,-742.32 504,-726.74 504,-712.43"/>
-<polygon fill="#a9c7fb" stroke="#a9c7fb" stroke-width="3" points="507.5,-712.29 504,-702.29 500.5,-712.29 507.5,-712.29"/>
+<path fill="none" stroke="#000000" stroke-width="3" d="M504,-755.8C504,-742.32 504,-726.74 504,-712.43"/>
+<polygon fill="#000000" stroke="#000000" stroke-width="3" points="507.5,-712.29 504,-702.29 500.5,-712.29 507.5,-712.29"/>
 </g>
 <!-- n8&#45;&gt;n9 -->
 <g id="edge10" class="edge">
 <title>n8&#45;&gt;n9</title>
-<path fill="none" stroke="#a9c7fb" stroke-width="3" d="M315.37,-125.96C351.41,-110.45 393.94,-92.14 431.02,-76.17"/>
-<polygon fill="#a9c7fb" stroke="#a9c7fb" stroke-width="3" points="432.53,-79.33 440.33,-72.16 429.76,-72.9 432.53,-79.33"/>
+<path fill="none" stroke="#000000" stroke-width="3" d="M315.37,-125.96C351.41,-110.45 393.94,-92.14 431.02,-76.17"/>
+<polygon fill="#000000" stroke="#000000" stroke-width="3" points="432.53,-79.33 440.33,-72.16 429.76,-72.9 432.53,-79.33"/>
 </g>
 <!-- n10 -->
 <g id="node11" class="node">
 <title>n10</title>
-<polygon fill="#383344" stroke="#a9c7fb" stroke-width="3" points="648,-198 396,-198 396,-126 648,-126 648,-198"/>
-<text text-anchor="middle" x="522" y="-158.3" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#a9c7fb">Gimli leaves the mountains</text>
+<polygon fill="#ff7c7c" stroke="#000000" stroke-width="3" points="648,-198 396,-198 396,-126 648,-126 648,-198"/>
+<text text-anchor="middle" x="522" y="-158.3" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">Gimli leaves the mountains</text>
 </g>
 <!-- n10&#45;&gt;n9 -->
 <g id="edge12" class="edge">
 <title>n10&#45;&gt;n9</title>
-<path fill="none" stroke="#a9c7fb" stroke-width="3" d="M522,-125.8C522,-112.32 522,-96.74 522,-82.43"/>
-<polygon fill="#a9c7fb" stroke="#a9c7fb" stroke-width="3" points="525.5,-82.29 522,-72.29 518.5,-82.29 525.5,-82.29"/>
+<path fill="none" stroke="#000000" stroke-width="3" d="M522,-125.8C522,-112.32 522,-96.74 522,-82.43"/>
+<polygon fill="#000000" stroke="#000000" stroke-width="3" points="525.5,-82.29 522,-72.29 518.5,-82.29 525.5,-82.29"/>
 </g>
 <!-- n11 -->
 <g id="node12" class="node">
 <title>n11</title>
-<polygon fill="#383344" stroke="#a9c7fb" stroke-width="3" points="936,-198 684,-198 684,-126 936,-126 936,-198"/>
-<text text-anchor="middle" x="810" y="-158.3" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#a9c7fb">Legolas travels from Mirkwood</text>
+<polygon fill="#ff7c7c" stroke="#000000" stroke-width="3" points="936,-198 684,-198 684,-126 936,-126 936,-198"/>
+<text text-anchor="middle" x="810" y="-158.3" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">Legolas travels from Mirkwood</text>
 </g>
 <!-- n11&#45;&gt;n9 -->
 <g id="edge13" class="edge">
 <title>n11&#45;&gt;n9</title>
-<path fill="none" stroke="#a9c7fb" stroke-width="3" d="M728.63,-125.96C692.59,-110.45 650.06,-92.14 612.98,-76.17"/>
-<polygon fill="#a9c7fb" stroke="#a9c7fb" stroke-width="3" points="614.24,-72.9 603.67,-72.16 611.47,-79.33 614.24,-72.9"/>
+<path fill="none" stroke="#000000" stroke-width="3" d="M728.63,-125.96C692.59,-110.45 650.06,-92.14 612.98,-76.17"/>
+<polygon fill="#000000" stroke="#000000" stroke-width="3" points="614.24,-72.9 603.67,-72.16 611.47,-79.33 614.24,-72.9"/>
 </g>
 <!-- n12 -->
 <g id="node13" class="node">
 <title>n12</title>
-<polygon fill="#383344" stroke="#a9c7fb" stroke-width="3" points="1230,-198 972,-198 972,-126 1230,-126 1230,-198"/>
-<text text-anchor="middle" x="1101" y="-158.3" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#a9c7fb">Boromir seeks the sword that is broken</text>
+<polygon fill="#ff7c7c" stroke="#000000" stroke-width="3" points="1230,-198 972,-198 972,-126 1230,-126 1230,-198"/>
+<text text-anchor="middle" x="1101" y="-158.3" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">Boromir seeks the sword that is broken</text>
 </g>
 <!-- n12&#45;&gt;n9 -->
 <g id="edge14" class="edge">
 <title>n12&#45;&gt;n9</title>
-<path fill="none" stroke="#a9c7fb" stroke-width="3" d="M971.99,-130.05C965.91,-128.66 959.89,-127.31 954,-126 873.69,-108.17 784.71,-89.63 708.48,-74.12"/>
-<polygon fill="#a9c7fb" stroke="#a9c7fb" stroke-width="3" points="708.79,-70.61 698.29,-72.05 707.39,-77.47 708.79,-70.61"/>
+<path fill="none" stroke="#000000" stroke-width="3" d="M971.99,-130.05C965.91,-128.66 959.89,-127.31 954,-126 873.69,-108.17 784.71,-89.63 708.48,-74.12"/>
+<polygon fill="#000000" stroke="#000000" stroke-width="3" points="708.79,-70.61 698.29,-72.05 707.39,-77.47 708.79,-70.61"/>
 </g>
 <!-- n13 -->
 <g id="node14" class="node">
 <title>n13</title>
-<polygon fill="#f8e135" stroke="#589ecd" stroke-width="3" points="1230,-324 972,-324 972,-252 1230,-252 1230,-324"/>
-<text text-anchor="middle" x="1101" y="-284.3" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#589ecd">Boromir fights in the battle for Osgiliath</text>
+<polygon fill="#6bc58c" stroke="#000000" stroke-width="3" points="1230,-324 972,-324 972,-252 1230,-252 1230,-324"/>
+<text text-anchor="middle" x="1101" y="-284.3" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">Boromir fights in the battle for Osgiliath</text>
 </g>
 <!-- n13&#45;&gt;n12 -->
 <g id="edge15" class="edge">
 <title>n13&#45;&gt;n12</title>
-<path fill="none" stroke="#a9c7fb" stroke-width="3" d="M1101,-251.8C1101,-238.32 1101,-222.74 1101,-208.43"/>
-<polygon fill="#a9c7fb" stroke="#a9c7fb" stroke-width="3" points="1104.5,-208.29 1101,-198.29 1097.5,-208.29 1104.5,-208.29"/>
+<path fill="none" stroke="#000000" stroke-width="3" d="M1101,-251.8C1101,-238.32 1101,-222.74 1101,-208.43"/>
+<polygon fill="#000000" stroke="#000000" stroke-width="3" points="1104.5,-208.29 1101,-198.29 1097.5,-208.29 1104.5,-208.29"/>
 </g>
 </g>
 </svg>
