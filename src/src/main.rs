@@ -1,7 +1,9 @@
 use clap::{AppSettings, Clap, ValueHint};
-use libmicrodot::helper::MicrodotHelper;
+use libmicrodot::graph::Graph;
+use libmicrodot::helper::{GetNodeLabel, MicrodotHelper};
 use libmicrodot::json::{empty_json_graph, JsonImporter};
 use libmicrodot::repl::repl;
+use libmicrodot::{Id, Label};
 use rustyline::{Config, Editor};
 use std::fs::File;
 use std::io::Read;
@@ -20,23 +22,41 @@ struct Opts {
     history: Option<PathBuf>,
 }
 
+impl Opts {
+    fn history(&self) -> PathBuf {
+        self.history
+            .clone()
+            .unwrap_or_else(|| dirs::home_dir().unwrap().join(".microdot_history"))
+    }
+
+    fn file(&self) -> PathBuf {
+        self.file
+            .clone()
+            .unwrap_or_else(|| dirs::home_dir().unwrap().join("microdot_graph.json"))
+    }
+}
+
+struct GraphGetNodeLabel {}
+
+impl GetNodeLabel for GraphGetNodeLabel {
+    fn get_node_label(&self, id: &Id) -> Option<Label> {
+        //Some(Label::new("I dunno".to_string()))
+        None
+    }
+}
+
 fn main() -> Result<(), anyhow::Error> {
-    // `()` can be used when no completer is required
-    let config = Config::builder().build();
-    let h = MicrodotHelper::new();
+    let opts = Opts::parse();
+    let history = opts.history();
+    let json_file = opts.file();
+
+    let mut graph = load_graph(&json_file)?;
+    let gnl = GraphGetNodeLabel {};
+
+    let h = MicrodotHelper::new(&gnl);
+    let config = Config::default();
     let mut rl = Editor::with_config(config);
     rl.set_helper(Some(h));
-
-    //let mut rl = Editor::<libmicrodot::helper::MicrodotHelper>::new();
-
-    let Opts {
-        history,
-        file: json_file,
-    } = Opts::parse();
-
-    let history = history.unwrap_or_else(|| dirs::home_dir().unwrap().join(".microdot_history"));
-    let json_file =
-        json_file.unwrap_or_else(|| dirs::home_dir().unwrap().join("microdot_graph.json"));
 
     if rl.load_history(&history).is_err() {
         println!("No previous history at {}.", history.to_string_lossy());
@@ -47,6 +67,14 @@ fn main() -> Result<(), anyhow::Error> {
         );
     }
 
+    repl(&mut rl, &json_file, &mut graph)?;
+
+    rl.save_history(&history).unwrap();
+
+    Ok(())
+}
+
+fn load_graph(json_file: &PathBuf) -> Result<Graph, anyhow::Error> {
     let json_content = if json_file.exists() {
         println!(
             "loading existing graph from {}",
@@ -62,10 +90,5 @@ fn main() -> Result<(), anyhow::Error> {
 
     let importer = JsonImporter::new(json_content);
     let mut graph = importer.import()?;
-
-    repl(&mut rl, &json_file, &mut graph)?;
-
-    rl.save_history(&history).unwrap();
-
-    Ok(())
+    Ok(graph)
 }

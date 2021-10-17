@@ -1,3 +1,5 @@
+use crate::parser::parse_line;
+use crate::{Command, GraphCommand, Id, Label, Line};
 use rustyline::completion::{Completer, Pair};
 use rustyline::error::ReadlineError;
 use rustyline::highlight::{Highlighter, MatchingBracketHighlighter};
@@ -7,55 +9,81 @@ use rustyline::Context;
 use rustyline_derive::Helper;
 use std::borrow::Cow::{self, Borrowed, Owned};
 
-pub struct MicrodotLanguageCompleter {}
+pub trait GetNodeLabel {
+    fn get_node_label(&self, id: &Id) -> Option<Label>;
+}
 
-impl Completer for MicrodotLanguageCompleter {
+pub struct MicrodotLanguageCompleter<'a, GNL>
+where
+    GNL: GetNodeLabel,
+{
+    label_info: &'a GNL,
+}
+
+const ALLOW_COMPLETION: bool = true;
+
+impl<'a, GNL> Completer for MicrodotLanguageCompleter<'a, GNL>
+where
+    GNL: GetNodeLabel,
+{
     type Candidate = Pair;
 
     fn complete(
         &self,
         line: &str,
-        pos: usize,
-        ctx: &Context<'_>,
+        _pos: usize,
+        _ctx: &Context<'_>,
     ) -> Result<(usize, Vec<Pair>), ReadlineError> {
+        if !ALLOW_COMPLETION {
+            // feature-flagged off
+            return Ok((0, vec![]));
+        }
+
+        let parse_result = parse_line(Line::new(line));
+        if let Command::GraphCommand(GraphCommand::RenameNode { id, .. }) = parse_result {
+            if let Some(label) = self.label_info.get_node_label(&id) {
+                let new_line = format!("r {} {}", id, label.0);
+
+                let replacement = Pair {
+                    display: new_line.clone(),
+                    replacement: new_line,
+                };
+                return Ok((0, vec![replacement]));
+            }
+        }
+
         Ok((0, vec![]))
-        // Ok((
-        //     1,
-        //     vec![Pair {
-        //         display: "foo".to_string(),
-        //         replacement: "foo".to_string(),
-        //     }],
-        // ))
-
-        //        self.completer.complete(line, pos, ctx)
     }
 }
 
-impl Default for MicrodotLanguageCompleter {
-    fn default() -> Self {
-        Self {}
-    }
-}
-
-impl MicrodotLanguageCompleter {
-    fn new() -> Self {
-        Default::default()
+impl<'a, GNL> MicrodotLanguageCompleter<'a, GNL>
+where
+    GNL: GetNodeLabel,
+{
+    fn new(label_info: &'a GNL) -> Self {
+        Self { label_info }
     }
 }
 
 #[derive(Helper)]
-pub struct MicrodotHelper {
-    completer: MicrodotLanguageCompleter,
+pub struct MicrodotHelper<'a, GNL>
+where
+    GNL: GetNodeLabel,
+{
+    completer: MicrodotLanguageCompleter<'a, GNL>,
     highlighter: MatchingBracketHighlighter,
     validator: MatchingBracketValidator,
     hinter: HistoryHinter,
     colored_prompt: String,
 }
 
-impl Default for MicrodotHelper {
-    fn default() -> Self {
+impl<'a, GNL> MicrodotHelper<'a, GNL>
+where
+    GNL: GetNodeLabel,
+{
+    pub fn new(label_info: &'a GNL) -> Self {
         Self {
-            completer: MicrodotLanguageCompleter::new(),
+            completer: MicrodotLanguageCompleter::new(label_info),
             highlighter: MatchingBracketHighlighter::new(),
             hinter: HistoryHinter {},
             colored_prompt: ">> ".to_owned(),
@@ -64,13 +92,10 @@ impl Default for MicrodotHelper {
     }
 }
 
-impl MicrodotHelper {
-    pub fn new() -> Self {
-        Default::default()
-    }
-}
-
-impl Completer for MicrodotHelper {
+impl<'a, GNL> Completer for MicrodotHelper<'a, GNL>
+where
+    GNL: GetNodeLabel,
+{
     type Candidate = Pair;
 
     fn complete(
@@ -83,7 +108,10 @@ impl Completer for MicrodotHelper {
     }
 }
 
-impl Hinter for MicrodotHelper {
+impl<'a, GNL> Hinter for MicrodotHelper<'a, GNL>
+where
+    GNL: GetNodeLabel,
+{
     type Hint = String;
 
     fn hint(&self, line: &str, pos: usize, ctx: &Context<'_>) -> Option<String> {
@@ -91,7 +119,10 @@ impl Hinter for MicrodotHelper {
     }
 }
 
-impl Highlighter for MicrodotHelper {
+impl<'a, GNL> Highlighter for MicrodotHelper<'a, GNL>
+where
+    GNL: GetNodeLabel,
+{
     fn highlight_prompt<'b, 's: 'b, 'p: 'b>(
         &'s self,
         prompt: &'p str,
@@ -117,7 +148,10 @@ impl Highlighter for MicrodotHelper {
     }
 }
 
-impl Validator for MicrodotHelper {
+impl<'a, GNL> Validator for MicrodotHelper<'a, GNL>
+where
+    GNL: GetNodeLabel,
+{
     fn validate(
         &self,
         ctx: &mut validate::ValidationContext,
