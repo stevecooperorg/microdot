@@ -41,6 +41,7 @@ pub enum Command {
     PrintDot,
     PrintJson,
     Save,
+    Show,
     Exit,
     ParseError { line: Line },
 }

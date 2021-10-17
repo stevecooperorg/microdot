@@ -15,6 +15,7 @@ Commands:
     - print           print dot for the graph
     - tb              render the graph top to bottom
     - u <id> <id>     unlink nodes by removing an edge
+    - show            show the SVG in Gapplin, if installed
 
 Usage:
 

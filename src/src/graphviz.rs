@@ -1,7 +1,7 @@
 use crate::colors::Color;
 use crate::graph::Graph;
 use crate::palettes::PaletteReader;
-use crate::{Exporter, Id, Label, NodeHighlight};
+use crate::{CommandResult, Exporter, Id, Label, NodeHighlight};
 use command_macros::cmd;
 use hyphenation::{Language, Load, Standard};
 use regex::Regex;
@@ -19,6 +19,7 @@ struct ColorScheme {
 }
 
 const PALETTE_NAME: &str = "soft_coral";
+const GAPPLIN_PATH: &str = "/Applications/Gapplin.app/Contents/MacOS/Gapplin";
 
 impl ColorScheme {
     pub fn from_entry(i: usize) -> Self {
@@ -66,6 +67,26 @@ macro_rules! hashmap {
             _map
         }
     };
+}
+
+pub fn open_in_gapplin(svg_path: &Path) -> CommandResult {
+    let viewer = GAPPLIN_PATH;
+    let svg_path = &svg_path.to_string_lossy().to_string();
+    if Path::new(viewer).exists() {
+        let mut cmd = std::process::Command::new(viewer);
+        cmd.arg(svg_path);
+        match cmd.spawn() {
+            Ok(_) => CommandResult(format!("Opened {} in {}", svg_path, viewer)),
+            Err(e) => CommandResult(format!(
+                "Could not open {} in {}: {}",
+                svg_path,
+                viewer,
+                e.to_string()
+            )),
+        }
+    } else {
+        CommandResult(format!("Could not open {} in {}", svg_path, viewer))
+    }
 }
 
 pub fn installed_graphviz_version() -> Option<String> {

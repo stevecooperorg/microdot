@@ -78,6 +78,9 @@ fn exit<'a>() -> Parser<'a, u8, ()> {
     keyword(b"exit").discard()
 }
 
+fn show<'a>() -> Parser<'a, u8, ()> {
+    keyword(b"show").discard()
+}
 fn keyword<'a>(keyword: &'static [u8]) -> Parser<'a, u8, ()> {
     literal(keyword).discard().name("keyword")
 }
@@ -230,6 +233,10 @@ pub fn parse_line(line: Line) -> Command {
         return Command::Save;
     }
 
+    if let Ok(()) = show().parse(text) {
+        return Command::Show;
+    }
+
     if let Ok(sub_label) = search().parse(text) {
         return Command::Search {
             sub_label: Label::new(sub_label),
@@ -303,6 +310,7 @@ mod tests {
 
         assert_consumes_all![delete_node(), b"d foo", "foo"];
         assert_consumes_all![exit(), b"exit", ()];
+        assert_consumes_all![show(), b"show", ()];
         assert_consumes_all![insert_node(), b"i foo bar baz", "foo bar baz"];
         assert_consumes_all![insert_node(), b"i foo", "foo"];
         assert_consumes_all![lr(), b"lr"];
@@ -444,6 +452,7 @@ mod tests {
                 sub_label: Label::new("foo")
             }
         );
+        assert_parse_command!("show", Command::Show {});
         assert_parse_command!(
             "/foo",
             Command::Search {

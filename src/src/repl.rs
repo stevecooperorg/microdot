@@ -34,6 +34,11 @@ pub fn repl<I: Interaction>(
                         }
                     }
                     Command::ShowHelp => interaction.log(include_str!("help.txt")),
+                    Command::Show => {
+                        let svg_file = json_file.with_extension("svg");
+                        let result = graphviz::open_in_gapplin(&svg_file);
+                        interaction.log(result.to_string());
+                    }
                     Command::PrintDot => {
                         let graph = graph.read().unwrap();
                         let mut exporter = GraphVizExporter::new(DisplayMode::Interactive);
