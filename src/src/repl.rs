@@ -4,7 +4,6 @@ use crate::json::JsonExporter;
 use crate::parser::parse_line;
 use crate::{graphviz, Command, CommandResult, Interaction, Line};
 use rustyline::error::ReadlineError;
-use std::borrow::BorrowMut;
 use std::path::{Path, PathBuf};
 use std::sync::{Arc, RwLock};
 

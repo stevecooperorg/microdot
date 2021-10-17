@@ -7,7 +7,7 @@ use libmicrodot::{Id, Label};
 use rustyline::{Config, Editor};
 use std::fs::File;
 use std::io::Read;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::sync::{Arc, RwLock};
 
 #[derive(Clap)]
@@ -80,7 +80,7 @@ fn main() -> Result<(), anyhow::Error> {
     Ok(())
 }
 
-fn load_graph(json_file: &PathBuf) -> Result<Graph, anyhow::Error> {
+fn load_graph(json_file: &Path) -> Result<Graph, anyhow::Error> {
     let json_content = if json_file.exists() {
         println!(
             "loading existing graph from {}",
@@ -95,6 +95,6 @@ fn load_graph(json_file: &PathBuf) -> Result<Graph, anyhow::Error> {
     };
 
     let importer = JsonImporter::new(json_content);
-    let mut graph = importer.import()?;
+    let graph = importer.import()?;
     Ok(graph)
 }
