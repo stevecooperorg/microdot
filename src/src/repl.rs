@@ -34,6 +34,9 @@ pub fn repl<I: Interaction>(
                         }
                     }
                     Command::ShowHelp => interaction.log(include_str!("help.txt")),
+                    Command::RenameNodeUnlabelled { .. } => {
+                        // no need to act, this is for auto-complete
+                    }
                     Command::Show => {
                         let svg_file = json_file.with_extension("svg");
                         let result = graphviz::open_in_gapplin(&svg_file);

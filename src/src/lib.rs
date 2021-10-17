@@ -40,6 +40,7 @@ pub enum Command {
     Search { sub_label: Label },
     PrintDot,
     PrintJson,
+    RenameNodeUnlabelled { id: Id },
     Save,
     Show,
     Exit,

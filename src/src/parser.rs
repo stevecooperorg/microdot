@@ -121,7 +121,12 @@ fn unlink_edge<'a>() -> Parser<'a, u8, String> {
 
 fn rename_node<'a>() -> Parser<'a, u8, (String, String)> {
     // e bar baz
-    keyword(b"r") * id() + label()
+    rename_node_unlabelled() + label()
+}
+
+fn rename_node_unlabelled<'a>() -> Parser<'a, u8, String> {
+    // e bar baz
+    keyword(b"r") * id()
 }
 
 fn insert_after_node<'a>() -> Parser<'a, u8, (String, String)> {
@@ -175,6 +180,10 @@ pub fn parse_line(line: Line) -> Command {
             label: Label::new(&label),
         }
         .into();
+    }
+
+    if let Ok(id) = rename_node_unlabelled().parse(text) {
+        return Command::RenameNodeUnlabelled { id: Id::new(&id) }.into();
     }
 
     if let Ok(()) = lr().parse(text) {
@@ -292,6 +301,7 @@ mod tests {
             b"r f new name",
             ("f".to_string(), "new name".to_string())
         ];
+        assert_consumes_all![rename_node_unlabelled(), b"r f", "f".to_string()];
         assert_consumes_all![
             insert_after_node(),
             b"aft f new name",
@@ -435,6 +445,11 @@ mod tests {
                 label: Label::new("a new name")
             }
             .into()
+        );
+
+        assert_parse_command!(
+            "r foo",
+            Command::RenameNodeUnlabelled { id: Id::new("foo") }.into()
         );
 
         assert_parse_command!("save", Command::Save);

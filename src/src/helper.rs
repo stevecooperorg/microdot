@@ -34,25 +34,35 @@ where
         _pos: usize,
         _ctx: &Context<'_>,
     ) -> Result<(usize, Vec<Pair>), ReadlineError> {
+        fn no_options() -> Result<(usize, Vec<Pair>), ReadlineError> {
+            Ok((0, vec![]))
+        }
+
         if !ALLOW_COMPLETION {
             // feature-flagged off
-            return Ok((0, vec![]));
+            return no_options();
         }
 
         let parse_result = parse_line(Line::new(line));
-        if let Command::GraphCommand(GraphCommand::RenameNode { id, .. }) = parse_result {
-            if let Some(label) = self.label_info.get_node_label(&id) {
-                let new_line = format!("r {} {}", id, label.0);
 
-                let replacement = Pair {
-                    display: new_line.clone(),
-                    replacement: new_line,
-                };
-                return Ok((0, vec![replacement]));
-            }
-        }
+        let id = match parse_result {
+            Command::GraphCommand(GraphCommand::RenameNode { id, .. }) => id,
+            Command::RenameNodeUnlabelled { id } => id,
+            _ => return no_options(),
+        };
 
-        Ok((0, vec![]))
+        let label = match self.label_info.get_node_label(&id) {
+            Some(label) => label,
+            None => return no_options(),
+        };
+
+        let new_line = format!("r {} {}", id, label.0);
+
+        let replacement = Pair {
+            display: new_line.clone(),
+            replacement: new_line,
+        };
+        Ok((0, vec![replacement]))
     }
 }
 

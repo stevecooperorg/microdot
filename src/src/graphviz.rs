@@ -18,7 +18,7 @@ struct ColorScheme {
     node_border_width: f64,
 }
 
-const PALETTE_NAME: &str = "soft_coral";
+const PALETTE_NAME: &str = "antarctica_evening";
 const GAPPLIN_PATH: &str = "/Applications/Gapplin.app/Contents/MacOS/Gapplin";
 
 impl ColorScheme {
