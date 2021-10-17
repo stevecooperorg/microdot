@@ -163,6 +163,7 @@ impl Exporter for GraphVizExporter {
         let line = template(LINE_TEMPLATE, &node_params);
 
         self.inner_content.push_str(&line);
+        self.inner_content.push('\n');
     }
 
     fn add_edge(&mut self, id: &Id, from: &Id, to: &Id) {
@@ -235,6 +236,7 @@ mod tests {
     use crate::{GraphCommand, Id, Interaction, Label};
     use std::collections::VecDeque;
     use std::path::PathBuf;
+    use std::sync::{Arc, RwLock};
 
     #[test]
     fn escapes_label() {
@@ -364,7 +366,7 @@ mod tests {
         );
 
         // read the file as lines and run it through the repl;
-        let mut graph = Graph::new();
+        let mut graph = Arc::new(RwLock::new(Graph::new()));
 
         let text_content = std::fs::read_to_string(&text_file).expect("could not read file");
         let lines: VecDeque<_> = text_content.lines().map(|l| l.to_string()).collect();
@@ -372,10 +374,11 @@ mod tests {
         repl(
             &mut auto_interaction,
             &text_file.with_extension("json"),
-            &mut graph,
+            graph.clone(),
         );
 
         let mut exporter = GraphVizExporter::new(DisplayMode::Interactive);
+        let graph = graph.read().unwrap();
         let exported = exporter.export(&graph);
 
         let dot_file = text_file.with_extension("dot");
