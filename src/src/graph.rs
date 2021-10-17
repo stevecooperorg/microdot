@@ -114,7 +114,17 @@ impl Graph {
         }
     }
 
-    pub fn search(&mut self, sub_label: Label) -> CommandResult {
+    pub fn find_node_label(&self, id: &Id) -> Option<Label> {
+        if let Some(idx) = self.find_node_idx(id) {
+            if let Some(node) = self.nodes.get(idx) {
+                return Some(node.label.clone());
+            }
+        }
+
+        None
+    }
+
+    pub fn highlight_search_results(&mut self, sub_label: Label) -> CommandResult {
         self.current_search = Some(sub_label.clone());
 
         let mut matches: Vec<_> = self

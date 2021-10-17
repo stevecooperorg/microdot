@@ -4,12 +4,14 @@ use crate::json::JsonExporter;
 use crate::parser::parse_line;
 use crate::{graphviz, Command, CommandResult, Interaction, Line};
 use rustyline::error::ReadlineError;
+use std::borrow::BorrowMut;
 use std::path::{Path, PathBuf};
+use std::sync::{Arc, RwLock};
 
 pub fn repl<I: Interaction>(
     interaction: &mut I,
     json_file: &Path,
-    graph: &mut Graph,
+    graph: Arc<RwLock<Graph>>,
 ) -> Result<(), anyhow::Error> {
     loop {
         let readline = interaction.read(">> ");
@@ -24,39 +26,44 @@ pub fn repl<I: Interaction>(
 
                 match command {
                     Command::GraphCommand(graph_command) => {
+                        let mut graph = graph.write().unwrap();
                         interaction.log(format!("({})", graph.apply_command(graph_command)));
                         let (interactive_dot_file, presentation_dot_file) =
-                            save_file(json_file, graph)?;
+                            save_file(json_file, &graph)?;
                         if interaction.should_compile_dot() {
                             compile_dot(interactive_dot_file, presentation_dot_file);
                         }
                     }
                     Command::ShowHelp => interaction.log(include_str!("help.txt")),
                     Command::PrintDot => {
+                        let graph = graph.read().unwrap();
                         let mut exporter = GraphVizExporter::new(DisplayMode::Interactive);
-                        let out = exporter.export(graph);
+                        let out = exporter.export(&graph);
                         interaction.log(out);
                         interaction.log("Dot printed");
                     }
                     Command::PrintJson => {
+                        let graph = graph.read().unwrap();
                         let mut exporter = JsonExporter::new();
-                        let out = exporter.export(graph);
+                        let out = exporter.export(&graph);
                         interaction.log(out);
                         interaction.log("Json printed");
                     }
                     Command::Search { sub_label } => {
-                        interaction.log(format!("({})", graph.search(sub_label)));
+                        let mut graph = graph.write().unwrap();
+                        interaction.log(format!("({})", graph.highlight_search_results(sub_label)));
 
                         // save the file so we get color highlights.
                         let (interactive_dot_file, presentation_dot_file) =
-                            save_file(json_file, graph)?;
+                            save_file(json_file, &graph)?;
                         if interaction.should_compile_dot() {
                             compile_dot(interactive_dot_file, presentation_dot_file);
                         }
                     }
                     Command::Save => {
+                        let graph = graph.read().unwrap();
                         let (interactive_dot_file, presentation_dot_file) =
-                            save_file(json_file, graph)?;
+                            save_file(json_file, &graph)?;
                         interaction.log(format!(
                             "Saved json: {}, interactive dot: {}, presentation dot: {}",
                             json_file.to_string_lossy(),

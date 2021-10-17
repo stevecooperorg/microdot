@@ -8,6 +8,7 @@ use rustyline::{Config, Editor};
 use std::fs::File;
 use std::io::Read;
 use std::path::PathBuf;
+use std::sync::{Arc, RwLock};
 
 #[derive(Clap)]
 #[clap(version = "1.0", author = "Kevin K. <kbknapp@gmail.com>")]
@@ -36,12 +37,14 @@ impl Opts {
     }
 }
 
-struct GraphGetNodeLabel {}
+struct GraphGetNodeLabel {
+    graph: Arc<RwLock<Graph>>,
+}
 
 impl GetNodeLabel for GraphGetNodeLabel {
     fn get_node_label(&self, id: &Id) -> Option<Label> {
-        //Some(Label::new("I dunno".to_string()))
-        None
+        let graph = self.graph.read().unwrap();
+        graph.find_node_label(id)
     }
 }
 
@@ -50,8 +53,11 @@ fn main() -> Result<(), anyhow::Error> {
     let history = opts.history();
     let json_file = opts.file();
 
-    let mut graph = load_graph(&json_file)?;
-    let gnl = GraphGetNodeLabel {};
+    let graph = load_graph(&json_file)?;
+    let graph = Arc::new(RwLock::new(graph));
+    let gnl = GraphGetNodeLabel {
+        graph: graph.clone(),
+    };
 
     let h = MicrodotHelper::new(&gnl);
     let config = Config::default();
@@ -67,7 +73,7 @@ fn main() -> Result<(), anyhow::Error> {
         );
     }
 
-    repl(&mut rl, &json_file, &mut graph)?;
+    repl(&mut rl, &json_file, graph)?;
 
     rl.save_history(&history).unwrap();
 

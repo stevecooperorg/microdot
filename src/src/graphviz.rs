@@ -269,7 +269,7 @@ mod tests {
             to: Id::new("n2"),
         });
 
-        graph.search(Label::new("abc"));
+        graph.highlight_search_results(Label::new("abc"));
 
         let mut exporter = GraphVizExporter::new(DisplayMode::Interactive);
 
