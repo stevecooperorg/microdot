@@ -5,11 +5,14 @@ use crate::{CommandResult, Exporter, Id, Label, NodeHighlight};
 use command_macros::cmd;
 use hyphenation::{Language, Load, Standard};
 use regex::Regex;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::path::Path;
 use textwrap::word_separators::UnicodeBreakProperties;
 use textwrap::wrap_algorithms::OptimalFit;
 use textwrap::{fill, Options};
+
+const PALETTE_NAME: &str = "antarctica_evening";
+const GAPPLIN_PATH: &str = "/Applications/Gapplin.app/Contents/MacOS/Gapplin";
 
 struct ColorScheme {
     font_color: String,
@@ -17,9 +20,6 @@ struct ColorScheme {
     stroke_color: String,
     node_border_width: f64,
 }
-
-const PALETTE_NAME: &str = "antarctica_evening";
-const GAPPLIN_PATH: &str = "/Applications/Gapplin.app/Contents/MacOS/Gapplin";
 
 impl ColorScheme {
     pub fn from_entry(i: usize) -> Self {
@@ -106,6 +106,32 @@ pub fn installed_graphviz_version() -> Option<String> {
     caps
 }
 
+fn hashtag_signature(input: &str) -> usize {
+    let rx = Regex::new("#[A-Z][A-Z0-9]*").expect("not a regex");
+    let mut hashes = HashSet::new();
+    for hash in rx.captures_iter(input) {
+        let hash = hash.get(0).unwrap().as_str();
+        hashes.insert(hash);
+    }
+
+    if hashes.is_empty() {
+        return 0;
+    }
+
+    let mut hashes: Vec<_> = hashes.into_iter().collect();
+    hashes.sort();
+
+    let combo: String = hashes.join("");
+    let combo = combo.as_bytes();
+    let digest = md5::compute(combo);
+    let digest_u8: [u8; 16] = digest.into();
+    let mut hash = 0usize;
+    for byte in digest_u8 {
+        hash += byte as usize;
+    }
+    hash
+}
+
 #[derive(Copy, Clone)]
 pub enum DisplayMode {
     Interactive,
@@ -153,11 +179,9 @@ impl Exporter for GraphVizExporter {
             Options::new(40).word_splitter(dictionary)
         };
 
-        let color_scheme = match highlight {
-            NodeHighlight::Normal => ColorScheme::normal(),
-            NodeHighlight::SearchResult => ColorScheme::search_result(),
-            NodeHighlight::CurrentNode => ColorScheme::current(),
-        };
+        let hash = hashtag_signature(&label.0);
+
+        let color_scheme = ColorScheme::from_entry(hash);
 
         let ColorScheme {
             font_color,
@@ -262,7 +286,8 @@ mod tests {
     use crate::graph::Graph;
     use crate::repl::repl;
     use crate::{GraphCommand, Id, Interaction, Label};
-    use std::collections::VecDeque;
+    use pom::set::Set;
+    use std::collections::{HashSet, VecDeque};
     use std::path::PathBuf;
     use std::sync::{Arc, RwLock};
 
@@ -431,5 +456,32 @@ mod tests {
             .expect("could not find major version");
 
         assert_eq!(major_version, "2");
+    }
+
+    #[test]
+    fn extracts_hashtags_right() {
+        fn eq(a: &str, b: &str) {
+            let ai = hashtag_signature(a);
+            let bi = hashtag_signature(b);
+            assert_eq!(
+                ai, bi,
+                "signatures are not the same for '{}' and '{}'",
+                a, b
+            )
+        }
+
+        fn ne(a: &str, b: &str) {
+            let ai = hashtag_signature(a);
+            let bi = hashtag_signature(b);
+            assert_ne!(ai, bi, "signatures are the same for '{}' and '{}'", a, b)
+        }
+
+        assert_eq!(0, hashtag_signature("no hashtags here"));
+        assert_ne!(0, hashtag_signature("hashtag! #HASH"));
+        eq("a #HASH", "b #HASH");
+        eq("#HASH a", "a #HASH");
+        eq("#A #B", "#B #A");
+        eq("#A #A", "#A");
+        ne("#HASHA a", "a #HASHB");
     }
 }

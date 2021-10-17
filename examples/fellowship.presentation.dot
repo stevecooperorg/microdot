@@ -4,20 +4,20 @@ digraph {
     node [fontname = "helvetica" style="filled" shape=box height=1 width=3.5 penwidth=3];
     edge [fontname = "helvetica" penwidth=3 color="#000"];
 
-    "n0" [label="Gandalf comes to the shire" fillcolor="#FF7C7C" color="#000" fontcolor="#000"]
-    "n1" [label="Frodo departs with the ring" fillcolor="#FF7C7C" color="#000" fontcolor="#000"]
-    "n2" [label="the inn at Bree" fillcolor="#FF7C7C" color="#000" fontcolor="#000"]
-    "n3" [label="the hobbits escape with Aragorn" fillcolor="#FF7C7C" color="#000" fontcolor="#000"]
-    "n4" [label="nazghuls catch up at Weathertop; Frodo is injured" fillcolor="#FF7C7C" color="#000" fontcolor="#000"]
-    "n5" [label="Nazghuls move to Bree" fillcolor="#FF7C7C" color="#000" fontcolor="#000"]
-    "n6" [label="the Nazghuls move to Weathertop" fillcolor="#FF7C7C" color="#000" fontcolor="#000"]
-    "n7" [label="Nazghuls dispatched from Mordor" fillcolor="#FF7C7C" color="#000" fontcolor="#000"]
-    "n8" [label="flight to the ford" fillcolor="#FF7C7C" color="#000" fontcolor="#000"]
-    "n9" [label="the fellowship meets at Rivendell \"one does not simply walk into mordor\"" fillcolor="#FF7C7C" color="#000" fontcolor="#000"]
-    "n10" [label="Gimli leaves the mountains" fillcolor="#FF7C7C" color="#000" fontcolor="#000"]
-    "n11" [label="Legolas travels from Mirkwood" fillcolor="#FF7C7C" color="#000" fontcolor="#000"]
-    "n12" [label="Boromir seeks the sword that is broken" fillcolor="#FF7C7C" color="#000" fontcolor="#000"]
-    "n13" [label="Boromir fights in the battle for Osgiliath" fillcolor="#6BC58C" color="#000" fontcolor="#000"]
+    "n0" [label="Gandalf comes to the shire" fillcolor="#F4D3C4" color="#000" fontcolor="#000"]
+    "n1" [label="Frodo departs with the ring" fillcolor="#F4D3C4" color="#000" fontcolor="#000"]
+    "n2" [label="the inn at Bree" fillcolor="#F4D3C4" color="#000" fontcolor="#000"]
+    "n3" [label="the hobbits escape with Aragorn" fillcolor="#F4D3C4" color="#000" fontcolor="#000"]
+    "n4" [label="nazghuls catch up at Weathertop; Frodo is injured" fillcolor="#F4D3C4" color="#000" fontcolor="#000"]
+    "n5" [label="Nazghuls move to Bree" fillcolor="#F4D3C4" color="#000" fontcolor="#000"]
+    "n6" [label="the Nazghuls move to Weathertop" fillcolor="#F4D3C4" color="#000" fontcolor="#000"]
+    "n7" [label="Nazghuls dispatched from Mordor" fillcolor="#F4D3C4" color="#000" fontcolor="#000"]
+    "n8" [label="flight to the ford" fillcolor="#F4D3C4" color="#000" fontcolor="#000"]
+    "n9" [label="the fellowship meets at Rivendell \"one does not simply walk into mordor\"" fillcolor="#F4D3C4" color="#000" fontcolor="#000"]
+    "n10" [label="Gimli leaves the mountains" fillcolor="#F4D3C4" color="#000" fontcolor="#000"]
+    "n11" [label="Legolas travels from Mirkwood" fillcolor="#F4D3C4" color="#000" fontcolor="#000"]
+    "n12" [label="Boromir seeks the sword that is broken" fillcolor="#F4D3C4" color="#000" fontcolor="#000"]
+    "n13" [label="Boromir fights in the battle for Osgiliath" fillcolor="#D895DA" color="#000" fontcolor="#000"]
 
     "n0" -> "n1";
     "n1" -> "n2";
