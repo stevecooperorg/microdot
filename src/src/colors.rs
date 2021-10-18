@@ -41,6 +41,16 @@ impl Color {
         Color([0, 0, 0])
     }
 
+    pub fn monochrome(&self) -> Self {
+        let grey =
+            ((self.r() as u64 + self.g() as u64 + self.b() as u64) as f64 / 3.0f64).floor() as u8;
+        Color::from_rgb(grey, grey, grey)
+    }
+
+    pub fn desaturate(&self, fraction: f64) -> Self {
+        self.mix(&self.monochrome(), fraction)
+    }
+
     pub fn white() -> Self {
         Color([255, 255, 255])
     }

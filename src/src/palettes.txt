@@ -12,6 +12,7 @@ fruits_tones: #E9692C #ED9121 #FFC324 #FFF000 #66B447 #8EE53F
 
 # https://applecolors.com/palette/11215-antarctica-evening-palette
 antarctica_evening: #F4D3C4 #F2AEBB #D895DA #A091D6 #696FC7 #A7AAE1
+antarctica_evening_v2: #FCF3F4 #F4D3C4 #F2AEBB #D895DA #A091D6 #A7AAE1 #D3F9CD #F8FDA2 #FAA5B5 #D485B8 #96BA31 #E58943 #F1B166
 
 # https://applecolors.com/palette/18276-soft-nature-gradient-palette
 soft_nature: #A8B087 #BCC199 #D3CDAE #F9E9DA #E9C9AE #DAB692

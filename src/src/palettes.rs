@@ -13,12 +13,14 @@ impl Palette {
 
         let RESERVED = 1;
 
-        if index < RESERVED {
-            return self.colors[index];
-        }
+        let color = if index < RESERVED {
+            self.colors[index]
+        } else {
+            let index = index % (self.colors.len() - RESERVED) + RESERVED;
+            self.colors[index]
+        };
 
-        let index = index % (self.colors.len() - RESERVED) + RESERVED;
-        self.colors[index]
+        color.desaturate(0.5).lighten(0.5)
     }
 }
 

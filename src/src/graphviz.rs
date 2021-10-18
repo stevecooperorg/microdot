@@ -11,7 +11,7 @@ use textwrap::word_separators::UnicodeBreakProperties;
 use textwrap::wrap_algorithms::OptimalFit;
 use textwrap::{fill, Options};
 
-const PALETTE_NAME: &str = "antarctica_evening";
+const PALETTE_NAME: &str = "antarctica_evening_v2";
 const GAPPLIN_PATH: &str = "/Applications/Gapplin.app/Contents/MacOS/Gapplin";
 
 struct ColorScheme {
