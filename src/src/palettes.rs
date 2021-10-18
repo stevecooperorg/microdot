@@ -11,7 +11,13 @@ impl Palette {
             return Color::white();
         }
 
-        let index = index % self.colors.len();
+        let RESERVED = 1;
+
+        if index < RESERVED {
+            return self.colors[index];
+        }
+
+        let index = index % (self.colors.len() - RESERVED) + RESERVED;
         self.colors[index]
     }
 }

@@ -215,6 +215,7 @@ impl Exporter for GraphVizExporter {
         let line = template(LINE_TEMPLATE, &node_params);
 
         self.inner_content.push_str(&line);
+        self.inner_content.push(';');
         self.inner_content.push('\n');
     }
 
