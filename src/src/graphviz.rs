@@ -196,7 +196,7 @@ impl Exporter for GraphVizExporter {
                 let unwrapped = format!("{}: {}", id.0, label.0);
                 fill(&unwrapped, &wrapping_options)
             }
-            DisplayMode::Presentation => label.0.clone(),
+            DisplayMode::Presentation => fill(&label.0, &wrapping_options),
         };
 
         let node_params = hashmap! {
