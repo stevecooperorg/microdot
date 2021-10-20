@@ -1,4 +1,4 @@
-use crate::colors::Color;
+use crate::colors::{Color, ColorScheme};
 use crate::graph::Graph;
 use crate::palettes::PaletteReader;
 use crate::{CommandResult, Exporter, Id, Label, NodeHighlight};
@@ -11,46 +11,7 @@ use textwrap::word_separators::UnicodeBreakProperties;
 use textwrap::wrap_algorithms::OptimalFit;
 use textwrap::{fill, Options};
 
-const PALETTE_NAME: &str = "antarctica_evening_v2";
 const GAPPLIN_PATH: &str = "/Applications/Gapplin.app/Contents/MacOS/Gapplin";
-
-struct ColorScheme {
-    font_color: String,
-    fill_color: String,
-    stroke_color: String,
-    node_border_width: f64,
-}
-
-impl ColorScheme {
-    pub fn from_entry(i: usize) -> Self {
-        let content = include_str!("./palettes.txt");
-        let reader = PaletteReader {};
-        let palettes = reader.read(content).expect("couldn't read palette");
-        let palette = palettes.get(PALETTE_NAME).unwrap();
-
-        let stroke_color = Color::black();
-        let fill_color = palette.get_color(i);
-        let font_color = stroke_color;
-        Self {
-            font_color: font_color.to_html_string(),
-            fill_color: fill_color.to_html_string(),
-            stroke_color: stroke_color.to_html_string(),
-            node_border_width: 3.0f64,
-        }
-    }
-
-    fn normal() -> Self {
-        ColorScheme::from_entry(0)
-    }
-
-    fn search_result() -> Self {
-        ColorScheme::from_entry(1)
-    }
-
-    fn current() -> Self {
-        ColorScheme::from_entry(2)
-    }
-}
 
 macro_rules! hashmap {
     (@single $($x:tt)*) => (());
@@ -106,7 +67,13 @@ pub fn installed_graphviz_version() -> Option<String> {
     caps
 }
 
-fn hashtag_signature(input: &str) -> usize {
+#[derive(PartialEq, Debug)]
+enum HashState {
+    None,
+    Hashed(usize),
+}
+
+fn hashtag_signature(input: &str) -> HashState {
     let rx = Regex::new("#[A-Z][A-Z0-9]*").expect("not a regex");
     let mut hashes = HashSet::new();
     for hash in rx.captures_iter(input) {
@@ -115,7 +82,7 @@ fn hashtag_signature(input: &str) -> usize {
     }
 
     if hashes.is_empty() {
-        return 0;
+        return HashState::None;
     }
 
     let mut hashes: Vec<_> = hashes.into_iter().collect();
@@ -129,7 +96,7 @@ fn hashtag_signature(input: &str) -> usize {
     for byte in digest_u8 {
         hash += byte as usize;
     }
-    hash
+    HashState::Hashed(hash)
 }
 
 #[derive(Copy, Clone)]
@@ -181,15 +148,10 @@ impl Exporter for GraphVizExporter {
 
         let hash = hashtag_signature(&label.0);
 
-        let color_scheme = ColorScheme::from_entry(hash);
-
-        let ColorScheme {
-            font_color,
-            fill_color,
-            stroke_color,
-            node_border_width,
-            ..
-        } = color_scheme;
+        let color_scheme = match hash {
+            HashState::None => ColorScheme::normal(),
+            HashState::Hashed(hash) => ColorScheme::series(hash),
+        };
 
         let label_text = match self.display_mode {
             DisplayMode::Interactive => {
@@ -204,10 +166,10 @@ impl Exporter for GraphVizExporter {
             "label" => label.0.clone(),
             "escaped_id" => escape_id(&id.0),
             "label_text" => escape_label(&label_text),
-            "stroke_color" => stroke_color,
-            "fill_color" => fill_color,
-            "font_color" => font_color,
-            "width" => node_border_width.to_string()
+            "stroke_color" => color_scheme.get_stroke_color().to_html_string(),
+            "fill_color" => color_scheme.get_fill_color().to_html_string(),
+            "font_color" => color_scheme.get_font_color().to_html_string(),
+            "width" => color_scheme.get_node_border_width().to_string()
         };
 
         const LINE_TEMPLATE: &str = r#"    ${escaped_id} [label=${label_text} fillcolor="${fill_color}" color="${stroke_color}" fontcolor="${font_color}"]"#;
@@ -264,11 +226,11 @@ impl GraphVizExporter {
 
         let rankdir = if self.is_left_right { "LR" } else { "TB" };
 
-        let edge_color = ColorScheme::normal().stroke_color;
+        let edge_color = ColorScheme::normal().get_stroke_color();
 
         template
             .replace("${RANKDIR}", rankdir)
-            .replace("${EDGECOLOR}", &edge_color)
+            .replace("${EDGECOLOR}", &edge_color.to_html_string())
             .replace("${INNER_CONTENT}", &self.inner_content)
     }
 }
@@ -477,8 +439,8 @@ mod tests {
             assert_ne!(ai, bi, "signatures are the same for '{}' and '{}'", a, b)
         }
 
-        assert_eq!(0, hashtag_signature("no hashtags here"));
-        assert_ne!(0, hashtag_signature("hashtag! #HASH"));
+        assert_eq!(HashState::None, hashtag_signature("no hashtags here"));
+        assert_ne!(HashState::None, hashtag_signature("hashtag! #HASH"));
         eq("a #HASH", "b #HASH");
         eq("#HASH a", "a #HASH");
         eq("#A #B", "#B #A");

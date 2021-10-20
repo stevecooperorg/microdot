@@ -1,3 +1,4 @@
+use crate::palettes::PaletteReader;
 use std::cmp::Ordering;
 
 #[derive(serde::Deserialize, Copy, Clone, PartialEq, Debug)]
@@ -104,6 +105,61 @@ impl Color {
 
     pub fn from_rgb(r: u8, g: u8, b: u8) -> Self {
         Color([r, g, b])
+    }
+}
+
+pub struct ColorScheme {
+    font_color: Color,
+    fill_color: Color,
+    stroke_color: Color,
+    node_border_width: f64,
+}
+
+const PALETTE_NAME: &str = "antarctica_evening_v2";
+
+impl ColorScheme {
+    const NODE_BORDER_WIDTH: f64 = 3.0f64;
+
+    fn from_colors(stroke_color: Color, fill_color: Color, font_color: Color) -> Self {
+        Self {
+            font_color,
+            fill_color,
+            stroke_color,
+            node_border_width: Self::NODE_BORDER_WIDTH,
+        }
+    }
+
+    fn from_entry(i: usize) -> Self {
+        let content = include_str!("./palettes.txt");
+        let reader = PaletteReader {};
+        let palettes = reader.read(content).expect("couldn't read palette");
+        let palette = palettes.get(PALETTE_NAME).unwrap();
+
+        let stroke_color = palette.get_stroke_color();
+        let fill_color = palette.get_fill_color(i);
+        let font_color = stroke_color;
+        Self::from_colors(stroke_color, fill_color, font_color)
+    }
+
+    pub fn normal() -> Self {
+        ColorScheme::from_colors(Color::black(), Color::white(), Color::black())
+    }
+
+    pub fn series(highlight: usize) -> Self {
+        ColorScheme::from_entry(2)
+    }
+
+    pub fn get_stroke_color(&self) -> Color {
+        self.stroke_color
+    }
+    pub fn get_font_color(&self) -> Color {
+        self.font_color
+    }
+    pub fn get_fill_color(&self) -> Color {
+        self.fill_color
+    }
+    pub fn get_node_border_width(&self) -> f64 {
+        self.node_border_width
     }
 }
 

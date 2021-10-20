@@ -6,21 +6,21 @@ pub struct Palette {
 }
 
 impl Palette {
-    pub fn get_color(&self, index: usize) -> Color {
+    pub fn get_stroke_color(&self) -> Color {
+        Color::black()
+    }
+
+    pub fn get_default_fill_color(&self, index: usize) -> Color {
+        Color::white()
+    }
+
+    pub fn get_fill_color(&self, index: usize) -> Color {
         if self.colors.is_empty() {
             return Color::white();
         }
 
-        let RESERVED = 1;
-
-        let color = if index < RESERVED {
-            self.colors[index]
-        } else {
-            let index = index % (self.colors.len() - RESERVED) + RESERVED;
-            self.colors[index]
-        };
-
-        color.desaturate(0.5).lighten(0.5)
+        let index = index % self.colors.len();
+        self.colors[index]
     }
 }
 
@@ -68,19 +68,19 @@ impl PaletteReader {
 mod tests {
     use super::*;
 
-    // #[test]
-    // fn can_read_single_palette() {
-    //     let content = "my_palette: #00ffff #ff0000 #ffff00";
-    //     let reader = PaletteReader {};
-    //     let palettes = reader.read(content).unwrap();
-    //     assert_eq!(palettes.len(), 1);
-    //     assert!(palettes.contains_key("my_palette"));
-    //     let palette = palettes.get("my_palette").unwrap();
-    //     assert_eq!(Color::from_rgb(0, 255, 255), palette.get_color(0));
-    //     assert_eq!(Color::from_rgb(255, 0, 0), palette.get_color(1));
-    //     assert_eq!(Color::from_rgb(255, 255, 0), palette.get_color(2));
-    //     assert_eq!(Color::from_rgb(0, 255, 255), palette.get_color(3));
-    // }
+    #[test]
+    fn can_read_single_palette() {
+        let content = "my_palette: #00ffff #ff0000 #ffff00";
+        let reader = PaletteReader {};
+        let palettes = reader.read(content).unwrap();
+        assert_eq!(palettes.len(), 1);
+        assert!(palettes.contains_key("my_palette"));
+        let palette = palettes.get("my_palette").unwrap();
+        assert_eq!(Color::from_rgb(0, 255, 255), palette.get_fill_color(0));
+        assert_eq!(Color::from_rgb(255, 0, 0), palette.get_fill_color(1));
+        assert_eq!(Color::from_rgb(255, 255, 0), palette.get_fill_color(2));
+        assert_eq!(Color::from_rgb(0, 255, 255), palette.get_fill_color(3));
+    }
 
     #[test]
     fn can_read_palette_file() {
