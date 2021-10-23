@@ -17,7 +17,7 @@
 <!-- n1 -->
 <g id="node2" class="node">
 <title>n1</title>
-<polygon fill="#f2aebb" stroke="#000000" stroke-width="3" points="288,-72 0,-72 0,0 288,0 288,-72"/>
+<polygon fill="#b596f6" stroke="#000000" stroke-width="3" points="288,-72 0,-72 0,0 288,0 288,-72"/>
 <text text-anchor="middle" x="144" y="-32.3" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">n1: a new name #HIGHLIGHT</text>
 </g>
 <!-- n0&#45;&gt;n1 -->

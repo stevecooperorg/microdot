@@ -1,22 +1,24 @@
-use crate::colors::Color;
+use crate::colors::{Color, Colors};
+use palette::{FromColor, Hue, IntoColor, Lch, Srgb};
 use std::collections::{HashMap, VecDeque};
 
+#[derive(Clone)]
 pub struct Palette {
     colors: Vec<Color>,
 }
 
 impl Palette {
     pub fn get_stroke_color(&self) -> Color {
-        Color::black()
+        Colors::black()
     }
 
     pub fn get_default_fill_color(&self, index: usize) -> Color {
-        Color::white()
+        Colors::white()
     }
 
     pub fn get_fill_color(&self, index: usize) -> Color {
         if self.colors.is_empty() {
-            return Color::white();
+            return Colors::white();
         }
 
         let index = index % self.colors.len();
@@ -26,9 +28,29 @@ impl Palette {
 
 pub struct PaletteReader {}
 
+pub struct PaletteCollection {
+    inner: HashMap<String, Palette>,
+}
+
+impl PaletteCollection {
+    fn new() -> Self {
+        Self {
+            inner: Default::default(),
+        }
+    }
+
+    fn insert(&mut self, name: &str, palette: Palette) {
+        self.inner.insert(name.to_string(), palette);
+    }
+
+    pub fn get(&self, name: &str) -> Option<Palette> {
+        self.inner.get(name).map(|p| p.clone())
+    }
+}
+
 impl PaletteReader {
-    pub fn read(&self, content: &str) -> Result<HashMap<String, Palette>, anyhow::Error> {
-        let mut result = HashMap::new();
+    pub fn read(&self, content: &str) -> Result<PaletteCollection, anyhow::Error> {
+        let mut result = PaletteCollection::new();
 
         for line in content.lines() {
             if line.trim().is_empty() {
@@ -58,9 +80,52 @@ impl PaletteReader {
             }
 
             let palette = Palette { colors };
-            result.insert(name.to_string(), palette);
+            result.insert(name, palette);
         }
+
+        let generator = ColorIterator::new();
+        let colors: Vec<_> = generator.take(20).collect();
+        let palette = Palette { colors };
+        result.insert("generated", palette);
         Ok(result)
+    }
+}
+
+pub struct ColorIterator {
+    hue: f32,
+    iteration: usize,
+}
+
+impl ColorIterator {
+    fn new() -> Self {
+        Self {
+            hue: 0f32,
+            iteration: 1,
+        }
+    }
+}
+
+impl Iterator for ColorIterator {
+    type Item = Color;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let delta = 140.0f32;
+        let hsl: Lch = Srgb::new(1.0, 0.5, 0.5).into_color();
+        let hsl = hsl.shift_hue(self.hue);
+        self.hue += delta;
+        let rgb: Srgb = Srgb::from_color(hsl);
+        fn to255(component: f32) -> u8 {
+            let res = component * 256.0;
+            let res = f32::min(res, 256.0);
+            let res = f32::max(res, 0.0);
+            let res = res as u8;
+            res
+        }
+
+        let r = to255(rgb.red);
+        let g = to255(rgb.green);
+        let b = to255(rgb.blue);
+        Some(Color::from_rgb(r, g, b))
     }
 }
 
@@ -69,12 +134,24 @@ mod tests {
     use super::*;
 
     #[test]
+    fn color_iterator_generates_colors() {
+        let mut iter = ColorIterator::new();
+        let colors: Vec<_> = iter.take(20).collect();
+        let color_str = colors
+            .iter()
+            .map(Color::to_html_string)
+            .collect::<Vec<_>>()
+            .join(" ");
+
+        let palette = format!("generated: {}", color_str);
+        println!("{}", palette);
+    }
+
+    #[test]
     fn can_read_single_palette() {
         let content = "my_palette: #00ffff #ff0000 #ffff00";
         let reader = PaletteReader {};
         let palettes = reader.read(content).unwrap();
-        assert_eq!(palettes.len(), 1);
-        assert!(palettes.contains_key("my_palette"));
         let palette = palettes.get("my_palette").unwrap();
         assert_eq!(Color::from_rgb(0, 255, 255), palette.get_fill_color(0));
         assert_eq!(Color::from_rgb(255, 0, 0), palette.get_fill_color(1));
@@ -87,6 +164,6 @@ mod tests {
         let content = include_str!("./palettes.txt");
         let reader = PaletteReader {};
         let palettes = reader.read(content).unwrap();
-        assert_eq!(palettes.len(), 7);
+        assert!(palettes.get("antarctica_evening").is_some());
     }
 }

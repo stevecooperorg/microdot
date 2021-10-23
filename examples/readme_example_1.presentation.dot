@@ -2,10 +2,10 @@ digraph {
 
     graph [fontname = "helvetica" rankdir=TB ranksep=0.75 nodesep=0.5];
     node [fontname = "helvetica" style="filled" shape=box height=1 width=4.0 penwidth=3];
-    edge [fontname = "helvetica" penwidth=3 color="#000"];
+    edge [fontname = "helvetica" penwidth=3 color="#000000"];
 
-    "n0" [label="a cool new node" fillcolor="#FFFFFF" color="#000" fontcolor="#000"];
-    "n1" [label="a new name #HIGHLIGHT" fillcolor="#F2AEBB" color="#000" fontcolor="#000"];
+    "n0" [label="a cool new node" fillcolor="#FFFFFF" color="#000000" fontcolor="#000000"];
+    "n1" [label="a new name #HIGHLIGHT" fillcolor="#B596F6" color="#000000" fontcolor="#000000"];
 
     "n0" -> "n1";
 

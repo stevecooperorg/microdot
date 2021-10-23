@@ -1,11 +1,12 @@
-use crate::colors::{Color, ColorScheme};
+use crate::colors::ColorScheme;
 use crate::graph::Graph;
-use crate::palettes::PaletteReader;
 use crate::{CommandResult, Exporter, Id, Label, NodeHighlight};
 use command_macros::cmd;
 use hyphenation::{Language, Load, Standard};
 use regex::Regex;
+use std::collections::hash_map::DefaultHasher;
 use std::collections::{HashMap, HashSet};
+use std::hash::{Hash, Hasher};
 use std::path::Path;
 use textwrap::word_separators::UnicodeBreakProperties;
 use textwrap::wrap_algorithms::OptimalFit;
@@ -89,13 +90,9 @@ fn hashtag_signature(input: &str) -> HashState {
     hashes.sort();
 
     let combo: String = hashes.join("");
-    let combo = combo.as_bytes();
-    let digest = md5::compute(combo);
-    let digest_u8: [u8; 16] = digest.into();
-    let mut hash = 0usize;
-    for byte in digest_u8 {
-        hash += byte as usize;
-    }
+    let mut s = DefaultHasher::new();
+    combo.hash(&mut s);
+    let hash = s.finish() as usize;
     HashState::Hashed(hash)
 }
 
@@ -249,8 +246,7 @@ mod tests {
     use crate::graph::Graph;
     use crate::repl::repl;
     use crate::{GraphCommand, Id, Interaction, Label};
-    use pom::set::Set;
-    use std::collections::{HashSet, VecDeque};
+    use std::collections::VecDeque;
     use std::path::PathBuf;
     use std::sync::{Arc, RwLock};
 

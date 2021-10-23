@@ -1,69 +1,36 @@
 use crate::palettes::PaletteReader;
-use std::cmp::Ordering;
+use palette::*;
 
-#[derive(serde::Deserialize, Copy, Clone, PartialEq, Debug)]
-pub struct Color([u8; 3]);
-
-impl PartialOrd for Color {
-    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        Some(self.sort_key().cmp(&other.sort_key()))
-    }
+#[derive(Copy, Clone, Debug, PartialEq)]
+pub struct Color {
+    inner: Srgb<u8>,
 }
 
 impl Color {
+    pub fn from_rgb(r: u8, g: u8, b: u8) -> Self {
+        Color {
+            inner: Srgb::new(r, g, b),
+        }
+    }
+
     fn r(&self) -> u8 {
-        self.0[0]
+        self.inner.red
     }
 
     fn g(&self) -> u8 {
-        self.0[1]
+        self.inner.green
     }
 
     fn b(&self) -> u8 {
-        self.0[2]
-    }
-
-    fn mix(&self, other: &Self, fraction: f64) -> Self {
-        let r = Color::blend(self.r(), other.r(), fraction);
-        let g = Color::blend(self.g(), other.g(), fraction);
-        let b = Color::blend(self.b(), other.b(), fraction);
-        Color([r, g, b])
-    }
-
-    pub fn darken(&self, fraction: f64) -> Self {
-        self.mix(&Color::black(), fraction)
-    }
-
-    pub fn lighten(&self, fraction: f64) -> Self {
-        self.mix(&Color::white(), fraction)
-    }
-
-    pub fn black() -> Self {
-        Color([0, 0, 0])
-    }
-
-    pub fn monochrome(&self) -> Self {
-        let grey =
-            ((self.r() as u64 + self.g() as u64 + self.b() as u64) as f64 / 3.0f64).floor() as u8;
-        Color::from_rgb(grey, grey, grey)
-    }
-
-    pub fn desaturate(&self, fraction: f64) -> Self {
-        self.mix(&self.monochrome(), fraction)
-    }
-
-    pub fn white() -> Self {
-        Color([255, 255, 255])
-    }
-
-    fn blend(c1: u8, c2: u8, fraction: f64) -> u8 {
-        let r = c1 as f64 * fraction + c2 as f64 * (1.0f64 - fraction);
-        r.floor() as u8
+        self.inner.blue
     }
 
     pub fn to_html_string(&self) -> String {
         fn push_hex(s: &mut String, byte: u8) {
             use std::fmt::Write;
+            if byte < 16 {
+                write!(s, "0").expect("unable to write");
+            }
             write!(s, "{:X}", byte).expect("Unable to write");
         }
 
@@ -96,15 +63,16 @@ impl Color {
 
         Ok(color)
     }
+}
 
-    fn sort_key(&self) -> i64 {
-        -((self.r() as f64 * 1.0f64)
-            + (self.g() as f64 * 1.00001f64)
-            + (self.b() as f64 * 1.001f64)) as i64
+pub struct Colors;
+
+impl Colors {
+    pub fn black() -> Color {
+        Color::from_rgb(0, 0, 0)
     }
-
-    pub fn from_rgb(r: u8, g: u8, b: u8) -> Self {
-        Color([r, g, b])
+    pub fn white() -> Color {
+        Color::from_rgb(255, 255, 255)
     }
 }
 
@@ -115,7 +83,8 @@ pub struct ColorScheme {
     node_border_width: f64,
 }
 
-const PALETTE_NAME: &str = "antarctica_evening_v2";
+// const PALETTE_NAME: &str = "antarctica_evening_v2";
+const PALETTE_NAME: &str = "generated";
 
 impl ColorScheme {
     const NODE_BORDER_WIDTH: f64 = 3.0f64;
@@ -142,11 +111,11 @@ impl ColorScheme {
     }
 
     pub fn normal() -> Self {
-        ColorScheme::from_colors(Color::black(), Color::white(), Color::black())
+        ColorScheme::from_colors(Colors::black(), Colors::white(), Colors::black())
     }
 
     pub fn series(highlight: usize) -> Self {
-        ColorScheme::from_entry(2)
+        ColorScheme::from_entry(highlight)
     }
 
     pub fn get_stroke_color(&self) -> Color {
@@ -166,6 +135,7 @@ impl ColorScheme {
 #[cfg(test)]
 mod tests {
     use super::*;
+
     #[test]
     fn can_parse_html_color_codes() {
         let actual = Color::from_html_string("#ff1100").expect("could not parse");
@@ -174,9 +144,15 @@ mod tests {
     }
 
     #[test]
+    fn it_can_print_html_colors() {
+        assert_eq!("#000000", &Colors::black().to_html_string());
+        assert_eq!("#FFFFFF", &Colors::white().to_html_string());
+        assert_eq!("#FF0000", &Color::from_rgb(255, 0, 0).to_html_string());
+    }
+
+    #[test]
     fn does_not_parse_non_html_colors() {
         let naughty_strings = ["", "nope", "seven..", "#00000g"];
-
         for naughty in &naughty_strings {
             assert!(Color::from_html_string(naughty).is_err());
         }
