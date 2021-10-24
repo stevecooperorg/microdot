@@ -1,9 +1,16 @@
 use crate::palettes::PaletteReader;
 use palette::*;
+use std::fmt::{Display, Formatter};
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Color {
     inner: Srgb<u8>,
+}
+
+impl Display for Color {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.to_html_string())
+    }
 }
 
 impl Color {

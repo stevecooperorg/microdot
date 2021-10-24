@@ -12,10 +12,6 @@ impl Palette {
         Colors::black()
     }
 
-    pub fn get_default_fill_color(&self, index: usize) -> Color {
-        Colors::white()
-    }
-
     pub fn get_fill_color(&self, index: usize) -> Color {
         if self.colors.is_empty() {
             return Colors::white();
@@ -135,7 +131,7 @@ mod tests {
 
     #[test]
     fn color_iterator_generates_colors() {
-        let mut iter = ColorIterator::new();
+        let iter = ColorIterator::new();
         let colors: Vec<_> = iter.take(20).collect();
         let color_str = colors
             .iter()

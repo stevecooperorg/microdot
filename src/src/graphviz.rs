@@ -1,6 +1,7 @@
-use crate::colors::ColorScheme;
+use crate::colors::{Color, ColorScheme};
 use crate::graph::Graph;
 use crate::{CommandResult, Exporter, Id, Label, NodeHighlight};
+use askama::Template;
 use command_macros::cmd;
 use hyphenation::{Language, Load, Standard};
 use regex::Regex;
@@ -8,8 +9,8 @@ use std::collections::hash_map::DefaultHasher;
 use std::collections::{HashMap, HashSet};
 use std::hash::{Hash, Hasher};
 use std::path::Path;
-use textwrap::word_separators::UnicodeBreakProperties;
-use textwrap::wrap_algorithms::OptimalFit;
+use textwrap::word_separators::{UnicodeBreakProperties, WordSeparator};
+use textwrap::wrap_algorithms::{wrap_optimal_fit, OptimalFit};
 use textwrap::{fill, Options};
 
 const GAPPLIN_PATH: &str = "/Applications/Gapplin.app/Contents/MacOS/Gapplin";
@@ -151,12 +152,11 @@ impl Exporter for GraphVizExporter {
         };
 
         let label_text = match self.display_mode {
-            DisplayMode::Interactive => {
-                let unwrapped = format!("{}: {}", id.0, label.0);
-                fill(&unwrapped, &wrapping_options)
-            }
-            DisplayMode::Presentation => fill(&label.0, &wrapping_options),
+            DisplayMode::Interactive => format!("{}: {}", id.0, label.0),
+            DisplayMode::Presentation => label.0.clone(),
         };
+
+        let label_text = fill(&label_text, &wrapping_options);
 
         let node_params = hashmap! {
             "id" => id.0.clone(),
@@ -240,6 +240,38 @@ fn escape_id(id: &str) -> String {
     format!("\"{}\"", id.replace("\"", "\\\""))
 }
 
+fn prepare_label(label: &str, wrap: usize) -> String {
+    let splitter = UnicodeBreakProperties::default();
+    let fragments: Vec<_> = splitter.find_words(label).collect();
+    let lines = wrap_optimal_fit(&fragments, &[wrap]);
+    let mut res = String::new();
+    for line in &lines {
+        let words = line.iter().map(|w| w.word).collect::<Vec<_>>().join(" ");
+        res.push_str(&words);
+        res.push('\n');
+    }
+    if lines.len() > 0 {
+        res.truncate(res.len() - 1)
+    }
+    res
+}
+
+#[derive(Template)]
+#[template(path = "node.html")]
+struct NodeViewModel {
+    id: String,
+    #[template(escape = "none")]
+    label: String,
+    hash_tags: Vec<HashTag>,
+}
+
+#[derive(Template)]
+#[template(path = "hashtag.html")]
+struct HashTag {
+    label: String,
+    bgcolor: Color,
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -251,10 +283,45 @@ mod tests {
     use std::sync::{Arc, RwLock};
 
     #[test]
+    fn runs_node_template() {
+        let lines = vec![
+            "this is the first",
+            "line in the thing",
+            "and here is a third",
+        ];
+        let vm = NodeViewModel {
+            id: "n99".into(),
+            label: lines.join("\n"),
+            hash_tags: vec![
+                HashTag {
+                    bgcolor: Color::from_rgb(255, 0, 0),
+                    label: "#hash1".into(),
+                },
+                HashTag {
+                    bgcolor: Color::from_rgb(0, 255, 0),
+                    label: "#hash2".into(),
+                },
+            ],
+        };
+        println!("{}", vm.render().unwrap());
+    }
+
+    #[test]
     fn escapes_label() {
         assert_eq!(r#""abc""#, escape_label("abc"));
         assert_eq!(r#""a\"bc""#, escape_label(r#"a"bc"#));
         assert_eq!(r#""a\nbc""#, escape_label("a\nbc"));
+    }
+
+    #[test]
+    fn prepares_label() {
+        let instr =
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ut egestas velit.";
+        let outstr = r#"Lorem ipsum dolor sit amet,
+consectetur adipiscing elit.
+Cras ut egestas velit."#;
+
+        assert_eq!(outstr, prepare_label(instr, 30));
     }
 
     #[test]
@@ -346,7 +413,7 @@ mod tests {
     }
 
     impl Interaction for AutoInteraction {
-        fn read(&mut self, prompt: &str) -> rustyline::Result<String> {
+        fn read(&mut self, _prompt: &str) -> rustyline::Result<String> {
             match self.lines.pop_front() {
                 Some(line) => Ok(line),
                 None => Err(rustyline::error::ReadlineError::Eof),
@@ -378,7 +445,7 @@ mod tests {
         );
 
         // read the file as lines and run it through the repl;
-        let mut graph = Arc::new(RwLock::new(Graph::new()));
+        let graph = Arc::new(RwLock::new(Graph::new()));
 
         let text_content = std::fs::read_to_string(&text_file).expect("could not read file");
         let lines: VecDeque<_> = text_content.lines().map(|l| l.to_string()).collect();
@@ -387,7 +454,8 @@ mod tests {
             &mut auto_interaction,
             &text_file.with_extension("json"),
             graph.clone(),
-        );
+        )
+        .expect("error in repl");
 
         let mut exporter = GraphVizExporter::new(DisplayMode::Interactive);
         let graph = graph.read().unwrap();
