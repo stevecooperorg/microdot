@@ -1,0 +1,21 @@
+<TABLE CELLPADDING="0" BORDER="1" CELLBORDER="0" CELLSPACING="4">
+    <TR >
+        <TD width="20"><FONT POINT-SIZE="10">{{ id }}</FONT></TD>
+        <TD WIDTH="200" ROWSPAN="2" ALIGN="left" VALIGN="top">{{ label|linebreaksbr|safe }}</TD>
+    </TR>
+    <TR>
+        <TD HEIGHT="60" BGCOLOR="#dddddd" ROWSPAN="2" BORDER="1"></TD>
+    </TR>
+    <TR>
+        <TD HEIGHT="20">
+            <TABLE BORDER="0" CELLSPACING="5">
+                <TR>
+                    {% for hash in hash_tags %}
+                    {{ hash|safe }}
+                    {% endfor %}
+                    <TD></TD>
+                </TR>
+            </TABLE>
+        </TD>
+    </TR>
+</TABLE>

@@ -75,26 +75,39 @@ enum HashState {
     Hashed(usize),
 }
 
-fn hashtag_signature(input: &str) -> HashState {
+fn extract_hashtags(input: &str) -> Vec<HashTag> {
     let rx = Regex::new("#[A-Z][A-Z0-9]*").expect("not a regex");
     let mut hashes = HashSet::new();
     for hash in rx.captures_iter(input) {
-        let hash = hash.get(0).unwrap().as_str();
+        let hash = hash.get(0).unwrap().as_str().to_string();
         hashes.insert(hash);
-    }
-
-    if hashes.is_empty() {
-        return HashState::None;
     }
 
     let mut hashes: Vec<_> = hashes.into_iter().collect();
     hashes.sort();
 
-    let combo: String = hashes.join("");
-    let mut s = DefaultHasher::new();
-    combo.hash(&mut s);
-    let hash = s.finish() as usize;
+    hashes.into_iter().map(|tag| HashTag { tag }).collect()
+}
+
+fn hashtag_signature(input: &str) -> HashState {
+    let hashes = extract_hashtags(input);
+    if hashes.is_empty() {
+        return HashState::None;
+    }
+
+    let combo = hashes
+        .into_iter()
+        .map(|hash| hash.tag)
+        .collect::<Vec<_>>()
+        .join("");
+    let hash = generate_hash(&combo);
     HashState::Hashed(hash)
+}
+
+fn generate_hash(input: &str) -> usize {
+    let mut s = DefaultHasher::new();
+    input.hash(&mut s);
+    s.finish() as usize
 }
 
 #[derive(Copy, Clone)]
@@ -144,37 +157,44 @@ impl Exporter for GraphVizExporter {
             Options::new(40).word_splitter(dictionary)
         };
 
-        let hash = hashtag_signature(&label.0);
+        let base_label = &label.0;
 
-        let color_scheme = match hash {
-            HashState::None => ColorScheme::normal(),
-            HashState::Hashed(hash) => ColorScheme::series(hash),
-        };
+        let mut hash_tags = extract_hashtags(base_label);
 
-        let label_text = match self.display_mode {
-            DisplayMode::Interactive => format!("{}: {}", id.0, label.0),
-            DisplayMode::Presentation => label.0.clone(),
+        // let label_text = match self.display_mode {
+        //     DisplayMode::Interactive => format!("{}: {}", id.0, base_label),
+        //     DisplayMode::Presentation => base_label.clone(),
+        // };
+
+        let label_text = base_label;
+        let id = match self.display_mode {
+            DisplayMode::Interactive => id.0.clone(),
+            DisplayMode::Presentation => "".to_string(),
         };
 
         let label_text = fill(&label_text, &wrapping_options);
 
-        let node_params = hashmap! {
-            "id" => id.0.clone(),
-            "label" => label.0.clone(),
-            "escaped_id" => escape_id(&id.0),
-            "label_text" => escape_label(&label_text),
-            "stroke_color" => color_scheme.get_stroke_color().to_html_string(),
-            "fill_color" => color_scheme.get_fill_color().to_html_string(),
-            "font_color" => color_scheme.get_font_color().to_html_string(),
-            "width" => color_scheme.get_node_border_width().to_string()
+        let label_vm = NodeHtmlLabelViewModel {
+            id: id.clone(),
+            label: label_text.clone(),
+            label_wrapped: escape_label(&label_text.clone()),
+            hash_tags: hash_tags
+                .iter()
+                .map(|tag| HashTagViewModel {
+                    label: tag.tag.clone(),
+                    bgcolor: ColorScheme::series(tag.hash()).get_fill_color(),
+                })
+                .collect(),
         };
 
-        const LINE_TEMPLATE: &str = r#"    ${escaped_id} [label=${label_text} fillcolor="${fill_color}" color="${stroke_color}" fontcolor="${font_color}"]"#;
+        let node_vm = NodeViewModel {
+            id: id.clone(),
+            label: label_vm,
+        };
 
-        let line = template(LINE_TEMPLATE, &node_params);
+        let line = node_vm.render().unwrap();
 
         self.inner_content.push_str(&line);
-        self.inner_content.push(';');
         self.inner_content.push('\n');
     }
 
@@ -217,18 +237,18 @@ impl GraphVizExporter {
     }
 
     pub fn export(&mut self, graph: &Graph) -> String {
-        let template = include_str!("template.dot");
+        let rank_dir = if self.is_left_right { "LR" } else { "TB" };
+        let rank_dir = rank_dir.to_string();
+        let edge_color = ColorScheme::normal().get_stroke_color();
 
         graph.export(self);
 
-        let rankdir = if self.is_left_right { "LR" } else { "TB" };
-
-        let edge_color = ColorScheme::normal().get_stroke_color();
-
-        template
-            .replace("${RANKDIR}", rankdir)
-            .replace("${EDGECOLOR}", &edge_color.to_html_string())
-            .replace("${INNER_CONTENT}", &self.inner_content)
+        let vm = GraphViewModel {
+            rank_dir,
+            edge_color,
+            inner_content: self.inner_content.clone(),
+        };
+        vm.render().unwrap()
     }
 }
 
@@ -257,19 +277,45 @@ fn prepare_label(label: &str, wrap: usize) -> String {
 }
 
 #[derive(Template)]
-#[template(path = "node.html")]
+#[template(path = "node_line.txt")]
 struct NodeViewModel {
     id: String,
-    #[template(escape = "none")]
+    label: NodeHtmlLabelViewModel,
+}
+
+#[derive(Template)]
+//#[template(path = "node.html")]
+#[template(path = "node.txt")]
+struct NodeHtmlLabelViewModel {
+    id: String,
     label: String,
-    hash_tags: Vec<HashTag>,
+    label_wrapped: String,
+    hash_tags: Vec<HashTagViewModel>,
 }
 
 #[derive(Template)]
 #[template(path = "hashtag.html")]
-struct HashTag {
+struct HashTagViewModel {
     label: String,
     bgcolor: Color,
+}
+
+#[derive(Template)]
+#[template(path = "graph.txt")]
+struct GraphViewModel {
+    rank_dir: String,
+    edge_color: Color,
+    inner_content: String,
+}
+
+struct HashTag {
+    tag: String,
+}
+
+impl HashTag {
+    fn hash(&self) -> usize {
+        generate_hash(&self.tag)
+    }
 }
 
 #[cfg(test)]
@@ -278,6 +324,7 @@ mod tests {
     use crate::graph::Graph;
     use crate::repl::repl;
     use crate::{GraphCommand, Id, Interaction, Label};
+    use regex::Captures;
     use std::collections::VecDeque;
     use std::path::PathBuf;
     use std::sync::{Arc, RwLock};
@@ -289,21 +336,27 @@ mod tests {
             "line in the thing",
             "and here is a third",
         ];
-        let vm = NodeViewModel {
+        let label = NodeHtmlLabelViewModel {
             id: "n99".into(),
             label: lines.join("\n"),
+            label_wrapped: escape_label(&lines.join("\n")),
             hash_tags: vec![
-                HashTag {
+                HashTagViewModel {
                     bgcolor: Color::from_rgb(255, 0, 0),
                     label: "#hash1".into(),
                 },
-                HashTag {
+                HashTagViewModel {
                     bgcolor: Color::from_rgb(0, 255, 0),
                     label: "#hash2".into(),
                 },
             ],
         };
-        println!("{}", vm.render().unwrap());
+        let node = NodeViewModel {
+            id: "n99".into(),
+            label,
+        };
+
+        println!("{}", node.render().unwrap());
     }
 
     #[test]
@@ -356,9 +409,14 @@ Cras ut egestas velit."#;
 
         let dot = exporter.export(&graph);
 
+        fn color_free(input: &str) -> String {
+            let rx = Regex::new("#[a-f0-9]{6}").unwrap();
+            rx.replace(input, |m: &Captures| "").to_string()
+        }
+
         assert_eq!(
-            include_str!("../test_data/exports_graph.dot").to_string(),
-            dot
+            color_free(include_str!("../test_data/exports_graph.dot")),
+            color_free(&dot)
         );
     }
 

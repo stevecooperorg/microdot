@@ -1,0 +1,33 @@
+[package]
+name = "microdot"
+version = "0.1.0"
+edition = "2018"
+
+[[bin]]
+name="microdot"
+path="src/main.rs"
+
+[lib]
+name="libmicrodot"
+path="src/lib.rs"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0"
+askama = "0.10"
+clap = "3.0.0-beta.4"
+command-macros = "0.2"
+dirs = "4.0"
+hex="0.4"
+hyphenation = "0.8"
+lazy_static = "1.4"
+pom = "3.2"
+regex = "1.5"
+md5 = "0.7"
+palette="0.6"
+rustyline = "9.0"
+rustyline-derive = "0.5"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+textwrap = { version="0.14", features = ["hyphenation"] }

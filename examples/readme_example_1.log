@@ -1,9 +1,0 @@
->> i a cool new node
-(inserted node n0: 'a cool new node')
->> i a second node
-(inserted node n1: 'a second node')
->> l n0 n1
-(Added edge e0 from n0 to n1)
->> r n1 a new name #HIGHLIGHT
-(Node n1 renamed to 'a new name #HIGHLIGHT')
->> exit

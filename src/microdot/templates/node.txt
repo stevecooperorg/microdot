@@ -1,0 +1,1 @@
+{{ label_wrapped }}  {% for hash in hash_tags %}| {{ hash|safe }}{% endfor %}
