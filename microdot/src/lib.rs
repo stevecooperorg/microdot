@@ -4,7 +4,6 @@ use rustyline::{Editor, Helper};
 
 pub mod colors;
 pub mod graphviz;
-pub mod hash;
 pub mod helper;
 pub mod json;
 pub mod palettes;

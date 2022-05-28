@@ -1,10 +1,10 @@
 use crate::colors::{Color, ColorScheme};
-use crate::hash::extract_hashtags;
 use askama::Template;
 use command_macros::cmd;
 use hyphenation::{Language, Load, Standard};
 use microdot_core::exporter::{Exporter, NodeHighlight};
 use microdot_core::graph::Graph;
+use microdot_core::hash::extract_hashtags;
 use microdot_core::{Id, Label};
 use regex::Regex;
 use std::collections::HashMap;

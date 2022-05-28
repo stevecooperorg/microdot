@@ -12,12 +12,6 @@ digraph {
     n5 [label="Nazghuls move to Bree"  ]
     n6 [label="the Nazghuls move to Weathertop"  ]
     n7 [label="Nazghuls dispatched from Mordor"  ]
-    n8 [label="flight to the ford"  ]
-    n9 [label="the fellowship meets at Rivendell \"one\ndoes not simply walk into mordor\""  ]
-    n10 [label="Gimli leaves the mountains"  ]
-    n11 [label="Legolas travels from Mirkwood"  ]
-    n12 [label="Boromir seeks the sword that is broken"  ]
-    n13 [label="Boromir fights in the battle for\nOsgiliath"  ]
 
     "n0" -> "n1" [label="e0"];
     "n1" -> "n2" [label="e1"];
@@ -27,12 +21,5 @@ digraph {
     "n2" -> "n6" [label="e5"];
     "n6" -> "n4" [label="e6"];
     "n7" -> "n5" [label="e7"];
-    "n4" -> "n8" [label="e8"];
-    "n8" -> "n9" [label="e9"];
-    "n0" -> "n9" [label="e10"];
-    "n10" -> "n9" [label="e11"];
-    "n11" -> "n9" [label="e12"];
-    "n12" -> "n9" [label="e13"];
-    "n13" -> "n12" [label="e14"];
 
 }
