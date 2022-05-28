@@ -15,8 +15,8 @@ path="src/lib.rs"
 
 [dependencies]
 anyhow = "1.0"
-askama = "0.10"
-clap = "3.0.0-beta.4"
+askama = "0.11"
+clap = { version="3.1", features=["derive"] }
 command-macros = "0.2"
 dirs = "4.0"
 hex="0.4"
@@ -27,7 +27,7 @@ regex = "1.5"
 md5 = "0.7"
 palette="0.6"
 rustyline = "9.0"
-rustyline-derive = "0.5"
+rustyline-derive = "0.6"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-textwrap = { version="0.14", features = ["hyphenation"] }
+textwrap = { version="0.15", features = ["hyphenation"] }

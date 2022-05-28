@@ -1,17 +1,15 @@
 use crate::colors::{Color, ColorScheme};
 use crate::graph::Graph;
+use crate::hash::extract_hashtags;
 use crate::{CommandResult, Exporter, Id, Label, NodeHighlight};
 use askama::Template;
 use command_macros::cmd;
 use hyphenation::{Language, Load, Standard};
 use regex::Regex;
-use std::collections::hash_map::DefaultHasher;
-use std::collections::{HashMap, HashSet};
-use std::hash::{Hash, Hasher};
+use std::collections::HashMap;
 use std::path::Path;
-use textwrap::word_separators::{UnicodeBreakProperties, WordSeparator};
-use textwrap::wrap_algorithms::{wrap_optimal_fit, OptimalFit};
-use textwrap::{fill, Options};
+use textwrap::wrap_algorithms::{wrap_optimal_fit, Penalties};
+use textwrap::{fill, Options, WordSplitter};
 
 const GAPPLIN_PATH: &str = "/Applications/Gapplin.app/Contents/MacOS/Gapplin";
 
@@ -69,47 +67,6 @@ pub fn installed_graphviz_version() -> Option<String> {
     caps
 }
 
-#[derive(PartialEq, Debug)]
-enum HashState {
-    None,
-    Hashed(usize),
-}
-
-fn extract_hashtags(input: &str) -> Vec<HashTag> {
-    let rx = Regex::new("#[A-Z][A-Z0-9]*").expect("not a regex");
-    let mut hashes = HashSet::new();
-    for hash in rx.captures_iter(input) {
-        let hash = hash.get(0).unwrap().as_str().to_string();
-        hashes.insert(hash);
-    }
-
-    let mut hashes: Vec<_> = hashes.into_iter().collect();
-    hashes.sort();
-
-    hashes.into_iter().map(|tag| HashTag { tag }).collect()
-}
-
-fn hashtag_signature(input: &str) -> HashState {
-    let hashes = extract_hashtags(input);
-    if hashes.is_empty() {
-        return HashState::None;
-    }
-
-    let combo = hashes
-        .into_iter()
-        .map(|hash| hash.tag)
-        .collect::<Vec<_>>()
-        .join("");
-    let hash = generate_hash(&combo);
-    HashState::Hashed(hash)
-}
-
-fn generate_hash(input: &str) -> usize {
-    let mut s = DefaultHasher::new();
-    input.hash(&mut s);
-    s.finish() as usize
-}
-
 #[derive(Copy, Clone)]
 pub enum DisplayMode {
     Interactive,
@@ -149,17 +106,18 @@ impl Exporter for GraphVizExporter {
         self.is_left_right = is_left_right;
     }
 
-    fn add_node(&mut self, id: &Id, label: &Label, highlight: NodeHighlight) {
+    fn add_node(&mut self, id: &Id, label: &Label, _highlight: NodeHighlight) {
         // TODO: probably horrific perf.
 
-        let wrapping_options: Options<OptimalFit, UnicodeBreakProperties, Standard> = {
+        let wrapping_options = {
             let dictionary = Standard::from_embedded(Language::EnglishUS).unwrap();
-            Options::new(40).word_splitter(dictionary)
+            let splitter = WordSplitter::Hyphenation(dictionary);
+            Options::new(40).word_splitter(splitter)
         };
 
         let base_label = &label.0;
 
-        let mut hash_tags = extract_hashtags(base_label);
+        let hash_tags = extract_hashtags(base_label);
 
         // let label_text = match self.display_mode {
         //     DisplayMode::Interactive => format!("{}: {}", id.0, base_label),
@@ -181,7 +139,7 @@ impl Exporter for GraphVizExporter {
             hash_tags: hash_tags
                 .iter()
                 .map(|tag| HashTagViewModel {
-                    label: tag.tag.clone(),
+                    label: tag.to_string(),
                     bgcolor: ColorScheme::series(tag.hash()).get_fill_color(),
                 })
                 .collect(),
@@ -260,10 +218,14 @@ fn escape_id(id: &str) -> String {
     format!("\"{}\"", id.replace("\"", "\\\""))
 }
 
-fn prepare_label(label: &str, wrap: usize) -> String {
-    let splitter = UnicodeBreakProperties::default();
+#[allow(dead_code)]
+fn prepare_label(label: &str, wrap: f64) -> String {
+    let splitter = textwrap::WordSeparator::UnicodeBreakProperties;
     let fragments: Vec<_> = splitter.find_words(label).collect();
-    let lines = wrap_optimal_fit(&fragments, &[wrap]);
+    let lines = match wrap_optimal_fit(&fragments, &[wrap], &Penalties::new()) {
+        Ok(lines) => lines,
+        Err(_) => return "<wrap failed>".into(),
+    };
     let mut res = String::new();
     for line in &lines {
         let words = line.iter().map(|w| w.word).collect::<Vec<_>>().join(" ");
@@ -286,6 +248,7 @@ struct NodeViewModel {
 #[derive(Template)]
 //#[template(path = "node.html")]
 #[template(path = "node.txt")]
+#[allow(dead_code)]
 struct NodeHtmlLabelViewModel {
     id: String,
     label: String,
@@ -306,16 +269,6 @@ struct GraphViewModel {
     rank_dir: String,
     edge_color: Color,
     inner_content: String,
-}
-
-struct HashTag {
-    tag: String,
-}
-
-impl HashTag {
-    fn hash(&self) -> usize {
-        generate_hash(&self.tag)
-    }
 }
 
 #[cfg(test)]
@@ -374,7 +327,7 @@ mod tests {
 consectetur adipiscing elit.
 Cras ut egestas velit."#;
 
-        assert_eq!(outstr, prepare_label(instr, 30));
+        assert_eq!(outstr, prepare_label(instr, 30.0f64));
     }
 
     #[test]
@@ -411,11 +364,11 @@ Cras ut egestas velit."#;
 
         fn color_free(input: &str) -> String {
             let rx = Regex::new("#[a-f0-9]{6}").unwrap();
-            rx.replace(input, |m: &Captures| "").to_string()
+            rx.replace(input, |_: &Captures| "").to_string()
         }
 
         assert_eq!(
-            color_free(include_str!("../test_data/exports_graph.dot")),
+            color_free(include_str!("../../test_data/exports_graph.dot")),
             color_free(&dot)
         );
     }
@@ -541,32 +494,5 @@ Cras ut egestas velit."#;
             .expect("could not find major version");
 
         assert_eq!(major_version, "2");
-    }
-
-    #[test]
-    fn extracts_hashtags_right() {
-        fn eq(a: &str, b: &str) {
-            let ai = hashtag_signature(a);
-            let bi = hashtag_signature(b);
-            assert_eq!(
-                ai, bi,
-                "signatures are not the same for '{}' and '{}'",
-                a, b
-            )
-        }
-
-        fn ne(a: &str, b: &str) {
-            let ai = hashtag_signature(a);
-            let bi = hashtag_signature(b);
-            assert_ne!(ai, bi, "signatures are the same for '{}' and '{}'", a, b)
-        }
-
-        assert_eq!(HashState::None, hashtag_signature("no hashtags here"));
-        assert_ne!(HashState::None, hashtag_signature("hashtag! #HASH"));
-        eq("a #HASH", "b #HASH");
-        eq("#HASH a", "a #HASH");
-        eq("#A #B", "#B #A");
-        eq("#A #A", "#A");
-        ne("#HASHA a", "a #HASHB");
     }
 }

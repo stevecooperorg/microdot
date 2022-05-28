@@ -1,4 +1,4 @@
-use clap::{AppSettings, Clap, ValueHint};
+use clap::{Parser, ValueHint};
 use libmicrodot::graph::Graph;
 use libmicrodot::helper::{GetNodeLabel, MicrodotHelper};
 use libmicrodot::json::{empty_json_graph, JsonImporter};
@@ -10,9 +10,9 @@ use std::io::Read;
 use std::path::{Path, PathBuf};
 use std::sync::{Arc, RwLock};
 
-#[derive(Clap)]
-#[clap(version = "1.0", author = "Kevin K. <kbknapp@gmail.com>")]
-#[clap(setting = AppSettings::ColoredHelp)]
+/// Simple program to greet a person
+#[derive(Parser, Debug)]
+#[clap(author, version, about, long_about = None)]
 struct Opts {
     /// Sets a custom config file. Could have been an Option<T> with no default too
     #[clap(short, long,  value_hint = ValueHint::FilePath)]

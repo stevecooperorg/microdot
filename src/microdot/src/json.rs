@@ -127,14 +127,14 @@ mod tests {
 
     #[test]
     fn imports_graph() {
-        let content = include_str!("../test_data/imports_graph.json").to_string();
+        let content = include_str!("../../test_data/imports_graph.json").to_string();
         let importer = JsonImporter::new(content);
         importer.import().expect("could not import");
     }
 
     #[test]
     fn round_trips_graph() {
-        let content = include_str!("../test_data/imports_graph.json").to_string();
+        let content = include_str!("../../test_data/imports_graph.json").to_string();
         let importer = JsonImporter::new(content.clone());
         let graph = importer.import().expect("could not import");
         let mut exporter = JsonExporter::new();
@@ -174,7 +174,7 @@ mod tests {
         let exported = exporter.export(&graph);
 
         assert_eq!(
-            include_str!("../test_data/exports_graph.json").to_string(),
+            include_str!("../../test_data/exports_graph.json").to_string(),
             exported
         );
     }

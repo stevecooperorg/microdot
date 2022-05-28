@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Check" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
     <option name="command" value="check --all-targets" />
-    <option name="workingDirectory" value="file://src" />
+    <option name="workingDirectory" value="file://$PROJECT_DIR$/src" />
     <option name="channel" value="DEFAULT" />
     <option name="requiredFeatures" value="true" />
     <option name="allFeatures" value="false" />

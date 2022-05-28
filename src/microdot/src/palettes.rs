@@ -87,6 +87,7 @@ impl PaletteReader {
     }
 }
 
+#[allow(dead_code)]
 pub struct ColorIterator {
     hue: f32,
     iteration: usize,
