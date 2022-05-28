@@ -1,0 +1,38 @@
+digraph {
+
+    graph [fontname = "helvetica" rankdir="TB" ranksep=0.75 nodesep=0.5];
+    node [fontname = "helvetica" shape = "plain"];
+    edge [fontname = "helvetica" penwidth=3 color="#000000"];
+
+    n0 [label="Gandalf comes to the shire"  ]
+    n1 [label="Frodo departs with the ring"  ]
+    n2 [label="the inn at Bree"  ]
+    n3 [label="the hobbits escape with Aragorn"  ]
+    n4 [label="nazghuls catch up at Weathertop; Frodo\nis injured"  ]
+    n5 [label="Nazghuls move to Bree"  ]
+    n6 [label="the Nazghuls move to Weathertop"  ]
+    n7 [label="Nazghuls dispatched from Mordor"  ]
+    n8 [label="flight to the ford"  ]
+    n9 [label="the fellowship meets at Rivendell \"one\ndoes not simply walk into mordor\""  ]
+    n10 [label="Gimli leaves the mountains"  ]
+    n11 [label="Legolas travels from Mirkwood"  ]
+    n12 [label="Boromir seeks the sword that is broken"  ]
+    n13 [label="Boromir fights in the battle for\nOsgiliath"  ]
+
+    "n0" -> "n1" [label="e0"];
+    "n1" -> "n2" [label="e1"];
+    "n2" -> "n3" [label="e2"];
+    "n3" -> "n4" [label="e3"];
+    "n5" -> "n2" [label="e4"];
+    "n2" -> "n6" [label="e5"];
+    "n6" -> "n4" [label="e6"];
+    "n7" -> "n5" [label="e7"];
+    "n4" -> "n8" [label="e8"];
+    "n8" -> "n9" [label="e9"];
+    "n0" -> "n9" [label="e10"];
+    "n10" -> "n9" [label="e11"];
+    "n11" -> "n9" [label="e12"];
+    "n12" -> "n9" [label="e13"];
+    "n13" -> "n12" [label="e14"];
+
+}

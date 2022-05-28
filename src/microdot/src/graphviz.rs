@@ -348,8 +348,8 @@ Cras ut egestas velit."#;
         }
 
         assert_eq!(
+            color_free(&dot),
             color_free(include_str!("../../test_data/exports_graph.dot")),
-            color_free(&dot)
         );
     }
 
@@ -473,6 +473,6 @@ Cras ut egestas velit."#;
             .first()
             .expect("could not find major version");
 
-        assert_eq!(major_version, "2");
+        assert_eq!(major_version, "3");
     }
 }
