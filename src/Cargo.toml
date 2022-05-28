@@ -1,7 +1,5 @@
 [workspace]
 
 members = [
-    "microdot",
-    "microdot-layout",
-    "microdot-graph",
+    "microdot*",
 ]
