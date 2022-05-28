@@ -1,4 +1,4 @@
-use crate::CommandResult;
+use microdot_core::CommandResult;
 use std::path::Path;
 
 const GAPPLIN_PATH: &str = "/Applications/Gapplin.app/Contents/MacOS/Gapplin";
@@ -10,8 +10,8 @@ pub fn open_in_gapplin(svg_path: &Path) -> CommandResult {
         let mut cmd = std::process::Command::new(viewer);
         cmd.arg(svg_path);
         match cmd.spawn() {
-            Ok(_) => CommandResult(format!("Opened {} in {}", svg_path, viewer)),
-            Err(e) => CommandResult(format!(
+            Ok(_) => CommandResult::new(format!("Opened {} in {}", svg_path, viewer)),
+            Err(e) => CommandResult::new(format!(
                 "Could not open {} in {}: {}",
                 svg_path,
                 viewer,
@@ -19,6 +19,6 @@ pub fn open_in_gapplin(svg_path: &Path) -> CommandResult {
             )),
         }
     } else {
-        CommandResult(format!("Could not open {} in {}", svg_path, viewer))
+        CommandResult::new(format!("Could not open {} in {}", svg_path, viewer))
     }
 }

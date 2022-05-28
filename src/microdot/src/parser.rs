@@ -1,4 +1,6 @@
-use crate::{Command, GraphCommand, Id, Label, Line};
+use crate::Command;
+use microdot_core::command::GraphCommand;
+use microdot_core::{Id, Label, Line};
 use pom::char_class::{alpha, alphanum, multispace};
 use pom::parser::*;
 
@@ -145,7 +147,7 @@ fn expand_edge<'a>() -> Parser<'a, u8, (String, String)> {
 }
 
 pub fn parse_line(line: Line) -> Command {
-    let text = &line.0.clone().into_bytes();
+    let text = &line.to_string().into_bytes();
 
     if let Ok(res) = insert_node().parse(text) {
         return GraphCommand::InsertNode {

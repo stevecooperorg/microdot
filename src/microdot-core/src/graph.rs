@@ -1,4 +1,6 @@
-use crate::{CommandResult, Exporter, GraphCommand, Id, Label, NodeHighlight};
+use crate::command::GraphCommand;
+use crate::exporter::{Exporter, NodeHighlight};
+use crate::{CommandResult, Id, Label};
 
 pub struct Graph {
     node_high_water: usize,

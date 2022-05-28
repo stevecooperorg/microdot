@@ -1,8 +1,9 @@
-use crate::graph::Graph;
 use crate::graphviz::{DisplayMode, GraphVizExporter};
 use crate::json::JsonExporter;
 use crate::parser::parse_line;
-use crate::{graphviz, svg, Command, CommandResult, Interaction, Line};
+use crate::{graphviz, svg, Command, Interaction};
+use microdot_core::graph::Graph;
+use microdot_core::{CommandResult, Line};
 use rustyline::error::ReadlineError;
 use std::path::{Path, PathBuf};
 use std::sync::{Arc, RwLock};

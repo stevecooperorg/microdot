@@ -1,9 +1,9 @@
 use clap::{Parser, ValueHint};
-use libmicrodot::graph::Graph;
 use libmicrodot::helper::{GetNodeLabel, MicrodotHelper};
 use libmicrodot::json::{empty_json_graph, JsonImporter};
 use libmicrodot::repl::repl;
-use libmicrodot::{Id, Label};
+use microdot_core::graph::*;
+use microdot_core::*;
 use rustyline::{Config, Editor};
 use std::fs::File;
 use std::io::Read;

@@ -1,5 +1,6 @@
-use crate::graph::Graph;
-use crate::{Exporter, Id, Label, NodeHighlight};
+use microdot_core::exporter::{Exporter, NodeHighlight};
+use microdot_core::graph::Graph;
+use microdot_core::{Id, Label};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 use std::collections::HashMap;
@@ -17,8 +18,8 @@ impl Exporter for JsonExporter {
 
     fn add_node(&mut self, id: &Id, label: &Label, _highlight: NodeHighlight) {
         let node = json!({
-            "id": id.0.clone(),
-            "label": label.0.clone()
+            "id": id.to_string(),
+            "label": label.to_string()
         });
 
         self.nodes.push(node);
@@ -26,8 +27,8 @@ impl Exporter for JsonExporter {
 
     fn add_edge(&mut self, _id: &Id, from: &Id, to: &Id) {
         let edge = json! { {
-            "from": from.0.clone(),
-            "to": to.0.clone()
+            "from": from.to_string(),
+            "to": to.to_string()
         }};
 
         self.edges.push(edge);
@@ -123,7 +124,8 @@ impl JsonImporter {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::GraphCommand;
+    use microdot_core::command::GraphCommand;
+    use microdot_core::graph::Graph;
 
     #[test]
     fn imports_graph() {

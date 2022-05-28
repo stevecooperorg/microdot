@@ -1,10 +1,11 @@
 use crate::colors::{Color, ColorScheme};
-use crate::graph::Graph;
 use crate::hash::extract_hashtags;
-use crate::{Exporter, Id, Label, NodeHighlight};
 use askama::Template;
 use command_macros::cmd;
 use hyphenation::{Language, Load, Standard};
+use microdot_core::exporter::{Exporter, NodeHighlight};
+use microdot_core::graph::Graph;
+use microdot_core::{Id, Label};
 use regex::Regex;
 use std::collections::HashMap;
 use std::path::Path;
@@ -93,7 +94,7 @@ impl Exporter for GraphVizExporter {
             Options::new(40).word_splitter(splitter)
         };
 
-        let base_label = &label.0;
+        let base_label = &label.to_string();
 
         let hash_tags = extract_hashtags(base_label);
 
@@ -104,7 +105,7 @@ impl Exporter for GraphVizExporter {
 
         let label_text = base_label;
         let id = match self.display_mode {
-            DisplayMode::Interactive => id.0.clone(),
+            DisplayMode::Interactive => id.to_string(),
             DisplayMode::Presentation => "".to_string(),
         };
 
@@ -141,10 +142,10 @@ impl Exporter for GraphVizExporter {
         }
 
         let edge_params = hashmap! {
-            "id" => id.0.clone(),
-            "escaped_id" => escape_id(&id.0),
-            "escaped_from" => escape_id(&from.0),
-            "escaped_to" => escape_id(&to.0),
+            "id" => id.to_string(),
+            "escaped_id" => escape_id(id.to_string()),
+            "escaped_from" => escape_id(from.to_string()),
+            "escaped_to" => escape_id(to.to_string()),
         };
 
         let line = match self.display_mode {
@@ -192,7 +193,8 @@ fn escape_label(label: &str) -> String {
     format!("\"{}\"", label.replace("\n", "\\n").replace("\"", "\\\""))
 }
 
-fn escape_id(id: &str) -> String {
+fn escape_id<S: Into<String>>(id: S) -> String {
+    let id: String = id.into();
     format!("\"{}\"", id.replace("\"", "\\\""))
 }
 
@@ -252,9 +254,9 @@ struct GraphViewModel {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::graph::Graph;
     use crate::repl::repl;
-    use crate::{GraphCommand, Id, Interaction, Label};
+    use crate::Interaction;
+    use microdot_core::command::GraphCommand;
     use regex::Captures;
     use std::collections::VecDeque;
     use std::path::PathBuf;

@@ -1,7 +1,8 @@
+use microdot_core::command::GraphCommand;
+use microdot_core::{Id, Label, Line};
 use rustyline::{Editor, Helper};
 
 pub mod colors;
-pub mod graph;
 pub mod graphviz;
 pub mod hash;
 pub mod helper;
@@ -10,30 +11,6 @@ pub mod palettes;
 pub mod parser;
 pub mod repl;
 pub mod svg;
-
-macro_rules! new_string_type {
-    ($id: ident) => {
-        #[derive(PartialEq, Eq, Hash, Debug, Clone, serde::Serialize, serde::Deserialize)]
-        pub struct $id(String);
-
-        impl $id {
-            pub fn new<S: Into<String>>(str: S) -> Self {
-                Self(str.into())
-            }
-        }
-
-        impl std::fmt::Display for $id {
-            fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                f.write_str(&self.0)
-            }
-        }
-    };
-}
-
-new_string_type!(CommandResult);
-new_string_type!(Label);
-new_string_type!(Id);
-new_string_type!(Line);
 
 #[derive(PartialEq, Debug)]
 pub enum Command {
@@ -49,39 +26,10 @@ pub enum Command {
     ParseError { line: Line },
 }
 
-#[derive(PartialEq, Debug)]
-pub enum GraphCommand {
-    DeleteNode { id: Id },
-    ExpandEdge { id: Id, label: Label },
-    InsertAfterNode { id: Id, label: Label },
-    InsertBeforeNode { id: Id, label: Label },
-    InsertNode { label: Label },
-    LinkEdge { from: Id, to: Id },
-    RenameNode { id: Id, label: Label },
-    SelectNode { id: Id },
-    SetDirection { is_left_right: bool },
-    UnlinkEdge { id: Id },
-}
-
 impl From<GraphCommand> for Command {
     fn from(c: GraphCommand) -> Self {
         Command::GraphCommand(c)
     }
-}
-
-#[derive(Copy, Clone)]
-pub enum NodeHighlight {
-    Normal,
-    SearchResult,
-    CurrentNode,
-}
-
-pub trait Exporter {
-    fn set_direction(&mut self, is_left_right: bool);
-
-    fn add_node(&mut self, id: &Id, label: &Label, highlight: NodeHighlight);
-
-    fn add_edge(&mut self, id: &Id, from: &Id, to: &Id);
 }
 
 // a trait which deals with the R & P of REPL: Read and Print; can be mixed in with a loop

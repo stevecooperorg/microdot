@@ -1,5 +1,7 @@
 use crate::parser::parse_line;
-use crate::{Command, GraphCommand, Id, Label, Line};
+use crate::Command;
+use microdot_core::command::GraphCommand;
+use microdot_core::{Id, Label, Line};
 use rustyline::completion::{Completer, Pair};
 use rustyline::error::ReadlineError;
 use rustyline::highlight::{Highlighter, MatchingBracketHighlighter};
@@ -56,7 +58,7 @@ where
             None => return no_options(),
         };
 
-        let new_line = format!("r {} {}", id, label.0);
+        let new_line = format!("r {} {}", id, label.to_string());
 
         let replacement = Pair {
             display: new_line.clone(),
