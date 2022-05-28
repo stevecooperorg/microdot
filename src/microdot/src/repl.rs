@@ -2,7 +2,7 @@ use crate::graph::Graph;
 use crate::graphviz::{DisplayMode, GraphVizExporter};
 use crate::json::JsonExporter;
 use crate::parser::parse_line;
-use crate::{graphviz, Command, CommandResult, Interaction, Line};
+use crate::{graphviz, svg, Command, CommandResult, Interaction, Line};
 use rustyline::error::ReadlineError;
 use std::path::{Path, PathBuf};
 use std::sync::{Arc, RwLock};
@@ -39,7 +39,7 @@ pub fn repl<I: Interaction>(
                     }
                     Command::Show => {
                         let svg_file = json_file.with_extension("svg");
-                        let result = graphviz::open_in_gapplin(&svg_file);
+                        let result = svg::open_in_gapplin(&svg_file);
                         interaction.log(result.to_string());
                     }
                     Command::PrintDot => {

@@ -9,6 +9,7 @@ pub mod json;
 pub mod palettes;
 pub mod parser;
 pub mod repl;
+pub mod svg;
 
 macro_rules! new_string_type {
     ($id: ident) => {

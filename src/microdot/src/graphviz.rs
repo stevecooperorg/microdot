@@ -1,7 +1,7 @@
 use crate::colors::{Color, ColorScheme};
 use crate::graph::Graph;
 use crate::hash::extract_hashtags;
-use crate::{CommandResult, Exporter, Id, Label, NodeHighlight};
+use crate::{Exporter, Id, Label, NodeHighlight};
 use askama::Template;
 use command_macros::cmd;
 use hyphenation::{Language, Load, Standard};
@@ -10,8 +10,6 @@ use std::collections::HashMap;
 use std::path::Path;
 use textwrap::wrap_algorithms::{wrap_optimal_fit, Penalties};
 use textwrap::{fill, Options, WordSplitter};
-
-const GAPPLIN_PATH: &str = "/Applications/Gapplin.app/Contents/MacOS/Gapplin";
 
 macro_rules! hashmap {
     (@single $($x:tt)*) => (());
@@ -28,26 +26,6 @@ macro_rules! hashmap {
             _map
         }
     };
-}
-
-pub fn open_in_gapplin(svg_path: &Path) -> CommandResult {
-    let viewer = GAPPLIN_PATH;
-    let svg_path = &svg_path.to_string_lossy().to_string();
-    if Path::new(viewer).exists() {
-        let mut cmd = std::process::Command::new(viewer);
-        cmd.arg(svg_path);
-        match cmd.spawn() {
-            Ok(_) => CommandResult(format!("Opened {} in {}", svg_path, viewer)),
-            Err(e) => CommandResult(format!(
-                "Could not open {} in {}: {}",
-                svg_path,
-                viewer,
-                e.to_string()
-            )),
-        }
-    } else {
-        CommandResult(format!("Could not open {} in {}", svg_path, viewer))
-    }
 }
 
 pub fn installed_graphviz_version() -> Option<String> {
