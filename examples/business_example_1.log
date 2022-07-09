@@ -10,6 +10,10 @@
 (inserted node n3: 'developers engaged in low-value work' before n2)
 >> bef n0 shipping labels generated once a day
 (inserted node n4: 'shipping labels generated once a day' before n0)
+>> bef n4 printers need rebooting but everyone in IT is busy util 3pm
+(inserted node n5: 'printers need rebooting but everyone in IT is busy util 3pm' before n4)
+>> l n3 n5
+(Added edge e5 from n3 to n5)
 >> save
 Saved json: /Users/steve/src/github.com/stevecooperorg/microdot/examples/business_example_1.json, interactive dot: /Users/steve/src/github.com/stevecooperorg/microdot/examples/business_example_1.dot, presentation dot: /Users/steve/src/github.com/stevecooperorg/microdot/examples/business_example_1.presentation.dot
 >> exit

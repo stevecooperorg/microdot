@@ -21,7 +21,7 @@ fn prepare_readme() {
         example_content: include_str!("../../examples/readme_example_1.log").to_string(),
     };
 
-    let mut current_dir: &Path = &std::env::current_dir().unwrap();
+    let current_dir: &Path = &std::env::current_dir().unwrap();
     let mut ancestors = Unfold::new(|path| &path.parent().unwrap(), current_dir);
     let git_root = ancestors
         .find(|&path| {

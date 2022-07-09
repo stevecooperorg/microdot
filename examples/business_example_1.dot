@@ -9,10 +9,13 @@ digraph {
     n2 [label="n2: no developer capacity to automate\norders"  ]
     n3 [label="n3: developers engaged in low-value work"  ]
     n4 [label="n4: shipping labels generated once a day"  ]
+    n5 [label="n5: printers need rebooting but everyone\nin IT is busy util 3pm"  ]
 
     "n1" -> "n0" [label="e0"];
     "n2" -> "n1" [label="e1"];
     "n3" -> "n2" [label="e2"];
     "n4" -> "n0" [label="e3"];
+    "n5" -> "n4" [label="e4"];
+    "n3" -> "n5" [label="e5"];
 
 }
