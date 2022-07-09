@@ -4,20 +4,272 @@ digraph {
     node [fontname = "helvetica" shape = "plain"];
     edge [fontname = "helvetica" penwidth=3 color="#000000"];
 
-     [label="Gandalf comes to the shire"  ]
-     [label="Frodo departs with the ring"  ]
-     [label="the inn at Bree"  ]
-     [label="the hobbits escape with Aragorn"  ]
-     [label="nazghuls catch up at Weathertop; Frodo\nis injured"  ]
-     [label="Nazghuls move to Bree"  ]
-     [label="the Nazghuls move to Weathertop"  ]
-     [label="Nazghuls dispatched from Mordor"  ]
-     [label="flight to the ford"  ]
-     [label="the fellowship meets at Rivendell \"one\ndoes not simply walk into mordor\""  ]
-     [label="Gimli leaves the mountains"  ]
-     [label="Legolas travels from Mirkwood"  ]
-     [label="Boromir seeks the sword that is broken"  ]
-     [label="Boromir fights in the battle for\nOsgiliath"  ]
+     [label=< <TABLE BORDER="1" CELLPADDING="0"  CELLBORDER="0" CELLSPACING="4">
+    <TR >
+        <TD width="20"><FONT POINT-SIZE="10"></FONT></TD>
+        <TD WIDTH="200" ROWSPAN="2" ALIGN="left" VALIGN="top">Gandalf comes to the shire</TD>
+    </TR>
+    <TR>
+        <TD HEIGHT="60" BGCOLOR="#dddddd" ROWSPAN="2" BORDER="1"></TD>
+    </TR>
+    <TR>
+        <TD HEIGHT="20">
+            <TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0">
+                <TR>
+                    
+                    <TD></TD>
+                </TR>
+            </TABLE>
+        </TD>
+    </TR>
+</TABLE> >]
+     [label=< <TABLE BORDER="1" CELLPADDING="0"  CELLBORDER="0" CELLSPACING="4">
+    <TR >
+        <TD width="20"><FONT POINT-SIZE="10"></FONT></TD>
+        <TD WIDTH="200" ROWSPAN="2" ALIGN="left" VALIGN="top">Frodo departs with the ring</TD>
+    </TR>
+    <TR>
+        <TD HEIGHT="60" BGCOLOR="#dddddd" ROWSPAN="2" BORDER="1"></TD>
+    </TR>
+    <TR>
+        <TD HEIGHT="20">
+            <TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0">
+                <TR>
+                    
+                    <TD></TD>
+                </TR>
+            </TABLE>
+        </TD>
+    </TR>
+</TABLE> >]
+     [label=< <TABLE BORDER="1" CELLPADDING="0"  CELLBORDER="0" CELLSPACING="4">
+    <TR >
+        <TD width="20"><FONT POINT-SIZE="10"></FONT></TD>
+        <TD WIDTH="200" ROWSPAN="2" ALIGN="left" VALIGN="top">the inn at Bree</TD>
+    </TR>
+    <TR>
+        <TD HEIGHT="60" BGCOLOR="#dddddd" ROWSPAN="2" BORDER="1"></TD>
+    </TR>
+    <TR>
+        <TD HEIGHT="20">
+            <TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0">
+                <TR>
+                    
+                    <TD></TD>
+                </TR>
+            </TABLE>
+        </TD>
+    </TR>
+</TABLE> >]
+     [label=< <TABLE BORDER="1" CELLPADDING="0"  CELLBORDER="0" CELLSPACING="4">
+    <TR >
+        <TD width="20"><FONT POINT-SIZE="10"></FONT></TD>
+        <TD WIDTH="200" ROWSPAN="2" ALIGN="left" VALIGN="top">the hobbits escape with Aragorn</TD>
+    </TR>
+    <TR>
+        <TD HEIGHT="60" BGCOLOR="#dddddd" ROWSPAN="2" BORDER="1"></TD>
+    </TR>
+    <TR>
+        <TD HEIGHT="20">
+            <TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0">
+                <TR>
+                    
+                    <TD></TD>
+                </TR>
+            </TABLE>
+        </TD>
+    </TR>
+</TABLE> >]
+     [label=< <TABLE BORDER="1" CELLPADDING="0"  CELLBORDER="0" CELLSPACING="4">
+    <TR >
+        <TD width="20"><FONT POINT-SIZE="10"></FONT></TD>
+        <TD WIDTH="200" ROWSPAN="2" ALIGN="left" VALIGN="top">nazghuls catch up at Weathertop; Frodo<br/>is injured</TD>
+    </TR>
+    <TR>
+        <TD HEIGHT="60" BGCOLOR="#dddddd" ROWSPAN="2" BORDER="1"></TD>
+    </TR>
+    <TR>
+        <TD HEIGHT="20">
+            <TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0">
+                <TR>
+                    
+                    <TD></TD>
+                </TR>
+            </TABLE>
+        </TD>
+    </TR>
+</TABLE> >]
+     [label=< <TABLE BORDER="1" CELLPADDING="0"  CELLBORDER="0" CELLSPACING="4">
+    <TR >
+        <TD width="20"><FONT POINT-SIZE="10"></FONT></TD>
+        <TD WIDTH="200" ROWSPAN="2" ALIGN="left" VALIGN="top">Nazghuls move to Bree</TD>
+    </TR>
+    <TR>
+        <TD HEIGHT="60" BGCOLOR="#dddddd" ROWSPAN="2" BORDER="1"></TD>
+    </TR>
+    <TR>
+        <TD HEIGHT="20">
+            <TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0">
+                <TR>
+                    
+                    <TD></TD>
+                </TR>
+            </TABLE>
+        </TD>
+    </TR>
+</TABLE> >]
+     [label=< <TABLE BORDER="1" CELLPADDING="0"  CELLBORDER="0" CELLSPACING="4">
+    <TR >
+        <TD width="20"><FONT POINT-SIZE="10"></FONT></TD>
+        <TD WIDTH="200" ROWSPAN="2" ALIGN="left" VALIGN="top">the Nazghuls move to Weathertop</TD>
+    </TR>
+    <TR>
+        <TD HEIGHT="60" BGCOLOR="#dddddd" ROWSPAN="2" BORDER="1"></TD>
+    </TR>
+    <TR>
+        <TD HEIGHT="20">
+            <TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0">
+                <TR>
+                    
+                    <TD></TD>
+                </TR>
+            </TABLE>
+        </TD>
+    </TR>
+</TABLE> >]
+     [label=< <TABLE BORDER="1" CELLPADDING="0"  CELLBORDER="0" CELLSPACING="4">
+    <TR >
+        <TD width="20"><FONT POINT-SIZE="10"></FONT></TD>
+        <TD WIDTH="200" ROWSPAN="2" ALIGN="left" VALIGN="top">Nazghuls dispatched from Mordor</TD>
+    </TR>
+    <TR>
+        <TD HEIGHT="60" BGCOLOR="#dddddd" ROWSPAN="2" BORDER="1"></TD>
+    </TR>
+    <TR>
+        <TD HEIGHT="20">
+            <TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0">
+                <TR>
+                    
+                    <TD></TD>
+                </TR>
+            </TABLE>
+        </TD>
+    </TR>
+</TABLE> >]
+     [label=< <TABLE BORDER="1" CELLPADDING="0"  CELLBORDER="0" CELLSPACING="4">
+    <TR >
+        <TD width="20"><FONT POINT-SIZE="10"></FONT></TD>
+        <TD WIDTH="200" ROWSPAN="2" ALIGN="left" VALIGN="top">flight to the ford</TD>
+    </TR>
+    <TR>
+        <TD HEIGHT="60" BGCOLOR="#dddddd" ROWSPAN="2" BORDER="1"></TD>
+    </TR>
+    <TR>
+        <TD HEIGHT="20">
+            <TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0">
+                <TR>
+                    
+                    <TD></TD>
+                </TR>
+            </TABLE>
+        </TD>
+    </TR>
+</TABLE> >]
+     [label=< <TABLE BORDER="1" CELLPADDING="0"  CELLBORDER="0" CELLSPACING="4">
+    <TR >
+        <TD width="20"><FONT POINT-SIZE="10"></FONT></TD>
+        <TD WIDTH="200" ROWSPAN="2" ALIGN="left" VALIGN="top">the fellowship meets at Rivendell "one<br/>does not simply walk into mordor"</TD>
+    </TR>
+    <TR>
+        <TD HEIGHT="60" BGCOLOR="#dddddd" ROWSPAN="2" BORDER="1"></TD>
+    </TR>
+    <TR>
+        <TD HEIGHT="20">
+            <TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0">
+                <TR>
+                    
+                    <TD></TD>
+                </TR>
+            </TABLE>
+        </TD>
+    </TR>
+</TABLE> >]
+     [label=< <TABLE BORDER="1" CELLPADDING="0"  CELLBORDER="0" CELLSPACING="4">
+    <TR >
+        <TD width="20"><FONT POINT-SIZE="10"></FONT></TD>
+        <TD WIDTH="200" ROWSPAN="2" ALIGN="left" VALIGN="top">Gimli leaves the mountains</TD>
+    </TR>
+    <TR>
+        <TD HEIGHT="60" BGCOLOR="#dddddd" ROWSPAN="2" BORDER="1"></TD>
+    </TR>
+    <TR>
+        <TD HEIGHT="20">
+            <TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0">
+                <TR>
+                    
+                    <TD></TD>
+                </TR>
+            </TABLE>
+        </TD>
+    </TR>
+</TABLE> >]
+     [label=< <TABLE BORDER="1" CELLPADDING="0"  CELLBORDER="0" CELLSPACING="4">
+    <TR >
+        <TD width="20"><FONT POINT-SIZE="10"></FONT></TD>
+        <TD WIDTH="200" ROWSPAN="2" ALIGN="left" VALIGN="top">Legolas travels from Mirkwood</TD>
+    </TR>
+    <TR>
+        <TD HEIGHT="60" BGCOLOR="#dddddd" ROWSPAN="2" BORDER="1"></TD>
+    </TR>
+    <TR>
+        <TD HEIGHT="20">
+            <TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0">
+                <TR>
+                    
+                    <TD></TD>
+                </TR>
+            </TABLE>
+        </TD>
+    </TR>
+</TABLE> >]
+     [label=< <TABLE BORDER="1" CELLPADDING="0"  CELLBORDER="0" CELLSPACING="4">
+    <TR >
+        <TD width="20"><FONT POINT-SIZE="10"></FONT></TD>
+        <TD WIDTH="200" ROWSPAN="2" ALIGN="left" VALIGN="top">Boromir seeks the sword that is broken</TD>
+    </TR>
+    <TR>
+        <TD HEIGHT="60" BGCOLOR="#dddddd" ROWSPAN="2" BORDER="1"></TD>
+    </TR>
+    <TR>
+        <TD HEIGHT="20">
+            <TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0">
+                <TR>
+                    
+                    <TD></TD>
+                </TR>
+            </TABLE>
+        </TD>
+    </TR>
+</TABLE> >]
+     [label=< <TABLE BORDER="1" CELLPADDING="0"  CELLBORDER="0" CELLSPACING="4">
+    <TR >
+        <TD width="20"><FONT POINT-SIZE="10"></FONT></TD>
+        <TD WIDTH="200" ROWSPAN="2" ALIGN="left" VALIGN="top">Boromir fights in the battle for<br/>Osgiliath</TD>
+    </TR>
+    <TR>
+        <TD HEIGHT="60" BGCOLOR="#dddddd" ROWSPAN="2" BORDER="1"></TD>
+    </TR>
+    <TR>
+        <TD HEIGHT="20">
+            <TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0">
+                <TR>
+                    
+                    <TD></TD>
+                </TR>
+            </TABLE>
+        </TD>
+    </TR>
+</TABLE> >]
 
     "n0" -> "n1";
     "n1" -> "n2";

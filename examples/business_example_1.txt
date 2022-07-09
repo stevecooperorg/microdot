@@ -6,5 +6,3 @@ bef n2 developers engaged in low-value work
 bef n0 shipping labels generated once a day
 bef n4 printers need rebooting but everyone in IT is busy util 3pm
 l n3 n5
-save
-exit

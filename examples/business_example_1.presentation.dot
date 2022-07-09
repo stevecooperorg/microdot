@@ -4,12 +4,120 @@ digraph {
     node [fontname = "helvetica" shape = "plain"];
     edge [fontname = "helvetica" penwidth=3 color="#000000"];
 
-     [label="customers get delivery too slowly"  ]
-     [label="orders need to be processed by hand"  ]
-     [label="no developer capacity to automate orders"  ]
-     [label="developers engaged in low-value work"  ]
-     [label="shipping labels generated once a day"  ]
-     [label="printers need rebooting but everyone in\nIT is busy util 3pm"  ]
+     [label=< <TABLE BORDER="1" CELLPADDING="0"  CELLBORDER="0" CELLSPACING="4">
+    <TR >
+        <TD width="20"><FONT POINT-SIZE="10"></FONT></TD>
+        <TD WIDTH="200" ROWSPAN="2" ALIGN="left" VALIGN="top">customers get delivery too slowly</TD>
+    </TR>
+    <TR>
+        <TD HEIGHT="60" BGCOLOR="#dddddd" ROWSPAN="2" BORDER="1"></TD>
+    </TR>
+    <TR>
+        <TD HEIGHT="20">
+            <TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0">
+                <TR>
+                    
+                    <TD></TD>
+                </TR>
+            </TABLE>
+        </TD>
+    </TR>
+</TABLE> >]
+     [label=< <TABLE BORDER="1" CELLPADDING="0"  CELLBORDER="0" CELLSPACING="4">
+    <TR >
+        <TD width="20"><FONT POINT-SIZE="10"></FONT></TD>
+        <TD WIDTH="200" ROWSPAN="2" ALIGN="left" VALIGN="top">orders need to be processed by hand</TD>
+    </TR>
+    <TR>
+        <TD HEIGHT="60" BGCOLOR="#dddddd" ROWSPAN="2" BORDER="1"></TD>
+    </TR>
+    <TR>
+        <TD HEIGHT="20">
+            <TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0">
+                <TR>
+                    
+                    <TD></TD>
+                </TR>
+            </TABLE>
+        </TD>
+    </TR>
+</TABLE> >]
+     [label=< <TABLE BORDER="1" CELLPADDING="0"  CELLBORDER="0" CELLSPACING="4">
+    <TR >
+        <TD width="20"><FONT POINT-SIZE="10"></FONT></TD>
+        <TD WIDTH="200" ROWSPAN="2" ALIGN="left" VALIGN="top">no developer capacity to automate orders</TD>
+    </TR>
+    <TR>
+        <TD HEIGHT="60" BGCOLOR="#dddddd" ROWSPAN="2" BORDER="1"></TD>
+    </TR>
+    <TR>
+        <TD HEIGHT="20">
+            <TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0">
+                <TR>
+                    
+                    <TD></TD>
+                </TR>
+            </TABLE>
+        </TD>
+    </TR>
+</TABLE> >]
+     [label=< <TABLE BORDER="1" CELLPADDING="0"  CELLBORDER="0" CELLSPACING="4">
+    <TR >
+        <TD width="20"><FONT POINT-SIZE="10"></FONT></TD>
+        <TD WIDTH="200" ROWSPAN="2" ALIGN="left" VALIGN="top">developers engaged in low-value work</TD>
+    </TR>
+    <TR>
+        <TD HEIGHT="60" BGCOLOR="#dddddd" ROWSPAN="2" BORDER="1"></TD>
+    </TR>
+    <TR>
+        <TD HEIGHT="20">
+            <TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0">
+                <TR>
+                    
+                    <TD></TD>
+                </TR>
+            </TABLE>
+        </TD>
+    </TR>
+</TABLE> >]
+     [label=< <TABLE BORDER="1" CELLPADDING="0"  CELLBORDER="0" CELLSPACING="4">
+    <TR >
+        <TD width="20"><FONT POINT-SIZE="10"></FONT></TD>
+        <TD WIDTH="200" ROWSPAN="2" ALIGN="left" VALIGN="top">shipping labels generated once a day</TD>
+    </TR>
+    <TR>
+        <TD HEIGHT="60" BGCOLOR="#dddddd" ROWSPAN="2" BORDER="1"></TD>
+    </TR>
+    <TR>
+        <TD HEIGHT="20">
+            <TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0">
+                <TR>
+                    
+                    <TD></TD>
+                </TR>
+            </TABLE>
+        </TD>
+    </TR>
+</TABLE> >]
+     [label=< <TABLE BORDER="1" CELLPADDING="0"  CELLBORDER="0" CELLSPACING="4">
+    <TR >
+        <TD width="20"><FONT POINT-SIZE="10"></FONT></TD>
+        <TD WIDTH="200" ROWSPAN="2" ALIGN="left" VALIGN="top">printers need rebooting but everyone in<br/>IT is busy util 3pm</TD>
+    </TR>
+    <TR>
+        <TD HEIGHT="60" BGCOLOR="#dddddd" ROWSPAN="2" BORDER="1"></TD>
+    </TR>
+    <TR>
+        <TD HEIGHT="20">
+            <TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0">
+                <TR>
+                    
+                    <TD></TD>
+                </TR>
+            </TABLE>
+        </TD>
+    </TR>
+</TABLE> >]
 
     "n1" -> "n0";
     "n2" -> "n1";

@@ -14,6 +14,4 @@
 (inserted node n5: 'printers need rebooting but everyone in IT is busy util 3pm' before n4)
 >> l n3 n5
 (Added edge e5 from n3 to n5)
->> save
-Saved json: /Users/steve/src/github.com/stevecooperorg/microdot/examples/business_example_1.json, interactive dot: /Users/steve/src/github.com/stevecooperorg/microdot/examples/business_example_1.dot, presentation dot: /Users/steve/src/github.com/stevecooperorg/microdot/examples/business_example_1.presentation.dot
->> exit
+CTRL-D

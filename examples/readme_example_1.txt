@@ -1,5 +1,4 @@
-i a cool new node
-i a second node
+i this happens first
+i and then this happens
 l n0 n1
-r n1 a new name #HIGHLIGHT
-exit
+r n1 and then this happens #TAG

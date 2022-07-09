@@ -80,9 +80,7 @@ $ microdot --file story.json
 (inserted node n5: 'printers need rebooting but everyone in IT is busy util 3pm' before n4)
 >> l n3 n5
 (Added edge e5 from n3 to n5)
->> save
-Saved json: /Users/steve/src/github.com/stevecooperorg/microdot/examples/business_example_1.json, interactive dot: /Users/steve/src/github.com/stevecooperorg/microdot/examples/business_example_1.dot, presentation dot: /Users/steve/src/github.com/stevecooperorg/microdot/examples/business_example_1.presentation.dot
->> exit
+CTRL-D
 
 ```
 
@@ -96,15 +94,15 @@ Enter microdot. A repl-driven system for building graphs. The idea is to use lan
 
 ```
 $ microdot --file my-graph.json
->> i a cool new node
-(inserted node n0: 'a cool new node')
->> i a second node
-(inserted node n1: 'a second node')
+>> i this happens first
+(inserted node n0: 'this happens first')
+>> i and then this happens
+(inserted node n1: 'and then this happens')
 >> l n0 n1
 (Added edge e0 from n0 to n1)
->> r n1 a new name #HIGHLIGHT
-(Node n1 renamed to 'a new name #HIGHLIGHT')
->> exit
+>> r n1 and then this happens #TAG
+(Node n1 renamed to 'and then this happens #TAG')
+CTRL-D
 
 ```
 
