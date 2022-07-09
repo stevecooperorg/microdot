@@ -78,6 +78,7 @@ impl Colors {
     pub fn black() -> Color {
         Color::from_rgb(0, 0, 0)
     }
+
     pub fn white() -> Color {
         Color::from_rgb(255, 255, 255)
     }
@@ -128,12 +129,15 @@ impl ColorScheme {
     pub fn get_stroke_color(&self) -> Color {
         self.stroke_color
     }
+
     pub fn get_font_color(&self) -> Color {
         self.font_color
     }
+
     pub fn get_fill_color(&self) -> Color {
         self.fill_color
     }
+
     pub fn get_node_border_width(&self) -> f64 {
         self.node_border_width
     }
