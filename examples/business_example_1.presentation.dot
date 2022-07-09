@@ -1,6 +1,6 @@
 digraph {
 
-    graph [fontname = "helvetica" rankdir="TB" ranksep=0.75 nodesep=0.5];
+    graph [fontname = "helvetica" rankdir="LR" ranksep=0.75 nodesep=0.5];
     node [fontname = "helvetica" shape = "plain"];
     edge [fontname = "helvetica" penwidth=3 color="#000000"];
 

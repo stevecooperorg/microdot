@@ -10,6 +10,7 @@ pub mod palettes;
 pub mod parser;
 pub mod repl;
 pub mod svg;
+pub mod util;
 
 #[derive(PartialEq, Debug)]
 pub enum Command {

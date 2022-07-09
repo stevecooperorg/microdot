@@ -1,4 +1,5 @@
 use askama::Template;
+use libmicrodot::util::git_root;
 use std::fs;
 use std::path::Path;
 use unfold::Unfold;
@@ -21,17 +22,7 @@ fn prepare_readme() {
         example_content: include_str!("../../examples/readme_example_1.log").to_string(),
     };
 
-    let current_dir: &Path = &std::env::current_dir().unwrap();
-    let mut ancestors = Unfold::new(|path| &path.parent().unwrap(), current_dir);
-    let git_root = ancestors
-        .find(|&path| {
-            // should have a '.git' folder in it.
-            fs::read_dir(path)
-                .unwrap()
-                .flatten()
-                .any(|p| p.file_name() == ".git")
-        })
-        .unwrap();
+    let git_root = git_root().unwrap();
 
     let readme_path = git_root.join("README.md");
     let readme_content = readme.render().unwrap();

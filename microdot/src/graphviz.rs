@@ -174,11 +174,11 @@ impl GraphVizExporter {
     }
 
     pub fn export(&mut self, graph: &Graph) -> String {
+        graph.export(self);
+
         let rank_dir = if self.is_left_right { "LR" } else { "TB" };
         let rank_dir = rank_dir.to_string();
         let edge_color = ColorScheme::normal().get_stroke_color();
-
-        graph.export(self);
 
         let vm = GraphViewModel {
             rank_dir,
@@ -255,6 +255,7 @@ struct GraphViewModel {
 mod tests {
     use super::*;
     use crate::repl::repl;
+    use crate::util::git_root;
     use crate::Interaction;
     use microdot_core::command::GraphCommand;
     use regex::Captures;
@@ -369,25 +370,19 @@ Cras ut egestas velit."#;
         assert!(compile_result.is_ok());
     }
 
-    fn git_root() -> PathBuf {
-        dirs::home_dir()
-            .unwrap()
-            .join("src/github.com/stevecooperorg/microdot")
-    }
-
     #[test]
     fn test_graphviz_compile_fellowship() {
-        compile_input_string_content(git_root().join("examples/fellowship.txt"));
+        compile_input_string_content(git_root().unwrap().join("examples/fellowship.txt"));
     }
 
     #[test]
     fn test_graphviz_compile_business() {
-        compile_input_string_content(git_root().join("examples/business_example_1.txt"));
+        compile_input_string_content(git_root().unwrap().join("examples/business_example_1.txt"));
     }
 
     #[test]
     fn test_graphviz_compile_readme_example_1() {
-        compile_input_string_content(git_root().join("examples/readme_example_1.txt"));
+        compile_input_string_content(git_root().unwrap().join("examples/readme_example_1.txt"));
     }
 
     struct AutoInteraction {
