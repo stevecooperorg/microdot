@@ -1,28 +1,33 @@
 DEFAULT_DOT=$(HOME)/microdot_graph.dot
 DEFAULT_JSON=$(HOME)/microdot_graph.dot
 DEFAULT_SVG=$(HOME)/microdot_graph.svg
+SRC_FILES=$(shell cargo-list-files --toml ./Cargo.toml)
+
+.PHONY: setup
+setup:
+	cargo install --git https://github.com/stevecooperorg/cargo-list-files
 
 .PHONY: all
-all:
-	echo "nothing yet"
+all: build
+
+build: target/debug/microdot
 
 fmt:
-	cd src; cargo +nightly fmt
+	cargo +nightly fmt
 
-run: src/target/debug/microdot
-	src/target/debug/microdot
+run: target/debug/microdot
+	target/debug/microdot
 
-.PHONY: src/target/debug/microdot
-src/target/debug/microdot:
-	cd src; cargo build
+target/debug/microdot:
+	cargo build
 
 watch:
 	nodemon --exec "make run"
 
-build: src/target/debug/microdot
+build: target/debug/microdot
 
 test:
-	cd src; cargo watch -x test
+	cargo watch -x test
 
 dot:
 	#dot graph.dot -Tpng -o graph.png
