@@ -357,7 +357,7 @@ Cras ut egestas velit."#;
     fn test_graphviz_compiles() {
         let dot_file = dirs::home_dir()
             .unwrap()
-            .join("src/github.com/stevecooperorg/microdot/src/test_data/exports_graph.dot");
+            .join("src/github.com/stevecooperorg/microdot/test_data/exports_graph.dot");
 
         assert!(
             dot_file.exists(),

@@ -33,7 +33,9 @@ $ microdot my-graph.dot
 
 This REPL-style app makes editing a large graph easy and interactive. It outputs `dot`, and compiles it to `svg` if you have graphviz installed and on your path. Importantly it defaults to a 'draft mode' output so you can see those node IDs;
 
-![x](examples/readme_example_1.svg)
+
+
+![examples/readme_example_1.svg](examples/readme_example_1.svg)
 
 In draft mode, the IDs of nodes and edges are included. This means we render a version where every node and edge can be referred to by a very short ID, like `n34` or `e16`. This makes it really easy to do things like delete an edge that shouldn't exist, rename a node, or insert a new node onto an edge. The operations that are hard when manually writing dot files.
 
