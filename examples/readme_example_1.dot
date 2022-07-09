@@ -4,8 +4,8 @@ digraph {
     node [fontname = "helvetica" shape = "plain"];
     edge [fontname = "helvetica" penwidth=3 color="#000000"];
 
-    n0 [label="a cool new node"  ]
-    n1 [label="a new name #HIGHLIGHT"  | <TD WIDTH="1" BGCOLOR="#B596F6" COLOR="#000000"><FONT>#HIGHLIGHT</FONT></TD>]
+    n0 [label="n0: a cool new node"  ]
+    n1 [label="n1: a new name #HIGHLIGHT"  | <TD WIDTH="1" BGCOLOR="#B596F6" COLOR="#000000"><FONT>#HIGHLIGHT</FONT></TD>]
 
     "n0" -> "n1" [label="e0"];
 

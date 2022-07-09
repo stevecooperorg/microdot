@@ -32,10 +32,8 @@
 (inserted node n12: 'Boromir seeks the sword that is broken' before n9)
 >> bef n12 Boromir fights in the battle for Osgiliath
 (inserted node n13: 'Boromir fights in the battle for Osgiliath' before n12)
->> /bree
-(Search results for: bree,
-
+>> /hobbits
+(Search results for: hobbits,
+n3: the hobbits escape with Aragorn
 )
->> save
-Saved json: /Users/steve/src/github.com/stevecooperorg/microdot/examples/fellowship.json, interactive dot: /Users/steve/src/github.com/stevecooperorg/microdot/examples/fellowship.dot, presentation dot: /Users/steve/src/github.com/stevecooperorg/microdot/examples/fellowship.presentation.dot
 CTRL-D

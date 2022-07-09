@@ -1,0 +1,15 @@
+>> lr
+(Direction changed to LR)
+>> i customers get delivery too slowly
+(inserted node n0: 'customers get delivery too slowly')
+>> bef n0 orders need to be processed by hand
+(inserted node n1: 'orders need to be processed by hand' before n0)
+>> bef n1 no developer capacity to automate orders
+(inserted node n2: 'no developer capacity to automate orders' before n1)
+>> bef n2 developers engaged in low-value work
+(inserted node n3: 'developers engaged in low-value work' before n2)
+>> bef n0 shipping labels generated once a day
+(inserted node n4: 'shipping labels generated once a day' before n0)
+>> save
+Saved json: /Users/steve/src/github.com/stevecooperorg/microdot/examples/business_example_1.json, interactive dot: /Users/steve/src/github.com/stevecooperorg/microdot/examples/business_example_1.dot, presentation dot: /Users/steve/src/github.com/stevecooperorg/microdot/examples/business_example_1.presentation.dot
+>> exit

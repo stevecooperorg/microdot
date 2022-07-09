@@ -1,0 +1,18 @@
+digraph {
+
+    graph [fontname = "helvetica" rankdir="TB" ranksep=0.75 nodesep=0.5];
+    node [fontname = "helvetica" shape = "plain"];
+    edge [fontname = "helvetica" penwidth=3 color="#000000"];
+
+     [label="customers get delivery too slowly"  ]
+     [label="orders need to be processed by hand"  ]
+     [label="no developer capacity to automate orders"  ]
+     [label="developers engaged in low-value work"  ]
+     [label="shipping labels generated once a day"  ]
+
+    "n1" -> "n0";
+    "n2" -> "n1";
+    "n3" -> "n2";
+    "n4" -> "n0";
+
+}

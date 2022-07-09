@@ -1,0 +1,8 @@
+lr
+i customers get delivery too slowly
+bef n0 orders need to be processed by hand
+bef n1 no developer capacity to automate orders
+bef n2 developers engaged in low-value work
+bef n0 shipping labels generated once a day
+save
+exit

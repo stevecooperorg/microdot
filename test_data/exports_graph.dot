@@ -4,9 +4,9 @@ digraph {
     node [fontname = "helvetica" shape = "plain"];
     edge [fontname = "helvetica" penwidth=3 color=""];
 
-    n0 [label="abc"  ]
-    n1 [label="def"  ]
-    n2 [label="hij"  ]
+    n0 [label="n0: abc"  ]
+    n1 [label="n1: def"  ]
+    n2 [label="n2: hij"  ]
 
     "n0" -> "n1" [label="e0"];
     "n1" -> "n2" [label="e1"];

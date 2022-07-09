@@ -4,20 +4,20 @@ digraph {
     node [fontname = "helvetica" shape = "plain"];
     edge [fontname = "helvetica" penwidth=3 color="#000000"];
 
-    n0 [label="Gandalf comes to the shire"  ]
-    n1 [label="Frodo departs with the ring"  ]
-    n2 [label="the inn at Bree"  ]
-    n3 [label="the hobbits escape with Aragorn"  ]
-    n4 [label="nazghuls catch up at Weathertop; Frodo\nis injured"  ]
-    n5 [label="Nazghuls move to Bree"  ]
-    n6 [label="the Nazghuls move to Weathertop"  ]
-    n7 [label="Nazghuls dispatched from Mordor"  ]
-    n8 [label="flight to the ford"  ]
-    n9 [label="the fellowship meets at Rivendell \"one\ndoes not simply walk into mordor\""  ]
-    n10 [label="Gimli leaves the mountains"  ]
-    n11 [label="Legolas travels from Mirkwood"  ]
-    n12 [label="Boromir seeks the sword that is broken"  ]
-    n13 [label="Boromir fights in the battle for\nOsgiliath"  ]
+    n0 [label="n0: Gandalf comes to the shire"  ]
+    n1 [label="n1: Frodo departs with the ring"  ]
+    n2 [label="n2: the inn at Bree"  ]
+    n3 [label="n3: the hobbits escape with Aragorn"  ]
+    n4 [label="n4: nazghuls catch up at Weathertop;\nFrodo is injured"  ]
+    n5 [label="n5: Nazghuls move to Bree"  ]
+    n6 [label="n6: the Nazghuls move to Weathertop"  ]
+    n7 [label="n7: Nazghuls dispatched from Mordor"  ]
+    n8 [label="n8: flight to the ford"  ]
+    n9 [label="n9: the fellowship meets at Rivendell\n\"one does not simply walk into mordor\""  ]
+    n10 [label="n10: Gimli leaves the mountains"  ]
+    n11 [label="n11: Legolas travels from Mirkwood"  ]
+    n12 [label="n12: Boromir seeks the sword that is\nbroken"  ]
+    n13 [label="n13: Boromir fights in the battle for\nOsgiliath"  ]
 
     "n0" -> "n1" [label="e0"];
     "n1" -> "n2" [label="e1"];

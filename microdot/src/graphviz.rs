@@ -98,12 +98,12 @@ impl Exporter for GraphVizExporter {
 
         let hash_tags = extract_hashtags(base_label);
 
-        // let label_text = match self.display_mode {
-        //     DisplayMode::Interactive => format!("{}: {}", id.0, base_label),
-        //     DisplayMode::Presentation => base_label.clone(),
-        // };
+        let label_text = match self.display_mode {
+            DisplayMode::Interactive => format!("{}: {}", id, base_label),
+            DisplayMode::Presentation => base_label.clone(),
+        };
 
-        let label_text = base_label;
+        // let label_text = base_label;
         let id = match self.display_mode {
             DisplayMode::Interactive => id.to_string(),
             DisplayMode::Presentation => "".to_string(),
@@ -378,6 +378,11 @@ Cras ut egestas velit."#;
     #[test]
     fn test_graphviz_compile_fellowship() {
         compile_input_string_content(git_root().join("examples/fellowship.txt"));
+    }
+
+    #[test]
+    fn test_graphviz_compile_business() {
+        compile_input_string_content(git_root().join("examples/business_example_1.txt"));
     }
 
     #[test]

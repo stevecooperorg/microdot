@@ -18,68 +18,14 @@ For the story example;
 
 ```
 $ microdot --file story.json
->> i Gandalf comes to the shire
-(inserted node n0: 'Gandalf comes to the shire')
->> aft n0 Frodo departs with the ring
-(inserted node n1: 'Frodo departs with the ring' after n0)
->> aft n1 the inn at Bree
-(inserted node n2: 'the inn at Bree' after n1)
->> aft n2 the hobbits escape with Aragorn
-(inserted node n3: 'the hobbits escape with Aragorn' after n2)
->> aft n3 nazghuls catch up at Weathertop; Frodo is injured
-(inserted node n4: 'nazghuls catch up at Weathertop; Frodo is injured' after n3)
->> i Nazghuls move to Bree
-(inserted node n5: 'Nazghuls move to Bree')
->> l n5 n2
-(Added edge e4 from n5 to n2)
->> aft n2 the Nazghuls move to Weathertop
-(inserted node n6: 'the Nazghuls move to Weathertop' after n2)
->> l n6 n4
-(Added edge e6 from n6 to n4)
->> bef n5 Nazghuls dispatched from Mordor
-(inserted node n7: 'Nazghuls dispatched from Mordor' before n5)
->> aft n4 flight to the ford
-(inserted node n8: 'flight to the ford' after n4)
->> aft n8 the fellowship meets at Rivendell "one does not simply walk into mordor"
-(inserted node n9: 'the fellowship meets at Rivendell "one does not simply walk into mordor"' after n8)
->> l n0 n9
-(Added edge e10 from n0 to n9)
->> bef n9 Gimli leaves the mountains
-(inserted node n10: 'Gimli leaves the mountains' before n9)
->> bef n9 Legolas travels from Mirkwood
-(inserted node n11: 'Legolas travels from Mirkwood' before n9)
->> bef n9 Boromir seeks the sword that is broken
-(inserted node n12: 'Boromir seeks the sword that is broken' before n9)
->> bef n12 Boromir fights in the battle for Osgiliath
-(inserted node n13: 'Boromir fights in the battle for Osgiliath' before n12)
->> /hobbits
-(Search results for: hobbits,
-n3: the hobbits escape with Aragorn
-)
-CTRL-D
-
+{{fellowship_content}}
 ```
 
 For the business example;
 
 ```
 $ microdot --file story.json
->> lr
-(Direction changed to LR)
->> i customers get delivery too slowly
-(inserted node n0: 'customers get delivery too slowly')
->> bef n0 orders need to be processed by hand
-(inserted node n1: 'orders need to be processed by hand' before n0)
->> bef n1 no developer capacity to automate orders
-(inserted node n2: 'no developer capacity to automate orders' before n1)
->> bef n2 developers engaged in low-value work
-(inserted node n3: 'developers engaged in low-value work' before n2)
->> bef n0 shipping labels generated once a day
-(inserted node n4: 'shipping labels generated once a day' before n0)
->> save
-Saved json: /Users/steve/src/github.com/stevecooperorg/microdot/examples/business_example_1.json, interactive dot: /Users/steve/src/github.com/stevecooperorg/microdot/examples/business_example_1.dot, presentation dot: /Users/steve/src/github.com/stevecooperorg/microdot/examples/business_example_1.presentation.dot
->> exit
-
+{{business_content}}
 ```
 
 See how we're working one line at a time, inserting nodes and linking them together? Each time you make a change, the diagram is regenerated on disk as an SVG file. SVGs can be opened in a browser, making a cheap and cheerful viewer, or you can use a tool like [Gapplin](http://gapplin.wolfrosch.com/) to automatically refresh the SVG as it changes.
@@ -92,16 +38,7 @@ Enter microdot. A repl-driven system for building graphs. The idea is to use lan
 
 ```
 $ microdot --file my-graph.json
->> i a cool new node
-(inserted node n0: 'a cool new node')
->> i a second node
-(inserted node n1: 'a second node')
->> l n0 n1
-(Added edge e0 from n0 to n1)
->> r n1 a new name #HIGHLIGHT
-(Node n1 renamed to 'a new name #HIGHLIGHT')
->> exit
-
+{{example_content}}
 ```
 
 This REPL-style app makes editing a large graph easy and interactive. It outputs `dot`, and compiles it to `svg` if you have graphviz installed and on your path. Importantly it defaults to a 'draft mode' output so you can see those node IDs;
