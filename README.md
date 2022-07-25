@@ -100,8 +100,8 @@ $ microdot --file my-graph.json
 (inserted node n1: 'and then this happens')
 >> l n0 n1
 (Added edge e0 from n0 to n1)
->> r n1 and then this happens #TAG
-(Node n1 renamed to 'and then this happens #TAG')
+>> r n1 and then this happens #TAG1 #TAG2
+(Node n1 renamed to 'and then this happens #TAG1 #TAG2')
 CTRL-D
 
 ```

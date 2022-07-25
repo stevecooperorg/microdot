@@ -26,7 +26,7 @@ impl ToString for HashTag {
 }
 
 pub fn extract_hashtags(input: &str) -> Vec<HashTag> {
-    let rx = Regex::new("#[A-Z][A-Z0-9]*").expect("not a regex");
+    let rx = Regex::new("#[A-Za-z][A-Za-z0-9_-]*").expect("not a regex");
     let mut hashes = HashSet::new();
     for hash in rx.captures_iter(input) {
         let hash = hash.get(0).unwrap().as_str().to_string();

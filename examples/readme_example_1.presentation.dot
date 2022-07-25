@@ -1,49 +1,31 @@
 digraph {
 
     graph [fontname = "helvetica" rankdir="TB" ranksep=0.75 nodesep=0.5];
-    node [fontname = "helvetica" shape = "plain"];
+    node [fontname = "helvetica" shape = "box" width=4 style=filled];
     edge [fontname = "helvetica" penwidth=3 color="#000000"];
 
-     [label=< <TABLE BORDER="1" CELLPADDING="0"  CELLBORDER="0" CELLSPACING="4">
-    <TR >
-        <TD width="20"><FONT POINT-SIZE="10"></FONT></TD>
-        <TD WIDTH="200" ROWSPAN="2" ALIGN="left" VALIGN="top">this happens first</TD>
-    </TR>
+     [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
-        <TD HEIGHT="60" BGCOLOR="#dddddd" ROWSPAN="2" BORDER="1"></TD>
+        <TD COLSPAN="1"><FONT POINT-SIZE="10"></FONT>: this happens first</TD>
     </TR>
+    
+   </TABLE>
+> fillcolor="#FFFFFF"]
+     [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
-        <TD HEIGHT="20">
-            <TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0">
-                <TR>
-                    
-                    <TD></TD>
-                </TR>
-            </TABLE>
-        </TD>
+        <TD COLSPAN="2"><FONT POINT-SIZE="10"></FONT>: and then this happens #TAG1 #TAG2</TD>
     </TR>
-</TABLE> >]
-     [label=< <TABLE BORDER="1" CELLPADDING="0"  CELLBORDER="0" CELLSPACING="4">
-    <TR >
-        <TD width="20"><FONT POINT-SIZE="10"></FONT></TD>
-        <TD WIDTH="200" ROWSPAN="2" ALIGN="left" VALIGN="top">and then this happens #TAG</TD>
-    </TR>
+    
     <TR>
-        <TD HEIGHT="60" BGCOLOR="#dddddd" ROWSPAN="2" BORDER="1"></TD>
+        
+            <TD BGCOLOR="#FF7F7F"><FONT COLOR="#000000">#TAG1</FONT></TD>
+        
+            <TD BGCOLOR="#E2954D"><FONT COLOR="#000000">#TAG2</FONT></TD>
+        
     </TR>
-    <TR>
-        <TD HEIGHT="20">
-            <TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0">
-                <TR>
-                    
-                    <TD WIDTH="1" BGCOLOR="#FF7F80" COLOR="#000000" CELLPADDING="0" CELLBORDER="0"><FONT>#TAG</FONT></TD>
-                    
-                    <TD></TD>
-                </TR>
-            </TABLE>
-        </TD>
-    </TR>
-</TABLE> >]
+    
+   </TABLE>
+> fillcolor="#FFFFFF"]
 
     "n0" -> "n1";
 

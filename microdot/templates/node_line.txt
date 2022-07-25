@@ -1,1 +1,1 @@
-    {{id}} [label={{label}}]
+    {{id}} [label={{label}} fillcolor="{{label.bgcolor}}"]

@@ -16,6 +16,16 @@ pub fn repl<I: Interaction>(
     loop {
         let readline = interaction.read(">> ");
 
+        // when we start, make sure the existing pic is up to date.
+        {
+            let graph = graph.write().unwrap();
+            let (interactive_dot_file, presentation_dot_file) =
+                save_file(json_file, &graph)?;
+            if interaction.should_compile_dot() {
+                compile_dot(interactive_dot_file, presentation_dot_file);
+            }
+        }
+
         match readline {
             Ok(line) => {
                 interaction.add_history(line.as_str());

@@ -1,4 +1,4 @@
-use crate::colors::{Color, ColorScheme};
+use crate::colors::{Color, Colors, ColorScheme};
 use anyhow::anyhow;
 use askama::Template;
 use command_macros::cmd;
@@ -92,7 +92,7 @@ impl Exporter for GraphVizExporter {
         self.is_left_right = is_left_right;
     }
 
-    fn add_node(&mut self, id: &Id, label: &Label, _highlight: NodeHighlight) {
+    fn add_node(&mut self, id: &Id, label: &Label, highlight: NodeHighlight) {
         // TODO: probably horrific perf.
 
         let wrapping_options = {
@@ -105,11 +105,6 @@ impl Exporter for GraphVizExporter {
 
         let hash_tags = extract_hashtags(base_label);
 
-        // let label_text = match self.display_mode {
-        //     DisplayMode::Interactive => format!("{}: {}", id, base_label),
-        //     DisplayMode::Presentation => base_label.clone(),
-        // };
-
         let label_text = base_label;
 
         let id = match self.display_mode {
@@ -119,17 +114,29 @@ impl Exporter for GraphVizExporter {
 
         let label_text = fill(&label_text, &wrapping_options);
 
+        let bgcolor = match highlight {
+            NodeHighlight::Normal => Colors::white(),
+            NodeHighlight::SearchResult => Color::from_rgb(208, 204, 204),
+            NodeHighlight::CurrentNode => Colors::white()
+        };
+
+        let hash_tags: Vec<_> = hash_tags
+            .iter()
+            .map(|tag| HashTagViewModel {
+                label: tag.to_string(),
+                bgcolor: ColorScheme::series(tag.hash()).get_fill_color(),
+            })
+            .collect();
+
+        let colspan: usize = if hash_tags.is_empty() { 1 } else { hash_tags.len() };
+
         let label_vm = NodeHtmlLabelViewModel {
             id: id.clone(),
             label: label_text.clone(),
             label_wrapped: escape_label(&label_text.clone()),
-            hash_tags: hash_tags
-                .iter()
-                .map(|tag| HashTagViewModel {
-                    label: tag.to_string(),
-                    bgcolor: ColorScheme::series(tag.hash()).get_fill_color(),
-                })
-                .collect(),
+            hash_tags,
+            colspan,
+            bgcolor
         };
 
         let node_vm = NodeViewModel {
@@ -241,11 +248,14 @@ struct NodeHtmlLabelViewModel {
     id: String,
     label: String,
     label_wrapped: String,
+    colspan: usize,
     hash_tags: Vec<HashTagViewModel>,
+    bgcolor: Color,
 }
 
 #[derive(Template)]
-#[template(path = "hashtag.html")]
+//#[template(path = "hashtag.html")]
+#[template(path = "hashtag.txt")]
 struct HashTagViewModel {
     label: String,
     bgcolor: Color,
@@ -285,6 +295,8 @@ mod tests {
                     label: "#hash2".into(),
                 },
             ],
+            colspan: 2,
+            bgcolor: Colors::white()
         };
         let node = NodeViewModel {
             id: "n99".into(),
@@ -394,7 +406,8 @@ Cras ut egestas velit."#;
             .collect::<Vec<_>>()
             .first()
             .expect("could not find major version");
+        let major_version: u32 = major_version.parse().expect("could not parse as number");
 
-        assert_eq!(major_version, "3");
+        assert!(major_version >= 3, "need a recent version of graphviz - have {}", major_version);
     }
 }
