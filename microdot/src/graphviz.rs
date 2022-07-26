@@ -142,12 +142,7 @@ impl Exporter for GraphVizExporter {
             bgcolor
         };
 
-        let node_vm = NodeViewModel {
-            id: id.clone(),
-            label: label_vm,
-        };
-
-        let line = node_vm.render().unwrap();
+        let line = label_vm.render().unwrap();
 
         self.inner_content.push_str(&line);
         self.inner_content.push('\n');
@@ -237,15 +232,7 @@ fn prepare_label(label: &str, wrap: f64) -> String {
 }
 
 #[derive(Template)]
-#[template(path = "node_line.txt")]
-struct NodeViewModel {
-    id: String,
-    label: NodeHtmlLabelViewModel,
-}
-
-#[derive(Template)]
 #[template(path = "node.html")]
-//#[template(path = "node.txt")]
 #[allow(dead_code)]
 struct NodeHtmlLabelViewModel {
     id: String,
@@ -257,8 +244,7 @@ struct NodeHtmlLabelViewModel {
 }
 
 #[derive(Template)]
-//#[template(path = "hashtag.html")]
-#[template(path = "hashtag.txt")]
+#[template(path = "hashtag.html")]
 struct HashTagViewModel {
     label: String,
     bgcolor: Color,
@@ -301,12 +287,9 @@ mod tests {
             colspan: 2,
             bgcolor: Colors::white()
         };
-        let node = NodeViewModel {
-            id: "n99".into(),
-            label,
-        };
 
-        println!("{}", node.render().unwrap());
+
+        println!("{}", label.render().unwrap());
     }
 
     #[test]
