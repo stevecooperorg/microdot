@@ -17,3 +17,6 @@ Cargo.lock
 
 history.txt
 .idea/
+
+examples/*.png
+test_data/*.png

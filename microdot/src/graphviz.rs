@@ -59,16 +59,19 @@ pub fn compile_dot(path: &Path, _display_mode: DisplayMode) -> Result<(), anyhow
         return Err(anyhow::Error::msg("graphviz not installed"));
     }
 
-    let out = path.with_extension("svg");
+    for ext in ["svg", "png"] {
+        let out = path.with_extension(ext);
 
-    let Output { status, stderr, .. } = cmd!(dot(path)("-Tsvg")("-o")(out)).output()?;
+        let Output { status, stderr, .. } = cmd!(dot(path)(&format!("-T{}", ext))("-o")(out)).output()?;
 
-    if status.success() {
-        Ok(())
-    } else {
-        let stderr = String::from_utf8_lossy(&stderr).to_string();
-        Err(anyhow!(stderr))
+        if !status.success() {
+
+            let stderr = String::from_utf8_lossy(&stderr).to_string();
+            return Err(anyhow!(stderr))
+        }
     }
+
+    Ok(())
 }
 
 pub struct GraphVizExporter {
