@@ -9,6 +9,7 @@ pub enum HashState {
     Hashed(usize),
 }
 
+#[derive(PartialEq, Debug)]
 pub struct HashTag {
     tag: String,
 }
@@ -25,7 +26,7 @@ impl ToString for HashTag {
     }
 }
 
-pub fn extract_hashtags(input: &str) -> Vec<HashTag> {
+pub fn extract_hashtags(input: &str) -> (Vec<HashTag>, String) {
     let rx = Regex::new("#[A-Za-z][A-Za-z0-9_-]*").expect("not a regex");
     let mut hashes = HashSet::new();
     for hash in rx.captures_iter(input) {
@@ -33,15 +34,32 @@ pub fn extract_hashtags(input: &str) -> Vec<HashTag> {
         hashes.insert(hash);
     }
 
+    // trim any trailing hashtags, since they'll be immediately displayed underneath.
+    let mut work_done = true;
+    let mut new_label = input.to_string();
+
+    while work_done {
+        new_label = new_label.trim().to_string();
+        work_done = false;
+        for hash in hashes.iter() {
+            if new_label.ends_with(hash) {
+                let split_at = new_label.len() - hash.len();
+                //println!("found '{}' at the end of '{}', splitting from {}", hash, new_label, split_at);
+                new_label = new_label[..split_at].to_string();
+                work_done = true;
+            }
+        }
+    }
     let mut hashes: Vec<_> = hashes.into_iter().collect();
     hashes.sort();
 
-    hashes.into_iter().map(|tag| HashTag { tag }).collect()
+    let hashtags = hashes.into_iter().map(|tag| HashTag { tag }).collect();
+    (hashtags, new_label)
 }
 
 #[allow(dead_code)]
 fn hashtag_signature(input: &str) -> HashState {
-    let hashes = extract_hashtags(input);
+    let (hashes, _) = extract_hashtags(input);
     if hashes.is_empty() {
         return HashState::None;
     }
@@ -66,7 +84,20 @@ mod tests {
     use super::*;
 
     #[test]
-    fn extracts_hashtags_right() {
+    fn it_extracts_hashtags() {
+        let actual = extract_hashtags("no hashtags");
+        assert_eq!(actual, (vec![], "no hashtags".to_string()));
+
+        let actual = extract_hashtags("a #hashtag in the middle");
+        assert_eq!(actual, (vec![HashTag { tag:"#hashtag".to_string() }], "a #hashtag in the middle".to_string()));
+
+        let actual = extract_hashtags("a #hashtag at the #end");
+        assert_eq!(actual, (vec![HashTag { tag:"#end".to_string() }, HashTag { tag:"#hashtag".to_string() }], "a #hashtag at the".to_string()));
+
+    }
+
+    #[test]
+    fn it_calculates_hashtag_signatures() {
         fn eq(a: &str, b: &str) {
             let ai = hashtag_signature(a);
             let bi = hashtag_signature(b);

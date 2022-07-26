@@ -106,9 +106,7 @@ impl Exporter for GraphVizExporter {
 
         let base_label = &label.to_string();
 
-        let hash_tags = extract_hashtags(base_label);
-
-        let label_text = base_label;
+        let (hash_tags, label_text) = extract_hashtags(base_label);
 
         let id = match self.display_mode {
             DisplayMode::Interactive => id.to_string(),

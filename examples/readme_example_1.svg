@@ -19,12 +19,12 @@
 <g id="node2" class="node">
 <title>n1</title>
 <polygon fill="#ffffff" stroke="black" points="288,-38 0,-38 0,0 288,0 288,-38"/>
-<text text-anchor="start" x="21" y="-23.8" font-family="Helvetica,sans-Serif" font-size="10.00">n1</text>
-<text text-anchor="start" x="32" y="-23.8" font-family="Helvetica,sans-Serif" font-size="14.00">: and then this happens #TAG1 #TAG2</text>
-<polygon fill="#ff7f7f" stroke="transparent" points="21,-4 21,-19 144,-19 144,-4 21,-4"/>
-<text text-anchor="start" x="60.5" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">#TAG1</text>
-<polygon fill="#e2954d" stroke="transparent" points="144,-4 144,-19 267,-19 267,-4 144,-4"/>
-<text text-anchor="start" x="183.5" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">#TAG2</text>
+<text text-anchor="start" x="68" y="-23.8" font-family="Helvetica,sans-Serif" font-size="10.00">n1</text>
+<text text-anchor="start" x="79" y="-23.8" font-family="Helvetica,sans-Serif" font-size="14.00">: and then this happens</text>
+<polygon fill="#ff7f7f" stroke="transparent" points="68,-4 68,-19 144,-19 144,-4 68,-4"/>
+<text text-anchor="start" x="84" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">#TAG1</text>
+<polygon fill="#e2954d" stroke="transparent" points="144,-4 144,-19 220,-19 220,-4 144,-4"/>
+<text text-anchor="start" x="160" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">#TAG2</text>
 </g>
 <!-- n0&#45;&gt;n1 -->
 <g id="edge1" class="edge">
