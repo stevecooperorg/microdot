@@ -3,12 +3,12 @@ DEFAULT_JSON=$(HOME)/microdot_graph.dot
 DEFAULT_SVG=$(HOME)/microdot_graph.svg
 SRC_FILES=$(shell cargo-list-files --toml ./Cargo.toml)
 
+.PHONY: all
+all: build
+
 .PHONY: setup
 setup:
 	cargo install --git https://github.com/stevecooperorg/cargo-list-files
-
-.PHONY: all
-all: build
 
 build: target/debug/microdot
 
@@ -18,7 +18,7 @@ fmt:
 run: target/debug/microdot
 	target/debug/microdot
 
-target/debug/microdot:
+target/debug/microdot: $(SRC_FILES)
 	cargo build
 
 watch:
