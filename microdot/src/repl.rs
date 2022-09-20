@@ -50,6 +50,7 @@ pub fn repl<I: Interaction>(
                     }
                     Command::Show => {
                         let svg_file = json_file.with_extension("svg");
+                        let svg_file = std::fs::canonicalize(svg_file).expect("could not canconcicalise file path");
                         let result = svg::open_in_gapplin(&svg_file);
                         interaction.log(result.to_string());
                     }
