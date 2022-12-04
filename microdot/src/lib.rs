@@ -36,12 +36,12 @@ impl Command {
             }
             Command::PrintDot => format!("print the dot definition for this graph to the terminal"),
             Command::PrintJson => {
-                format!("print the dot definition for this graph to the terminal")
+                format!("print the json definition for this graph to the terminal")
             }
             Command::RenameNodeUnlabelled { id } => format!("(ignored; internal option <{}>)", id),
             Command::Save => "save the graph to disc".into(),
             Command::Show => "open the diagram in Gapplin".into(),
-            Command::Exit => format!("exit {}", env!("CARGO_CRATE_NAME")),
+            Command::Exit => "exit microdot".into(),
             Command::ParseError { line } => format!("could not parse: \"{}\"", line),
         }
     }
