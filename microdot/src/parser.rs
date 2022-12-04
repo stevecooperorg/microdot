@@ -474,10 +474,7 @@ mod tests {
         );
     }
 
-    #[test]
-    fn verify_parser_text() {
-        let help_file_content = include_str!("help.txt");
-        let help_file_template = include_str!("help.txt.tpl");
+    fn help_command_data() -> Vec<(String, String)> {
         let help_parser_content = include_str!("help-commands.txt");
 
         let help_commands_line: Vec<_> = help_parser_content
@@ -485,7 +482,7 @@ mod tests {
             .filter(|l| l.len() > 0)
             .collect();
 
-        let help_commands_data: Vec<_> = help_commands_line
+        help_commands_line
             .iter()
             .filter(|l| !l.is_empty())
             .map(|line| {
@@ -494,7 +491,15 @@ mod tests {
                 let help_text_literal = parts[1].trim().to_string();
                 (parse_input, help_text_literal)
             })
-            .collect();
+            .collect()
+    }
+
+    #[test]
+    fn verify_parser_text() {
+        let help_file_content = include_str!("help.txt");
+        let help_file_template = include_str!("help.txt.tpl");
+
+        let help_commands_data = help_command_data();
 
         // verify all the help commands parse, and produce the right help.
         for (parse_input, help_text_literal) in &help_commands_data {
@@ -504,7 +509,6 @@ mod tests {
         }
 
         // let's generate the 'manual' automatically.
-
         let max_parse_input_len = help_commands_data
             .iter()
             .map(|(input, _)| input.len())
