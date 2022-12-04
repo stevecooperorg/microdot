@@ -48,7 +48,7 @@ impl GraphCommand {
                     "top to bottom"
                 }
             ),
-            GraphCommand::UnlinkEdge { id } => format!("unlink the <{}> edge", id),
+            GraphCommand::UnlinkEdge { id } => format!("Unlink the <{}> edge", id),
         }
     }
 }

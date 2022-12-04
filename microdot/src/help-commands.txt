@@ -1,0 +1,17 @@
+i new node label - Insert a node labelled "new node label" into the graph
+d n1 - Delete the <n1> node
+r n1 newnodetext - Rename the <n1> node to "newnodetext"
+
+l n1 n2 - Link the <n1> node to the <n2> node
+u e4 - Unlink the <e4> edge
+
+aft n0 following - Insert a node labelled "following" after the node with id "n0"
+bef n0 preceding - Insert a node labelled "preceding" before the node with id "n0"
+exp e1 intermediate - Expand the <e1> edge with a new node labelled "intermediate"
+
+sel n1 - Select the <n1> node and highlight it
+s searchterm - search for <searchterm> and highlight matching nodes
+/searchterm - search for <searchterm> and highlight matching nodes
+
+lr - Change the orientation of the graph to left to right
+tb - Change the orientation of the graph to top to bottom

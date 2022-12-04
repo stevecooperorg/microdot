@@ -473,4 +473,58 @@ mod tests {
             }
         );
     }
+
+    #[test]
+    fn verify_parser_text() {
+        let help_file_content = include_str!("help.txt");
+        let help_file_template = include_str!("help.txt.tpl");
+        let help_parser_content = include_str!("help-commands.txt");
+
+        let help_commands_line: Vec<_> = help_parser_content
+            .split('\n')
+            .filter(|l| l.len() > 0)
+            .collect();
+
+        let help_commands_data: Vec<_> = help_commands_line
+            .iter()
+            .filter(|l| !l.is_empty())
+            .map(|line| {
+                let parts: Vec<_> = line.split('-').collect();
+                let parse_input = parts[0].trim().to_string();
+                let help_text_literal = parts[1].trim().to_string();
+                (parse_input, help_text_literal)
+            })
+            .collect();
+
+        // verify all the help commands parse, and produce the right help.
+        for (parse_input, help_text_literal) in &help_commands_data {
+            let command = parse_line(Line::new(parse_input));
+            let actual = command.to_help_string();
+            assert_eq!(&actual, help_text_literal);
+        }
+
+        // let's generate the 'manual' automatically.
+
+        let max_parse_input_len = help_commands_data
+            .iter()
+            .map(|(input, _)| input.len())
+            .max()
+            .unwrap_or_default();
+
+        let command_text: Vec<_> = help_commands_data
+            .iter()
+            .map(|(input, expected)| {
+                format!("  - {:N$} - {}", input, expected, N = max_parse_input_len)
+            })
+            .collect();
+        let command_text = command_text.join("\n");
+        let actual_help = help_file_template.replace("#COMMANDS#", &command_text);
+
+        if actual_help != help_file_content {
+            println!("---- BEGIN CORRECT HELP ----");
+            println!("{}", actual_help);
+            println!("---- END CORRECT HELP ----");
+            panic!("help text is wrong. Copy-paste the above into the help file");
+        }
+    }
 }
