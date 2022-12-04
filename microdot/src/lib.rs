@@ -26,6 +26,27 @@ pub enum Command {
     ParseError { line: Line },
 }
 
+impl Command {
+    fn to_help_string(&self) -> String {
+        match self {
+            Command::GraphCommand(c) => c.to_help_string(),
+            Command::ShowHelp => "display this help".into(),
+            Command::Search { sub_label } => {
+                format!("search for <{}> and highlight matching nodes", sub_label)
+            }
+            Command::PrintDot => format!("print the dot definition for this graph to the terminal"),
+            Command::PrintJson => {
+                format!("print the dot definition for this graph to the terminal")
+            }
+            Command::RenameNodeUnlabelled { id } => format!("(ignored; internal option <{}>)", id),
+            Command::Save => "save the graph to disc".into(),
+            Command::Show => "open the diagram in Gapplin".into(),
+            Command::Exit => format!("exit {}", env!("CARGO_CRATE_NAME")),
+            Command::ParseError { line } => format!("could not parse: \"{}\"", line),
+        }
+    }
+}
+
 impl From<GraphCommand> for Command {
     fn from(c: GraphCommand) -> Self {
         Command::GraphCommand(c)

@@ -22,7 +22,7 @@ target/debug/microdot: $(SRC_FILES)
 	cargo build
 
 watch:
-	nodemon --exec "make run"
+	cargo watch -x test -x "clippy -- -Dwarnings"
 
 build: target/debug/microdot
 

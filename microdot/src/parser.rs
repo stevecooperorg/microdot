@@ -289,8 +289,15 @@ mod tests {
         };
     }
 
-    #[test]
+    macro_rules! assert_parse_command {
+        ($input: expr, $expected: expr) => {
+            let line = Line::new($input);
+            let actual = parse_line(line);
+            assert_eq!(actual, $expected);
+        };
+    }
 
+    #[test]
     fn parser_bits() {
         assert_consumes_all![
             link_edge(),
@@ -342,18 +349,7 @@ mod tests {
     }
 
     #[test]
-
     fn parse_line_works() {
-        macro_rules! assert_parse_command {
-            ($input: expr, $expected: expr) => {
-                let line = Line::new($input);
-
-                let actual = parse_line(line);
-
-                assert_eq!(actual, $expected);
-            };
-        }
-
         assert_parse_command!(
             "i",
             Command::ParseError {
