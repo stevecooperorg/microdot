@@ -32,3 +32,6 @@ test:
 dot:
 	#dot graph.dot -Tpng -o graph.png
 	dot "$(DEFAULT_DOT)" -Tsvg -o "$(DEFAULT_SVG)"
+
+commit:
+	./bin/auto-commit

@@ -1,0 +1,18 @@
+#!/usr/local/bin/bash
+
+set -e
+echo "FETCHING"
+git fetch
+echo "REBASING"
+git rebase --autostash
+
+if [[ `git status --porcelain` ]]; then
+  # Changes
+  echo "ADDING"
+  git add .
+  MSG="Commit $(date)"
+  echo "COMMITTING $MSG"
+  git commit -m "${MSG}"
+  echo "PUSHING"
+  git push
+fi
