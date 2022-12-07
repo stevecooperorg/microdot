@@ -3,3 +3,27 @@
 members = [
     "microdot*",
 ]
+
+[workspace.dependencies]
+anyhow = "1.0"
+askama = "0.11"
+clap = { version="3.1", features=["derive"] }
+command-macros = "0.2"
+dirs = "4.0"
+hex="0.4"
+hyphenation = "0.8"
+lazy_static = "1.4"
+md5 = "0.7"
+microdot-core= { path="../microdot-core" }
+palette="0.6"
+pom = "3.2"
+regex = "1.5"
+resvg = "0.23"
+rustyline = "9.0"
+rustyline-derive = "0.6"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+strum = "0.24"
+strum_macros = "0.24"
+textwrap = { version="0.15", features = ["hyphenation"] }
+unfold = "0.2"
