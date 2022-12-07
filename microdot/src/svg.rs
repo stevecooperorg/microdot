@@ -11,12 +11,9 @@ pub fn open_in_gapplin(svg_path: &Path) -> CommandResult {
         cmd.arg(svg_path);
         match cmd.spawn() {
             Ok(_) => CommandResult::new(format!("Opened {} in {}", svg_path, viewer)),
-            Err(e) => CommandResult::new(format!(
-                "Could not open {} in {}: {}",
-                svg_path,
-                viewer,
-                e.to_string()
-            )),
+            Err(e) => {
+                CommandResult::new(format!("Could not open {} in {}: {}", svg_path, viewer, e))
+            }
         }
     } else {
         CommandResult::new(format!("Could not open {} in {}", svg_path, viewer))

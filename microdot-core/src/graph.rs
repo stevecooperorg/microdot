@@ -2,6 +2,7 @@ use crate::command::GraphCommand;
 use crate::exporter::{Exporter, NodeHighlight};
 use crate::{CommandResult, Id, Label};
 
+#[derive(Default)]
 pub struct Graph {
     node_high_water: usize,
     edge_high_water: usize,
@@ -21,20 +22,6 @@ struct Edge {
     id: Id,
     from: Id,
     to: Id,
-}
-
-impl Default for Graph {
-    fn default() -> Self {
-        Self {
-            node_high_water: 0,
-            edge_high_water: 0,
-            nodes: vec![],
-            edges: vec![],
-            is_left_right: false,
-            current_search: None,
-            current_node: None,
-        }
-    }
 }
 
 impl Graph {

@@ -3,13 +3,13 @@ use std::collections::hash_map::DefaultHasher;
 use std::collections::HashSet;
 use std::hash::{Hash, Hasher};
 
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq, Eq, Debug)]
 pub enum HashState {
     None,
     Hashed(usize),
 }
 
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq, Eq, Debug)]
 pub struct HashTag {
     tag: String,
 }
@@ -89,11 +89,31 @@ mod tests {
         assert_eq!(actual, (vec![], "no hashtags".to_string()));
 
         let actual = extract_hashtags("a #hashtag in the middle");
-        assert_eq!(actual, (vec![HashTag { tag:"#hashtag".to_string() }], "a #hashtag in the middle".to_string()));
+        assert_eq!(
+            actual,
+            (
+                vec![HashTag {
+                    tag: "#hashtag".to_string()
+                }],
+                "a #hashtag in the middle".to_string()
+            )
+        );
 
         let actual = extract_hashtags("a #hashtag at the #end");
-        assert_eq!(actual, (vec![HashTag { tag:"#end".to_string() }, HashTag { tag:"#hashtag".to_string() }], "a #hashtag at the".to_string()));
-
+        assert_eq!(
+            actual,
+            (
+                vec![
+                    HashTag {
+                        tag: "#end".to_string()
+                    },
+                    HashTag {
+                        tag: "#hashtag".to_string()
+                    }
+                ],
+                "a #hashtag at the".to_string()
+            )
+        );
     }
 
     #[test]

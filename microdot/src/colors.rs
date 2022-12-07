@@ -2,7 +2,7 @@ use crate::palettes::PaletteReader;
 use palette::*;
 use std::fmt::{Display, Formatter};
 
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub struct Color {
     inner: Srgb<u8>,
 }

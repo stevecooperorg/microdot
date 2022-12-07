@@ -58,7 +58,7 @@ where
             None => return no_options(),
         };
 
-        let new_line = format!("r {} {}", id, label.to_string());
+        let new_line = format!("r {} {}", id, label);
 
         let replacement = Pair {
             display: new_line.clone(),

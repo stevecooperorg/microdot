@@ -1,4 +1,4 @@
-use crate::colors::{Color, Colors, ColorScheme};
+use crate::colors::{Color, ColorScheme, Colors};
 use anyhow::anyhow;
 use askama::Template;
 use command_macros::cmd;
@@ -62,12 +62,12 @@ pub fn compile_dot(path: &Path, _display_mode: DisplayMode) -> Result<(), anyhow
     for ext in ["svg", "png"] {
         let out = path.with_extension(ext);
 
-        let Output { status, stderr, .. } = cmd!(dot(path)(&format!("-T{}", ext))("-o")(out)).output()?;
+        let Output { status, stderr, .. } =
+            cmd!(dot(path)(&format!("-T{}", ext))("-o")(out)).output()?;
 
         if !status.success() {
-
             let stderr = String::from_utf8_lossy(&stderr).to_string();
-            return Err(anyhow!(stderr))
+            return Err(anyhow!(stderr));
         }
     }
 
@@ -118,7 +118,7 @@ impl Exporter for GraphVizExporter {
         let bgcolor = match highlight {
             NodeHighlight::Normal => Colors::white(),
             NodeHighlight::SearchResult => Color::from_rgb(208, 204, 204),
-            NodeHighlight::CurrentNode => Colors::white()
+            NodeHighlight::CurrentNode => Colors::white(),
         };
 
         let hash_tags: Vec<_> = hash_tags
@@ -129,15 +129,19 @@ impl Exporter for GraphVizExporter {
             })
             .collect();
 
-        let colspan: usize = if hash_tags.is_empty() { 1 } else { hash_tags.len() };
+        let colspan: usize = if hash_tags.is_empty() {
+            1
+        } else {
+            hash_tags.len()
+        };
 
         let label_vm = NodeHtmlLabelViewModel {
-            id: id.clone(),
+            id,
             label: label_text.clone(),
-            label_wrapped: escape_label(&label_text.clone()),
+            label_wrapped: escape_label(&label_text),
             hash_tags,
             colspan,
-            bgcolor
+            bgcolor,
         };
 
         let line = label_vm.render().unwrap();
@@ -201,12 +205,12 @@ impl GraphVizExporter {
 }
 
 fn escape_label(label: &str) -> String {
-    format!("\"{}\"", label.replace("\n", "\\n").replace("\"", "\\\""))
+    format!("\"{}\"", label.replace('\n', "\\n").replace('"', "\\\""))
 }
 
 fn escape_id<S: Into<String>>(id: S) -> String {
     let id: String = id.into();
-    format!("\"{}\"", id.replace("\"", "\\\""))
+    format!("\"{}\"", id.replace('"', "\\\""))
 }
 
 #[allow(dead_code)]
@@ -223,7 +227,7 @@ fn prepare_label(label: &str, wrap: f64) -> String {
         res.push_str(&words);
         res.push('\n');
     }
-    if lines.len() > 0 {
+    if !lines.is_empty() {
         res.truncate(res.len() - 1)
     }
     res
@@ -283,9 +287,8 @@ mod tests {
                 },
             ],
             colspan: 2,
-            bgcolor: Colors::white()
+            bgcolor: Colors::white(),
         };
-
 
         println!("{}", label.render().unwrap());
     }
@@ -392,6 +395,10 @@ Cras ut egestas velit."#;
             .expect("could not find major version");
         let major_version: u32 = major_version.parse().expect("could not parse as number");
 
-        assert!(major_version >= 3, "need a recent version of graphviz - have {}", major_version);
+        assert!(
+            major_version >= 3,
+            "need a recent version of graphviz - have {}",
+            major_version
+        );
     }
 }

@@ -185,7 +185,7 @@ pub fn parse_line(line: Line) -> Command {
     }
 
     if let Ok(id) = rename_node_unlabelled().parse(text) {
-        return Command::RenameNodeUnlabelled { id: Id::new(&id) }.into();
+        return Command::RenameNodeUnlabelled { id: Id::new(&id) };
     }
 
     if let Ok(()) = lr().parse(text) {

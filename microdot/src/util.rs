@@ -10,7 +10,7 @@ use unfold::Unfold;
 
 pub fn git_root() -> Result<PathBuf> {
     let current_dir: &Path = &std::env::current_dir()?;
-    let mut ancestors = Unfold::new(|path| &path.parent().unwrap(), current_dir);
+    let mut ancestors = Unfold::new(|path| path.parent().unwrap(), current_dir);
 
     fn has_git_dir(path: &Path) -> bool {
         std::fs::read_dir(path)
@@ -56,10 +56,8 @@ pub fn compile_input_string_content(text_file: PathBuf) -> PathBuf {
     let log_file = text_file.with_extension("log");
     std::fs::write(&log_file, auto_interaction.log()).expect("could not write log file");
 
-    compile_dot(&dot_file, DisplayMode::Interactive).expect(&format!(
-        "Could not compile '{}'",
-        dot_file.to_string_lossy()
-    ));
+    compile_dot(&dot_file, DisplayMode::Interactive)
+        .unwrap_or_else(|_| panic!("Could not compile '{}'", dot_file.to_string_lossy()));
 
     log_file
 }
@@ -93,13 +91,13 @@ impl Interaction for AutoInteraction {
     fn add_history<S: AsRef<str> + Into<String>>(&mut self, history: S) -> bool {
         self.log.push_str(">> ");
         self.log.push_str(&history.into());
-        self.log.push_str("\n");
+        self.log.push('\n');
         true
     }
 
     fn log<S: AsRef<str> + Into<String>>(&mut self, message: S) {
         self.log.push_str(&message.into());
-        self.log.push_str("\n");
+        self.log.push('\n');
     }
 
     fn should_compile_dot(&self) -> bool {

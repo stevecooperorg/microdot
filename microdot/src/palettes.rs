@@ -40,7 +40,7 @@ impl PaletteCollection {
     }
 
     pub fn get(&self, name: &str) -> Option<Palette> {
-        self.inner.get(name).map(|p| p.clone())
+        self.inner.get(name).cloned()
     }
 }
 
@@ -115,8 +115,7 @@ impl Iterator for ColorIterator {
             let res = component * 256.0;
             let res = f32::min(res, 256.0);
             let res = f32::max(res, 0.0);
-            let res = res as u8;
-            res
+            res as u8
         }
 
         let r = to255(rgb.red);

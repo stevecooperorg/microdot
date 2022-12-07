@@ -19,8 +19,7 @@ pub fn repl<I: Interaction>(
         // when we start, make sure the existing pic is up to date.
         {
             let graph = graph.write().unwrap();
-            let (interactive_dot_file, presentation_dot_file) =
-                save_file(json_file, &graph)?;
+            let (interactive_dot_file, presentation_dot_file) = save_file(json_file, &graph)?;
             if interaction.should_compile_dot() {
                 compile_dot(interactive_dot_file, presentation_dot_file);
             }
@@ -50,7 +49,8 @@ pub fn repl<I: Interaction>(
                     }
                     Command::Show => {
                         let svg_file = json_file.with_extension("svg");
-                        let svg_file = std::fs::canonicalize(svg_file).expect("could not canconcicalise file path");
+                        let svg_file = std::fs::canonicalize(svg_file)
+                            .expect("could not canconcicalise file path");
                         let result = svg::open_in_gapplin(&svg_file);
                         interaction.log(result.to_string());
                     }
@@ -121,7 +121,7 @@ pub fn repl<I: Interaction>(
 fn save_file(json_file: &Path, graph: &Graph) -> Result<(PathBuf, PathBuf), anyhow::Error> {
     let mut json_exporter = JsonExporter::new();
     let json = json_exporter.export(graph);
-    std::fs::write(&json_file, json)?;
+    std::fs::write(json_file, json)?;
 
     let mut dot_exporter = GraphVizExporter::new(DisplayMode::Interactive);
     let interactive_dot = dot_exporter.export(graph);
@@ -142,7 +142,7 @@ fn compile_dot(interactive_dot_file: PathBuf, presentation_dot_file: PathBuf) ->
             "compiled interactive dot: {}",
             interactive_dot_file.to_string_lossy()
         ),
-        Err(e) => format!("failed to compile interactive dot: {}", e.to_string()),
+        Err(e) => format!("failed to compile interactive dot: {}", e),
     };
 
     let msg2 = match graphviz::compile_dot(&presentation_dot_file, DisplayMode::Presentation) {
@@ -150,7 +150,7 @@ fn compile_dot(interactive_dot_file: PathBuf, presentation_dot_file: PathBuf) ->
             "compiled presentation dot: {}",
             presentation_dot_file.to_string_lossy()
         ),
-        Err(e) => format!("failed to compile presentation dot: {}", e.to_string()),
+        Err(e) => format!("failed to compile presentation dot: {}", e),
     };
 
     CommandResult::new(format!("{}\n{}", msg1, msg2))

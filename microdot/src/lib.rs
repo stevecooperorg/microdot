@@ -12,7 +12,7 @@ pub mod repl;
 pub mod svg;
 pub mod util;
 
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq, Eq, Debug)]
 pub enum Command {
     GraphCommand(GraphCommand),
     ShowHelp,
@@ -27,6 +27,7 @@ pub enum Command {
 }
 
 impl Command {
+    #[allow(dead_code)]
     fn to_help_string(&self) -> String {
         match self {
             Command::GraphCommand(c) => c.to_help_string(),
@@ -34,10 +35,8 @@ impl Command {
             Command::Search { sub_label } => {
                 format!("search for <{}> and highlight matching nodes", sub_label)
             }
-            Command::PrintDot => format!("print the dot definition for this graph to the terminal"),
-            Command::PrintJson => {
-                format!("print the json definition for this graph to the terminal")
-            }
+            Command::PrintDot => "print the dot definition for this graph to the terminal".into(),
+            Command::PrintJson => "print the json definition for this graph to the terminal".into(),
             Command::RenameNodeUnlabelled { id } => format!("(ignored; internal option <{}>)", id),
             Command::Save => "save the graph to disc".into(),
             Command::Show => "open the diagram in Gapplin".into(),

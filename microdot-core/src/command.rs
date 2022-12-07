@@ -1,6 +1,6 @@
 use crate::{Id, Label};
 
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq, Eq, Debug)]
 pub enum GraphCommand {
     DeleteNode { id: Id },
     ExpandEdge { id: Id, label: Label },

@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 use std::collections::HashMap;
 
+#[derive(Default)]
 pub struct JsonExporter {
     nodes: Vec<Value>,
     edges: Vec<Value>,
@@ -35,15 +36,6 @@ impl Exporter for JsonExporter {
     }
 }
 
-impl Default for JsonExporter {
-    fn default() -> Self {
-        Self {
-            nodes: vec![],
-            edges: vec![],
-            is_left_right: false,
-        }
-    }
-}
 impl JsonExporter {
     pub fn new() -> Self {
         Default::default()

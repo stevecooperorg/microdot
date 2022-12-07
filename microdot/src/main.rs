@@ -86,7 +86,7 @@ fn load_graph(json_file: &Path) -> Result<Graph, anyhow::Error> {
             "loading existing graph from {}",
             json_file.to_string_lossy()
         );
-        let mut f = File::open(&json_file)?;
+        let mut f = File::open(json_file)?;
         let mut s = "".to_string();
         f.read_to_string(&mut s)?;
         s
