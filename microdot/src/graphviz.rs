@@ -120,14 +120,12 @@ fn compile_dot_str<S: AsRef<str>>(
 }
 pub fn compile_dot(path: &Path, _display_mode: DisplayMode, format: OutputFormat) -> Result<()> {
     let input_str = std::fs::read_to_string(path)?;
-    match compile_dot_str(input_str, _display_mode, format) {
-        Ok(string) => {
-            let out_file = path.with_extension(&format.to_string());
-            std::fs::write(out_file, string)?;
-            Ok(())
-        }
-        Err(e) => Err(e),
-    }
+    let out_file = path.with_extension(&format.to_string());
+
+    compile_dot_str(input_str, _display_mode, format).and_then(|string| {
+        std::fs::write(out_file, string)?;
+        Ok(())
+    })
 }
 
 pub struct GraphVizExporter {
