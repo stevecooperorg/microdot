@@ -7,6 +7,7 @@ use microdot_core::exporter::{Exporter, NodeHighlight};
 use microdot_core::graph::Graph;
 use microdot_core::hash::extract_hashtags;
 use microdot_core::{Id, Label};
+use once_cell::sync::OnceCell;
 use regex::Regex;
 use std::collections::HashMap;
 use std::fmt::{Display, Formatter};
@@ -34,6 +35,13 @@ macro_rules! hashmap {
 }
 
 pub fn installed_graphviz_version() -> Option<String> {
+    static INSTANCE: OnceCell<Option<String>> = OnceCell::new();
+    INSTANCE
+        .get_or_init(|| installed_graphviz_version_inner())
+        .clone()
+}
+
+pub fn installed_graphviz_version_inner() -> Option<String> {
     // dot - graphviz version 2.49.1 (20210923.0004)
     let stderr = match cmd!(dot("-V")).output().ok() {
         Some(output) => output.stderr,
@@ -77,6 +85,10 @@ fn compile_dot_str<S: AsRef<str>>(
     _display_mode: DisplayMode,
     format: OutputFormat,
 ) -> Result<String> {
+    if installed_graphviz_version().is_none() {
+        return Err(anyhow::Error::msg("graphviz not installed"));
+    }
+
     let ext = format.to_string();
 
     let mut child = Command::new("dot")
@@ -107,10 +119,6 @@ fn compile_dot_str<S: AsRef<str>>(
     }
 }
 pub fn compile_dot(path: &Path, _display_mode: DisplayMode, format: OutputFormat) -> Result<()> {
-    if installed_graphviz_version().is_none() {
-        return Err(anyhow::Error::msg("graphviz not installed"));
-    }
-
     let input_str = std::fs::read_to_string(path)?;
     match compile_dot_str(input_str, _display_mode, format) {
         Ok(string) => {
