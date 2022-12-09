@@ -44,7 +44,8 @@ pub fn extract_hashtags(input: &str) -> (Vec<HashTag>, String) {
         for hash in hashes.iter() {
             if new_label.ends_with(hash) {
                 let split_at = new_label.len() - hash.len();
-                //println!("found '{}' at the end of '{}', splitting from {}", hash, new_label, split_at);
+                //println!("found '{}' at the end of '{}', splitting from {}", hash, new_label,
+                // split_at);
                 new_label = new_label[..split_at].to_string();
                 work_done = true;
             }

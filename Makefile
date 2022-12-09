@@ -1,7 +1,6 @@
 DEFAULT_DOT=$(HOME)/microdot_graph.dot
 DEFAULT_JSON=$(HOME)/microdot_graph.dot
 DEFAULT_SVG=$(HOME)/microdot_graph.svg
-SRC_FILES=$(shell cargo-list-files --toml ./Cargo.toml)
 
 .PHONY: all
 all: build
@@ -18,7 +17,9 @@ fmt:
 run: target/debug/microdot
 	target/debug/microdot
 
-target/debug/microdot: $(SRC_FILES)
+.PHONY:
+target/debug/microdot:
+	cargo --version
 	cargo build
 
 watch:

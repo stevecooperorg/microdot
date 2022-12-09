@@ -9,6 +9,7 @@ pub mod json;
 pub mod palettes;
 pub mod parser;
 pub mod repl;
+mod storage;
 pub mod svg;
 pub mod util;
 
