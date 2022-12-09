@@ -150,5 +150,5 @@ fn compile_dot(interactive_dot_file: PathBuf) -> CommandResult {
         (_, Err(e)) => format!("failed to compile interactive dot to png: {}", e),
     };
 
-    CommandResult::new(format!("{}", msg))
+    CommandResult::new(msg)
 }

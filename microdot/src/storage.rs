@@ -11,6 +11,7 @@ struct FileStore {
 }
 
 impl FileStore {
+    #[allow(dead_code)]
     fn new(root: PathBuf) -> Self {
         Self { root }
     }

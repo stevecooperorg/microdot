@@ -23,7 +23,7 @@ target/debug/microdot:
 	cargo build
 
 check:
-	cargo clippy
+	cargo clippy -- -Dwarnings
 
 watch:
 	cargo watch -x "clippy -- -Dwarnings"
@@ -40,4 +40,4 @@ dot:
 commit:
 	./bin/auto-commit
 
-safe-commit: check test commit
+safe-commit: fmt check test commit

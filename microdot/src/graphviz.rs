@@ -37,7 +37,7 @@ macro_rules! hashmap {
 pub fn installed_graphviz_version() -> Option<String> {
     static INSTANCE: OnceCell<Option<String>> = OnceCell::new();
     INSTANCE
-        .get_or_init(|| installed_graphviz_version_inner())
+        .get_or_init(installed_graphviz_version_inner)
         .clone()
 }
 
