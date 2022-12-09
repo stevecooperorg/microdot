@@ -16,6 +16,7 @@ lazy_static = "1.4"
 md5 = "0.7"
 microdot-core= { path="../microdot-core" }
 palette="0.6"
+petgraph = "0.6"
 pom = "3.2"
 regex = "1.5"
 resvg = "0.23"

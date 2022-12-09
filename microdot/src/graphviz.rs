@@ -9,8 +9,9 @@ use microdot_core::hash::extract_hashtags;
 use microdot_core::{Id, Label};
 use regex::Regex;
 use std::collections::HashMap;
+use std::io::Write;
 use std::path::Path;
-use std::process::Output;
+use std::process::{Command, Output, Stdio};
 use textwrap::wrap_algorithms::{wrap_optimal_fit, Penalties};
 use textwrap::{fill, Options, WordSplitter};
 
@@ -60,12 +61,31 @@ pub fn compile_dot(path: &Path, _display_mode: DisplayMode) -> Result<(), anyhow
     }
 
     for ext in ["svg", "png"] {
-        let out = path.with_extension(ext);
+        let input_str = std::fs::read_to_string(path)?;
 
-        let Output { status, stderr, .. } =
-            cmd!(dot(path)(&format!("-T{}", ext))("-o")(out)).output()?;
+        let mut child = Command::new("dot")
+            .arg(format!("-T{}", ext))
+            .stdin(Stdio::piped())
+            .stdout(Stdio::piped())
+            .spawn()?;
 
-        if !status.success() {
+        let child_stdin = child.stdin.as_mut().unwrap();
+        child_stdin.write_all(input_str.as_bytes())?;
+
+        let output = child.wait_with_output()?;
+
+        // TODO: if this takes the content as a string, pipes it as stdin, and gets it as stdout, we can
+        // avoid the file system altogether
+        let Output {
+            status,
+            stderr,
+            stdout,
+        } = output;
+
+        if status.success() {
+            let out_file = path.with_extension(ext);
+            std::fs::write(out_file, stdout)?;
+        } else {
             let stderr = String::from_utf8_lossy(&stderr).to_string();
             return Err(anyhow!(stderr));
         }

@@ -1,1 +1,27 @@
-{"edges":[{"from":"n1","to":"n0"},{"from":"n2","to":"n1"},{"from":"n3","to":"n2"},{"from":"n4","to":"n0"},{"from":"n5","to":"n4"},{"from":"n3","to":"n5"}],"is_left_right":true,"nodes":[{"id":"n0","label":"customers get delivery too slowly"},{"id":"n1","label":"orders need to be processed by hand"},{"id":"n2","label":"no developer capacity to automate orders"},{"id":"n3","label":"developers engaged in low-value work"},{"id":"n4","label":"shipping labels generated once a day"},{"id":"n5","label":"printers need rebooting but everyone in IT is busy util 3pm"}]}
+{
+  "edges": [
+    {
+      "from": "n1",
+      "to": "n0"
+    },
+    {
+      "from": "n2",
+      "to": "n1"
+    }
+  ],
+  "is_left_right": true,
+  "nodes": [
+    {
+      "id": "n0",
+      "label": "customers get delivery too slowly"
+    },
+    {
+      "id": "n1",
+      "label": "orders need to be processed by hand"
+    },
+    {
+      "id": "n2",
+      "label": "no developer capacity to automate orders"
+    }
+  ]
+}

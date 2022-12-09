@@ -1,1 +1,19 @@
-{"edges":[{"from":"n0","to":"n1"}],"is_left_right":false,"nodes":[{"id":"n0","label":"this happens first"},{"id":"n1","label":"and then this happens #TAG1 #TAG2"}]}
+{
+  "edges": [
+    {
+      "from": "n0",
+      "to": "n1"
+    }
+  ],
+  "is_left_right": false,
+  "nodes": [
+    {
+      "id": "n0",
+      "label": "this happens first"
+    },
+    {
+      "id": "n1",
+      "label": "and then this happens"
+    }
+  ]
+}

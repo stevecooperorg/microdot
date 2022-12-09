@@ -69,7 +69,7 @@ pub fn write_if_different<P: AsRef<Path>, C: AsRef<[u8]>>(
     let path = path.as_ref();
     let contents = contents.as_ref();
 
-    let needs_write = match std::fs::read(&path) {
+    let needs_write = match std::fs::read(path) {
         Ok(current_content) => current_content == contents,
         Err(_) => true,
     };

@@ -18,40 +18,7 @@ digraph {
     
    </TABLE>
 > fillcolor="#FFFFFF"]
-    n2 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
-    <TR>
-        <TD COLSPAN="1"><FONT POINT-SIZE="10">n2</FONT>: no developer capacity to automate orders</TD>
-    </TR>
-    
-   </TABLE>
-> fillcolor="#FFFFFF"]
-    n3 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
-    <TR>
-        <TD COLSPAN="1"><FONT POINT-SIZE="10">n3</FONT>: developers engaged in low-value work</TD>
-    </TR>
-    
-   </TABLE>
-> fillcolor="#FFFFFF"]
-    n4 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
-    <TR>
-        <TD COLSPAN="1"><FONT POINT-SIZE="10">n4</FONT>: shipping labels generated once a day</TD>
-    </TR>
-    
-   </TABLE>
-> fillcolor="#FFFFFF"]
-    n5 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
-    <TR>
-        <TD COLSPAN="1"><FONT POINT-SIZE="10">n5</FONT>: printers need rebooting but everyone in<br/>IT is busy util 3pm</TD>
-    </TR>
-    
-   </TABLE>
-> fillcolor="#FFFFFF"]
 
     "n1" -> "n0" [label="e0"];
-    "n2" -> "n1" [label="e1"];
-    "n3" -> "n2" [label="e2"];
-    "n4" -> "n0" [label="e3"];
-    "n5" -> "n4" [label="e4"];
-    "n3" -> "n5" [label="e5"];
 
 }

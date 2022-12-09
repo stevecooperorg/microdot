@@ -44,12 +44,12 @@ impl JsonExporter {
     pub fn export(&mut self, graph: &Graph) -> String {
         graph.export(self);
 
-        (json! {{
+        let value = json! {{
         "nodes": self.nodes,
         "edges": self.edges,
         "is_left_right": self.is_left_right
-        }})
-        .to_string()
+        }};
+        serde_json::to_string_pretty(&value).expect("could not serialise json")
     }
 }
 
