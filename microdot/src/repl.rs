@@ -36,7 +36,8 @@ pub fn repl<I: Interaction>(
                 match command {
                     Command::GraphCommand(graph_command) => {
                         let mut graph = graph.write().unwrap();
-                        interaction.log(format!("({})", graph.apply_command(graph_command)));
+                        let applied = graph.apply_command(graph_command);
+                        interaction.log(format!("({})", applied));
                         let interactive_dot_file = save_file(json_file, &graph)?;
                         if interaction.should_compile_dot() {
                             compile_dot(interactive_dot_file);

@@ -55,9 +55,13 @@ impl From<GraphCommand> for Command {
 
 // a trait which deals with the R & P of REPL: Read and Print; can be mixed in with a loop
 pub trait Interaction {
+    // TODO: this makes more sense as something like a stream of input lines, with an EOF from readline => None.
     fn read(&mut self, prompt: &str) -> rustyline::Result<String>;
+    // TODO: should this be converted to a futures::sink::Sink? 'write to the history channel'
     fn add_history<S: AsRef<str> + Into<String>>(&mut self, history: S) -> bool;
+    // TODO: possibly another futures::sink::Sink
     fn log<S: AsRef<str> + Into<String>>(&mut self, message: S);
+    // TODO: bad design. Should be handled outside; really corresponds to 'did the last command dirty the cache'
     fn should_compile_dot(&self) -> bool;
 }
 
