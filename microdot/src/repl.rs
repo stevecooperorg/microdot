@@ -1,4 +1,4 @@
-use crate::graphviz::{DisplayMode, GraphVizExporter};
+use crate::graphviz::{DisplayMode, GraphVizExporter, OutputFormat};
 use crate::json::JsonExporter;
 use crate::parser::parse_line;
 use crate::{graphviz, svg, Command, Interaction};
@@ -128,12 +128,25 @@ fn save_file(json_file: &Path, graph: &Graph) -> Result<PathBuf, anyhow::Error> 
 }
 
 fn compile_dot(interactive_dot_file: PathBuf) -> CommandResult {
-    let msg = match graphviz::compile_dot(&interactive_dot_file, DisplayMode::Interactive) {
-        Ok(_) => format!(
+    let svg_compile = graphviz::compile_dot(
+        &interactive_dot_file,
+        DisplayMode::Interactive,
+        OutputFormat::Svg,
+    );
+
+    let png_compile = graphviz::compile_dot(
+        &interactive_dot_file,
+        DisplayMode::Interactive,
+        OutputFormat::Png,
+    );
+
+    let msg = match (svg_compile, png_compile) {
+        (Ok(_), Ok(_)) => format!(
             "compiled interactive dot: {}",
             interactive_dot_file.to_string_lossy()
         ),
-        Err(e) => format!("failed to compile interactive dot: {}", e),
+        (Err(e), _) => format!("failed to compile interactive dot to svg: {}", e),
+        (_, Err(e)) => format!("failed to compile interactive dot to png: {}", e),
     };
 
     CommandResult::new(format!("{}", msg))

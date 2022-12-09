@@ -9,6 +9,7 @@ use microdot_core::hash::extract_hashtags;
 use microdot_core::{Id, Label};
 use regex::Regex;
 use std::collections::HashMap;
+use std::fmt::{Display, Formatter};
 use std::io::Write;
 use std::path::Path;
 use std::process::{Command, Output, Stdio};
@@ -55,38 +56,57 @@ pub enum DisplayMode {
     Presentation,
 }
 
-pub fn compile_dot(path: &Path, _display_mode: DisplayMode) -> Result<(), anyhow::Error> {
+#[derive(Clone, Copy)]
+pub enum OutputFormat {
+    Svg,
+    Png,
+}
+
+impl Display for OutputFormat {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        let str = match self {
+            OutputFormat::Svg => "svg",
+            OutputFormat::Png => "png",
+        };
+        write!(f, "{}", str)
+    }
+}
+
+pub fn compile_dot(
+    path: &Path,
+    _display_mode: DisplayMode,
+    format: OutputFormat,
+) -> Result<(), anyhow::Error> {
     if installed_graphviz_version().is_none() {
         return Err(anyhow::Error::msg("graphviz not installed"));
     }
 
-    for ext in ["svg", "png"] {
-        let input_str = std::fs::read_to_string(path)?;
+    let ext = format.to_string();
+    let input_str = std::fs::read_to_string(path)?;
 
-        let mut child = Command::new("dot")
-            .arg(format!("-T{}", ext))
-            .stdin(Stdio::piped())
-            .stdout(Stdio::piped())
-            .spawn()?;
+    let mut child = Command::new("dot")
+        .arg(format!("-T{}", ext))
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .spawn()?;
 
-        let child_stdin = child.stdin.as_mut().unwrap();
-        child_stdin.write_all(input_str.as_bytes())?;
+    let child_stdin = child.stdin.as_mut().unwrap();
+    child_stdin.write_all(input_str.as_bytes())?;
 
-        let output = child.wait_with_output()?;
+    let output = child.wait_with_output()?;
 
-        let Output {
-            status,
-            stderr,
-            stdout,
-        } = output;
+    let Output {
+        status,
+        stderr,
+        stdout,
+    } = output;
 
-        if status.success() {
-            let out_file = path.with_extension(ext);
-            std::fs::write(out_file, stdout)?;
-        } else {
-            let stderr = String::from_utf8_lossy(&stderr).to_string();
-            return Err(anyhow!(stderr));
-        }
+    if status.success() {
+        let out_file = path.with_extension(ext);
+        std::fs::write(out_file, stdout)?;
+    } else {
+        let stderr = String::from_utf8_lossy(&stderr).to_string();
+        return Err(anyhow!(stderr));
     }
 
     Ok(())
@@ -341,7 +361,7 @@ Cras ut egestas velit."#;
             dot_file.to_string_lossy()
         );
 
-        let compile_result = compile_dot(&dot_file, DisplayMode::Interactive);
+        let compile_result = compile_dot(&dot_file, DisplayMode::Interactive, OutputFormat::Svg);
         assert!(compile_result.is_ok());
     }
 
