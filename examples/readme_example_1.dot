@@ -13,7 +13,15 @@ digraph {
 > fillcolor="#FFFFFF"]
     n1 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
-        <TD COLSPAN="1"><FONT POINT-SIZE="10">n1</FONT>: and then this happens</TD>
+        <TD COLSPAN="2"><FONT POINT-SIZE="10">n1</FONT>: and then this happens</TD>
+    </TR>
+    
+    <TR>
+        
+            <TD BGCOLOR="#FF7F7F"><FONT COLOR="#000000">#TAG1</FONT></TD>
+        
+            <TD BGCOLOR="#E2954D"><FONT COLOR="#000000">#TAG2</FONT></TD>
+        
     </TR>
     
    </TABLE>

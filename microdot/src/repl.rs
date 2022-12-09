@@ -19,9 +19,9 @@ pub fn repl<I: Interaction>(
         // when we start, make sure the existing pic is up to date.
         {
             let graph = graph.write().unwrap();
-            let (interactive_dot_file, presentation_dot_file) = save_file(json_file, &graph)?;
+            let interactive_dot_file = save_file(json_file, &graph)?;
             if interaction.should_compile_dot() {
-                compile_dot(interactive_dot_file, presentation_dot_file);
+                compile_dot(interactive_dot_file);
             }
         }
 
@@ -37,10 +37,9 @@ pub fn repl<I: Interaction>(
                     Command::GraphCommand(graph_command) => {
                         let mut graph = graph.write().unwrap();
                         interaction.log(format!("({})", graph.apply_command(graph_command)));
-                        let (interactive_dot_file, presentation_dot_file) =
-                            save_file(json_file, &graph)?;
+                        let interactive_dot_file = save_file(json_file, &graph)?;
                         if interaction.should_compile_dot() {
-                            compile_dot(interactive_dot_file, presentation_dot_file);
+                            compile_dot(interactive_dot_file);
                         }
                     }
                     Command::ShowHelp => interaction.log(include_str!("help.txt")),
@@ -73,23 +72,20 @@ pub fn repl<I: Interaction>(
                         interaction.log(format!("({})", graph.highlight_search_results(sub_label)));
 
                         // save the file so we get color highlights.
-                        let (interactive_dot_file, presentation_dot_file) =
-                            save_file(json_file, &graph)?;
+                        let interactive_dot_file = save_file(json_file, &graph)?;
                         if interaction.should_compile_dot() {
-                            compile_dot(interactive_dot_file, presentation_dot_file);
+                            compile_dot(interactive_dot_file);
                         }
                     }
                     Command::Save => {
                         let graph = graph.read().unwrap();
-                        let (interactive_dot_file, presentation_dot_file) =
-                            save_file(json_file, &graph)?;
+                        let interactive_dot_file = save_file(json_file, &graph)?;
                         interaction.log(format!(
-                            "Saved json: {}, interactive dot: {}, presentation dot: {}",
+                            "Saved json: {}, interactive dot: {}",
                             json_file.to_string_lossy(),
-                            interactive_dot_file.to_string_lossy(),
-                            presentation_dot_file.to_string_lossy()
+                            interactive_dot_file.to_string_lossy()
                         ));
-                        compile_dot(interactive_dot_file, presentation_dot_file);
+                        compile_dot(interactive_dot_file);
                     }
                     Command::ParseError { .. } => {
                         interaction.log("could not understand command; try 'h' for help")
@@ -118,7 +114,7 @@ pub fn repl<I: Interaction>(
     Ok(())
 }
 
-fn save_file(json_file: &Path, graph: &Graph) -> Result<(PathBuf, PathBuf), anyhow::Error> {
+fn save_file(json_file: &Path, graph: &Graph) -> Result<PathBuf, anyhow::Error> {
     let mut json_exporter = JsonExporter::new();
     let json = json_exporter.export(graph);
     std::fs::write(json_file, json)?;
@@ -128,16 +124,11 @@ fn save_file(json_file: &Path, graph: &Graph) -> Result<(PathBuf, PathBuf), anyh
     let interactive_dot_file = json_file.with_extension("dot");
     std::fs::write(&interactive_dot_file, interactive_dot)?;
 
-    let mut dot_exporter = GraphVizExporter::new(DisplayMode::Presentation);
-    let presentation_dot = dot_exporter.export(graph);
-    let presentation_dot_file = json_file.with_extension("presentation.dot");
-    std::fs::write(&presentation_dot_file, presentation_dot)?;
-
-    Ok((interactive_dot_file, presentation_dot_file))
+    Ok(interactive_dot_file)
 }
 
-fn compile_dot(interactive_dot_file: PathBuf, presentation_dot_file: PathBuf) -> CommandResult {
-    let msg1 = match graphviz::compile_dot(&interactive_dot_file, DisplayMode::Interactive) {
+fn compile_dot(interactive_dot_file: PathBuf) -> CommandResult {
+    let msg = match graphviz::compile_dot(&interactive_dot_file, DisplayMode::Interactive) {
         Ok(_) => format!(
             "compiled interactive dot: {}",
             interactive_dot_file.to_string_lossy()
@@ -145,13 +136,5 @@ fn compile_dot(interactive_dot_file: PathBuf, presentation_dot_file: PathBuf) ->
         Err(e) => format!("failed to compile interactive dot: {}", e),
     };
 
-    let msg2 = match graphviz::compile_dot(&presentation_dot_file, DisplayMode::Presentation) {
-        Ok(_) => format!(
-            "compiled presentation dot: {}",
-            presentation_dot_file.to_string_lossy()
-        ),
-        Err(e) => format!("failed to compile presentation dot: {}", e),
-    };
-
-    CommandResult::new(format!("{}\n{}", msg1, msg2))
+    CommandResult::new(format!("{}", msg))
 }

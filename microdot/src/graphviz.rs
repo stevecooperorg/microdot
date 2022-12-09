@@ -74,8 +74,6 @@ pub fn compile_dot(path: &Path, _display_mode: DisplayMode) -> Result<(), anyhow
 
         let output = child.wait_with_output()?;
 
-        // TODO: if this takes the content as a string, pipes it as stdin, and gets it as stdout, we can
-        // avoid the file system altogether
         let Output {
             status,
             stderr,
