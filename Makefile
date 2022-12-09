@@ -22,13 +22,16 @@ target/debug/microdot:
 	cargo --version
 	cargo build
 
+check:
+	cargo clippy
+
 watch:
 	cargo watch -x "clippy -- -Dwarnings"
 
 build: target/debug/microdot
 
 test:
-	cargo watch -x test
+	cargo test
 
 dot:
 	#dot graph.dot -Tpng -o graph.png
@@ -36,3 +39,5 @@ dot:
 
 commit:
 	./bin/auto-commit
+
+safe-commit: check test commit

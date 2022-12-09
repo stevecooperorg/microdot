@@ -1,5 +1,5 @@
 use crate::colors::{Color, ColorScheme, Colors};
-use anyhow::anyhow;
+use anyhow::{anyhow, Context, Result};
 use askama::Template;
 use command_macros::cmd;
 use hyphenation::{Language, Load, Standard};
@@ -72,17 +72,12 @@ impl Display for OutputFormat {
     }
 }
 
-pub fn compile_dot(
-    path: &Path,
+fn compile_dot_str<S: AsRef<str>>(
+    input: S,
     _display_mode: DisplayMode,
     format: OutputFormat,
-) -> Result<(), anyhow::Error> {
-    if installed_graphviz_version().is_none() {
-        return Err(anyhow::Error::msg("graphviz not installed"));
-    }
-
+) -> Result<String> {
     let ext = format.to_string();
-    let input_str = std::fs::read_to_string(path)?;
 
     let mut child = Command::new("dot")
         .arg(format!("-T{}", ext))
@@ -91,7 +86,7 @@ pub fn compile_dot(
         .spawn()?;
 
     let child_stdin = child.stdin.as_mut().unwrap();
-    child_stdin.write_all(input_str.as_bytes())?;
+    child_stdin.write_all(input.as_ref().as_bytes())?;
 
     let output = child.wait_with_output()?;
 
@@ -102,14 +97,29 @@ pub fn compile_dot(
     } = output;
 
     if status.success() {
-        let out_file = path.with_extension(ext);
-        std::fs::write(out_file, stdout)?;
+        let stdout = std::str::from_utf8(&stdout)
+            .context("converting graphviz output to utf8")?
+            .to_string();
+        Ok(stdout)
     } else {
         let stderr = String::from_utf8_lossy(&stderr).to_string();
-        return Err(anyhow!(stderr));
+        Err(anyhow!(stderr))
+    }
+}
+pub fn compile_dot(path: &Path, _display_mode: DisplayMode, format: OutputFormat) -> Result<()> {
+    if installed_graphviz_version().is_none() {
+        return Err(anyhow::Error::msg("graphviz not installed"));
     }
 
-    Ok(())
+    let input_str = std::fs::read_to_string(path)?;
+    match compile_dot_str(input_str, _display_mode, format) {
+        Ok(string) => {
+            let out_file = path.with_extension(&format.to_string());
+            std::fs::write(out_file, string)?;
+            Ok(())
+        }
+        Err(e) => Err(e),
+    }
 }
 
 pub struct GraphVizExporter {
