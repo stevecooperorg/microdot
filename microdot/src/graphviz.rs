@@ -311,49 +311,6 @@ Cras ut egestas velit."#;
         assert_eq!(outstr, prepare_label(instr, 30.0f64));
     }
 
-    // #[test]
-    // fn exports_graph() {
-    //     let mut graph = Graph::new();
-    //
-    //     graph.apply_command(GraphCommand::InsertNode {
-    //         label: Label::new("abc"),
-    //     });
-    //
-    //     graph.apply_command(GraphCommand::InsertNode {
-    //         label: Label::new("def"),
-    //     });
-    //
-    //     graph.apply_command(GraphCommand::InsertNode {
-    //         label: Label::new("hij"),
-    //     });
-    //
-    //     graph.apply_command(GraphCommand::LinkEdge {
-    //         from: Id::new("n0"),
-    //         to: Id::new("n1"),
-    //     });
-    //
-    //     graph.apply_command(GraphCommand::LinkEdge {
-    //         from: Id::new("n1"),
-    //         to: Id::new("n2"),
-    //     });
-    //
-    //     graph.highlight_search_results(Label::new("abc"));
-    //
-    //     let mut exporter = GraphVizExporter::new(DisplayMode::Interactive);
-    //
-    //     let dot = exporter.export(&graph);
-    //
-    //     fn color_free(input: &str) -> String {
-    //         let rx = Regex::new("#[a-f0-9]{6}").unwrap();
-    //         rx.replace(input, |_: &Captures| "").to_string()
-    //     }
-    //
-    //     assert_eq!(
-    //         color_free(&dot),
-    //         color_free(include_str!("../../test_data/exports_graph.dot")),
-    //     );
-    // }
-
     #[test]
     fn test_graphviz_compiles() {
         let dot_file = dirs::home_dir()
