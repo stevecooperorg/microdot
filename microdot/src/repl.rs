@@ -25,9 +25,7 @@ pub fn repl<I: Interaction>(
             }
         }
 
-        let mut dirty = false;
-
-        match readline {
+        let dirty = match readline {
             Ok(line) => {
                 interaction.add_history(line.as_str());
 
@@ -40,11 +38,15 @@ pub fn repl<I: Interaction>(
                         let mut graph = graph.write().unwrap();
                         let applied = graph.apply_command(graph_command);
                         interaction.log(format!("({})", applied));
-                        dirty = true;
+                        true
                     }
-                    Command::ShowHelp => interaction.log(include_str!("help.txt")),
+                    Command::ShowHelp => {
+                        interaction.log(include_str!("help.txt"));
+                        false
+                    }
                     Command::RenameNodeUnlabelled { .. } => {
                         // no need to act, this is for auto-complete
+                        false
                     }
                     Command::Show => {
                         let svg_file = json_file.with_extension("svg");
@@ -52,6 +54,7 @@ pub fn repl<I: Interaction>(
                             .expect("could not canconcicalise file path");
                         let result = svg::open_in_gapplin(&svg_file);
                         interaction.log(result.to_string());
+                        false
                     }
                     Command::PrintDot => {
                         let graph = graph.read().unwrap();
@@ -59,6 +62,7 @@ pub fn repl<I: Interaction>(
                         let out = exporter.export(&graph);
                         interaction.log(out);
                         interaction.log("Dot printed");
+                        false
                     }
                     Command::PrintJson => {
                         let graph = graph.read().unwrap();
@@ -66,37 +70,36 @@ pub fn repl<I: Interaction>(
                         let out = exporter.export(&graph);
                         interaction.log(out);
                         interaction.log("Json printed");
+                        false
                     }
                     Command::Search { sub_label } => {
                         let mut graph = graph.write().unwrap();
                         interaction.log(format!("({})", graph.highlight_search_results(sub_label)));
-                        dirty = true;
+                        true
                     }
-                    Command::Save => {
-                        dirty = true;
-                    }
+                    Command::Save => true,
                     Command::ParseError { .. } => {
-                        interaction.log("could not understand command; try 'h' for help")
+                        interaction.log("could not understand command; try 'h' for help");
+                        false
                     }
-                    Command::Exit => break,
+                    Command::Exit => return Ok(()),
                 }
             }
             Err(ReadlineError::Interrupted) => {
                 interaction.log("CTRL-C");
 
-                break;
+                return Ok(());
             }
             Err(ReadlineError::Eof) => {
                 interaction.log("CTRL-D");
 
-                break;
+                return Ok(());
             }
             Err(err) => {
                 interaction.log(format!("Error: {:?}", err));
-
-                break;
+                return Err(anyhow::anyhow!("readline error: {}", err.to_string()));
             }
-        }
+        };
 
         if dirty {
             let graph = graph.read().unwrap();
@@ -106,8 +109,6 @@ pub fn repl<I: Interaction>(
             }
         }
     }
-
-    Ok(())
 }
 
 fn save_file(json_file: &Path, graph: &Graph) -> Result<PathBuf, anyhow::Error> {
