@@ -31,7 +31,7 @@ digraph {
     </TR>
     
    </TABLE>
-> fillcolor="#D0CCCC"]
+> fillcolor="#FFFFFF"]
     n4 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="1"><FONT POINT-SIZE="10">n4</FONT>: nazghuls catch up at Weathertop; Frodo<br/>is injured</TD>
@@ -74,34 +74,6 @@ digraph {
     
    </TABLE>
 > fillcolor="#FFFFFF"]
-    n10 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
-    <TR>
-        <TD COLSPAN="1"><FONT POINT-SIZE="10">n10</FONT>: Gimli leaves the mountains</TD>
-    </TR>
-    
-   </TABLE>
-> fillcolor="#FFFFFF"]
-    n11 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
-    <TR>
-        <TD COLSPAN="1"><FONT POINT-SIZE="10">n11</FONT>: Legolas travels from Mirkwood</TD>
-    </TR>
-    
-   </TABLE>
-> fillcolor="#FFFFFF"]
-    n12 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
-    <TR>
-        <TD COLSPAN="1"><FONT POINT-SIZE="10">n12</FONT>: Boromir seeks the sword that is broken</TD>
-    </TR>
-    
-   </TABLE>
-> fillcolor="#FFFFFF"]
-    n13 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
-    <TR>
-        <TD COLSPAN="1"><FONT POINT-SIZE="10">n13</FONT>: Boromir fights in the battle for<br/>Osgiliath</TD>
-    </TR>
-    
-   </TABLE>
-> fillcolor="#FFFFFF"]
 
     "n0" -> "n1" [label="e0"];
     "n1" -> "n2" [label="e1"];
@@ -113,10 +85,5 @@ digraph {
     "n7" -> "n5" [label="e7"];
     "n4" -> "n8" [label="e8"];
     "n8" -> "n9" [label="e9"];
-    "n0" -> "n9" [label="e10"];
-    "n10" -> "n9" [label="e11"];
-    "n11" -> "n9" [label="e12"];
-    "n12" -> "n9" [label="e13"];
-    "n13" -> "n12" [label="e14"];
 
 }

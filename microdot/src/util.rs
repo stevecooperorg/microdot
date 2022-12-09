@@ -51,15 +51,34 @@ pub fn compile_input_string_content(text_file: PathBuf) -> PathBuf {
     let exported = exporter.export(&graph);
 
     let dot_file = text_file.with_extension("dot");
-    std::fs::write(&dot_file, exported).expect("could not write dot file");
+    write_if_different(&dot_file, exported).expect("could not write dot file");
 
     let log_file = text_file.with_extension("log");
-    std::fs::write(&log_file, auto_interaction.log()).expect("could not write log file");
+    write_if_different(&log_file, auto_interaction.log()).expect("could not write log file");
 
     compile_dot(&dot_file, DisplayMode::Interactive)
         .unwrap_or_else(|_| panic!("Could not compile '{}'", dot_file.to_string_lossy()));
 
     log_file
+}
+
+pub fn write_if_different<P: AsRef<Path>, C: AsRef<[u8]>>(
+    path: P,
+    contents: C,
+) -> std::io::Result<()> {
+    let path = path.as_ref();
+    let contents = contents.as_ref();
+
+    let needs_write = match std::fs::read(&path) {
+        Ok(current_content) => current_content == contents,
+        Err(_) => true,
+    };
+
+    if needs_write {
+        std::fs::write(path, contents)
+    } else {
+        Ok(())
+    }
 }
 
 struct AutoInteraction {
