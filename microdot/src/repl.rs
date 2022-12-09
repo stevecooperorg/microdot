@@ -25,6 +25,8 @@ pub fn repl<I: Interaction>(
             }
         }
 
+        let mut dirty = false;
+
         match readline {
             Ok(line) => {
                 interaction.add_history(line.as_str());
@@ -38,10 +40,7 @@ pub fn repl<I: Interaction>(
                         let mut graph = graph.write().unwrap();
                         let applied = graph.apply_command(graph_command);
                         interaction.log(format!("({})", applied));
-                        let interactive_dot_file = save_file(json_file, &graph)?;
-                        if interaction.should_compile_dot() {
-                            compile_dot(interactive_dot_file);
-                        }
+                        dirty = true;
                     }
                     Command::ShowHelp => interaction.log(include_str!("help.txt")),
                     Command::RenameNodeUnlabelled { .. } => {
@@ -71,22 +70,10 @@ pub fn repl<I: Interaction>(
                     Command::Search { sub_label } => {
                         let mut graph = graph.write().unwrap();
                         interaction.log(format!("({})", graph.highlight_search_results(sub_label)));
-
-                        // save the file so we get color highlights.
-                        let interactive_dot_file = save_file(json_file, &graph)?;
-                        if interaction.should_compile_dot() {
-                            compile_dot(interactive_dot_file);
-                        }
+                        dirty = true;
                     }
                     Command::Save => {
-                        let graph = graph.read().unwrap();
-                        let interactive_dot_file = save_file(json_file, &graph)?;
-                        interaction.log(format!(
-                            "Saved json: {}, interactive dot: {}",
-                            json_file.to_string_lossy(),
-                            interactive_dot_file.to_string_lossy()
-                        ));
-                        compile_dot(interactive_dot_file);
+                        dirty = true;
                     }
                     Command::ParseError { .. } => {
                         interaction.log("could not understand command; try 'h' for help")
@@ -108,6 +95,14 @@ pub fn repl<I: Interaction>(
                 interaction.log(format!("Error: {:?}", err));
 
                 break;
+            }
+        }
+
+        if dirty {
+            let graph = graph.read().unwrap();
+            let interactive_dot_file = save_file(json_file, &graph)?;
+            if interaction.should_compile_dot() {
+                compile_dot(interactive_dot_file);
             }
         }
     }
