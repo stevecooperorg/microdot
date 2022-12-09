@@ -77,7 +77,10 @@ pub fn repl<I: Interaction>(
                         interaction.log(format!("({})", graph.highlight_search_results(sub_label)));
                         true
                     }
-                    Command::Save => true,
+                    Command::Save => {
+                        interaction.log(format!("saving to {}", json_file.to_string_lossy()));
+                        true
+                    }
                     Command::ParseError { .. } => {
                         interaction.log("could not understand command; try 'h' for help");
                         false
