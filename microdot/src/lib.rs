@@ -38,7 +38,9 @@ impl Command {
             }
             Command::PrintDot => "print the dot definition for this graph to the terminal".into(),
             Command::PrintJson => "print the json definition for this graph to the terminal".into(),
-            Command::RenameNodeUnlabelled { id } => format!("(ignored; internal option <{}>)", id),
+            Command::RenameNodeUnlabelled { id } => {
+                format!("rename <{}> but no new label text supplied", id)
+            }
             Command::Save => "save the graph to disc".into(),
             Command::Show => "open the diagram in Gapplin".into(),
             Command::Exit => "exit microdot".into(),
