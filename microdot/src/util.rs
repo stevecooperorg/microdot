@@ -1,4 +1,4 @@
-use crate::graphviz::{compile_dot, DisplayMode, GraphVizExporter, OutputFormat};
+use crate::graphviz::{compile, DisplayMode, GraphVizExporter, OutputFormat};
 use crate::repl::repl;
 use crate::Interaction;
 use anyhow::{anyhow, Result};
@@ -48,7 +48,7 @@ pub fn compile_input_string_content(text_file: PathBuf) -> PathBuf {
 
     let mut exporter = GraphVizExporter::new(DisplayMode::Interactive);
     let graph = graph.read().unwrap();
-    let exported = exporter.export(&graph);
+    let exported = exporter.export_dot(&graph);
 
     let dot_file = text_file.with_extension("dot");
     write_if_different(&dot_file, exported).expect("could not write dot file");
@@ -56,7 +56,7 @@ pub fn compile_input_string_content(text_file: PathBuf) -> PathBuf {
     let log_file = text_file.with_extension("log");
     write_if_different(&log_file, auto_interaction.log()).expect("could not write log file");
 
-    compile_dot(&dot_file, DisplayMode::Interactive, OutputFormat::Svg)
+    compile(&dot_file, DisplayMode::Interactive, OutputFormat::Svg)
         .unwrap_or_else(|_| panic!("Could not compile '{}'", dot_file.to_string_lossy()));
 
     log_file
@@ -119,7 +119,7 @@ impl Interaction for AutoInteraction {
         self.log.push('\n');
     }
 
-    fn should_compile_dot(&self) -> bool {
+    fn should_compile(&self) -> bool {
         false
     }
 }

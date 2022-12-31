@@ -41,7 +41,7 @@ impl JsonExporter {
         Default::default()
     }
 
-    pub fn export(&mut self, graph: &Graph) -> String {
+    pub fn export_json(&mut self, graph: &Graph) -> String {
         graph.export(self);
 
         let value = json! {{
@@ -132,7 +132,7 @@ mod tests {
         let importer = JsonImporter::new(content.clone());
         let graph = importer.import().expect("could not import");
         let mut exporter = JsonExporter::new();
-        let exported = exporter.export(&graph);
+        let exported = exporter.export_json(&graph);
         assert_eq!(
             content, exported,
             "round-trip should have lost or changed nothing"
@@ -165,7 +165,7 @@ mod tests {
         });
 
         let mut exporter = JsonExporter::new();
-        let exported = exporter.export(&graph);
+        let exported = exporter.export_json(&graph);
 
         assert_eq!(
             include_str!("../../test_data/exports_graph.json").to_string(),

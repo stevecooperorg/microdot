@@ -1,29 +1,25 @@
+use crate::fdg::FdgExporter;
 use crate::graphviz::{DisplayMode, GraphVizExporter, OutputFormat};
 use crate::json::JsonExporter;
 use crate::parser::parse_line;
 use crate::{graphviz, svg, Command, Interaction};
+use anyhow::{anyhow, Context, Result};
 use microdot_core::graph::Graph;
 use microdot_core::{CommandResult, Line};
 use rustyline::error::ReadlineError;
 use std::path::{Path, PathBuf};
-use std::sync::{Arc, RwLock};
+use std::sync::{Arc, LockResult, RwLock};
 
 pub fn repl<I: Interaction>(
     interaction: &mut I,
     json_file: &Path,
     graph: Arc<RwLock<Graph>>,
-) -> Result<(), anyhow::Error> {
+) -> Result<()> {
     loop {
         let readline = interaction.read(">> ");
 
         // when we start, make sure the existing pic is up to date.
-        {
-            let graph = graph.write().unwrap();
-            let interactive_dot_file = save_file(json_file, &graph)?;
-            if interaction.should_compile_dot() {
-                compile_dot(interactive_dot_file);
-            }
-        }
+        compile_graph(interaction, json_file, &graph)?;
 
         let dirty = match readline {
             Ok(line) => {
@@ -59,7 +55,7 @@ pub fn repl<I: Interaction>(
                     Command::PrintDot => {
                         let graph = graph.read().unwrap();
                         let mut exporter = GraphVizExporter::new(DisplayMode::Interactive);
-                        let out = exporter.export(&graph);
+                        let out = exporter.export_dot(&graph);
                         interaction.log(out);
                         interaction.log("Dot printed");
                         false
@@ -67,7 +63,7 @@ pub fn repl<I: Interaction>(
                     Command::PrintJson => {
                         let graph = graph.read().unwrap();
                         let mut exporter = JsonExporter::new();
-                        let out = exporter.export(&graph);
+                        let out = exporter.export_json(&graph);
                         interaction.log(out);
                         interaction.log("Json printed");
                         false
@@ -105,22 +101,60 @@ pub fn repl<I: Interaction>(
         };
 
         if dirty {
-            let graph = graph.read().unwrap();
-            let interactive_dot_file = save_file(json_file, &graph)?;
-            if interaction.should_compile_dot() {
-                compile_dot(interactive_dot_file);
-            }
+            compile_graph(interaction, json_file, &graph)?;
         }
     }
 }
 
-fn save_file(json_file: &Path, graph: &Graph) -> Result<PathBuf, anyhow::Error> {
+enum RenderMethod {
+    GraphViz,
+    Fdg,
+}
+
+const RENDER_METHOD: RenderMethod = RenderMethod::GraphViz;
+
+fn compile_graph<I: Interaction>(
+    interaction: &mut I,
+    json_file: &Path,
+    graph: &Arc<RwLock<Graph>>,
+) -> Result<()> {
+    let graph = match graph.write() {
+        Ok(graph) => graph,
+        Err(e) => return Err(anyhow!(e.to_string())),
+    };
+    match RENDER_METHOD {
+        RenderMethod::GraphViz => {
+            let interactive_dot_file = save_dot_file(json_file, &graph)?;
+            if interaction.should_compile() {
+                compile_dot(interactive_dot_file);
+            }
+        }
+        RenderMethod::Fdg => {
+            if interaction.should_compile() {
+                compile_fdg(json_file, &graph)?;
+            }
+        }
+    }
+
+    Ok(())
+}
+
+fn compile_fdg(json_file: &Path, graph: &Graph) -> Result<PathBuf> {
+    let mut fdg_exporter = FdgExporter::default();
+    let svg = fdg_exporter.export(graph);
+    let svg_file = json_file.with_extension("svg");
+    std::fs::write(&svg_file, svg)?;
+
+    Ok(svg_file)
+}
+
+fn save_dot_file(json_file: &Path, graph: &Graph) -> Result<PathBuf> {
     let mut json_exporter = JsonExporter::new();
-    let json = json_exporter.export(graph);
+    let json = json_exporter.export_json(graph);
     std::fs::write(json_file, json)?;
 
     let mut dot_exporter = GraphVizExporter::new(DisplayMode::Interactive);
-    let interactive_dot = dot_exporter.export(graph);
+    let interactive_dot = dot_exporter.export_dot(graph);
     let interactive_dot_file = json_file.with_extension("dot");
     std::fs::write(&interactive_dot_file, interactive_dot)?;
 
@@ -128,13 +162,13 @@ fn save_file(json_file: &Path, graph: &Graph) -> Result<PathBuf, anyhow::Error> 
 }
 
 fn compile_dot(interactive_dot_file: PathBuf) -> CommandResult {
-    let svg_compile = graphviz::compile_dot(
+    let svg_compile = graphviz::compile(
         &interactive_dot_file,
         DisplayMode::Interactive,
         OutputFormat::Svg,
     );
 
-    let png_compile = graphviz::compile_dot(
+    let png_compile = graphviz::compile(
         &interactive_dot_file,
         DisplayMode::Interactive,
         OutputFormat::Png,

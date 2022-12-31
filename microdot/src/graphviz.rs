@@ -118,7 +118,7 @@ fn compile_dot_str<S: AsRef<str>>(
         Err(anyhow!(stderr))
     }
 }
-pub fn compile_dot(path: &Path, _display_mode: DisplayMode, format: OutputFormat) -> Result<()> {
+pub fn compile(path: &Path, _display_mode: DisplayMode, format: OutputFormat) -> Result<()> {
     let input_str = std::fs::read_to_string(path)?;
     let out_file = path.with_extension(&format.to_string());
 
@@ -242,7 +242,7 @@ impl GraphVizExporter {
         }
     }
 
-    pub fn export(&mut self, graph: &Graph) -> String {
+    pub fn export_dot(&mut self, graph: &Graph) -> String {
         graph.export(self);
 
         let rank_dir = if self.is_left_right { "LR" } else { "TB" };
@@ -377,7 +377,7 @@ Cras ut egestas velit."#;
             dot_file.to_string_lossy()
         );
 
-        let compile_result = compile_dot(&dot_file, DisplayMode::Interactive, OutputFormat::Svg);
+        let compile_result = compile(&dot_file, DisplayMode::Interactive, OutputFormat::Svg);
         assert!(compile_result.is_ok());
     }
 
