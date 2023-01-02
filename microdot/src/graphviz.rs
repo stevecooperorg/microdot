@@ -152,10 +152,11 @@ impl Exporter for GraphVizExporter {
     fn add_node(&mut self, id: &Id, label: &Label, highlight: NodeHighlight) {
         // TODO: probably horrific perf.
 
+        let wrap_size = if self.is_left_right { 40 } else { 25 };
         let wrapping_options = {
             let dictionary = Standard::from_embedded(Language::EnglishUS).unwrap();
             let splitter = WordSplitter::Hyphenation(dictionary);
-            Options::new(40).word_splitter(splitter)
+            Options::new(wrap_size).word_splitter(splitter)
         };
 
         let base_label = &label.to_string();
@@ -249,10 +250,12 @@ impl GraphVizExporter {
         let rank_dir = rank_dir.to_string();
         let edge_color = ColorScheme::normal().get_stroke_color();
 
+        let width = if self.is_left_right { 4.0f32 } else { 2.5f32 };
         let vm = GraphViewModel {
             rank_dir,
             edge_color,
             inner_content: self.inner_content.clone(),
+            width,
         };
         vm.render().unwrap()
     }
@@ -312,6 +315,7 @@ struct GraphViewModel {
     rank_dir: String,
     edge_color: Color,
     inner_content: String,
+    width: f32,
 }
 
 #[cfg(test)]
