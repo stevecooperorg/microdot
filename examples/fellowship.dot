@@ -1,19 +1,19 @@
 digraph {
 
     graph [fontname = "helvetica" rankdir="TB" ranksep=0.75 nodesep=0.5];
-    node [fontname = "helvetica" shape = "box" width=4 style=filled];
+    node [fontname = "helvetica" shape = "box" width=2.5 style=filled];
     edge [fontname = "helvetica" penwidth=3 color="#000000"];
 
     n0 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
-        <TD COLSPAN="1"><FONT POINT-SIZE="10">n0</FONT>: Gandalf comes to the shire</TD>
+        <TD COLSPAN="1"><FONT POINT-SIZE="10">n0</FONT>: Gandalf comes to the<br/>shire</TD>
     </TR>
     
    </TABLE>
 > fillcolor="#FFFFFF"]
     n1 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
-        <TD COLSPAN="1"><FONT POINT-SIZE="10">n1</FONT>: Frodo departs with the ring</TD>
+        <TD COLSPAN="1"><FONT POINT-SIZE="10">n1</FONT>: Frodo departs with the<br/>ring</TD>
     </TR>
     
    </TABLE>
@@ -27,14 +27,14 @@ digraph {
 > fillcolor="#FFFFFF"]
     n3 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
-        <TD COLSPAN="1"><FONT POINT-SIZE="10">n3</FONT>: the hobbits escape with Aragorn</TD>
+        <TD COLSPAN="1"><FONT POINT-SIZE="10">n3</FONT>: the hobbits escape with<br/>Aragorn</TD>
     </TR>
     
    </TABLE>
-> fillcolor="#FFFFFF"]
+> fillcolor="#D0CCCC"]
     n4 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
-        <TD COLSPAN="1"><FONT POINT-SIZE="10">n4</FONT>: nazghuls catch up at Weathertop; Frodo<br/>is injured</TD>
+        <TD COLSPAN="1"><FONT POINT-SIZE="10">n4</FONT>: nazghuls catch up at<br/>Weathertop; Frodo is<br/>injured</TD>
     </TR>
     
    </TABLE>
@@ -48,14 +48,14 @@ digraph {
 > fillcolor="#FFFFFF"]
     n6 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
-        <TD COLSPAN="1"><FONT POINT-SIZE="10">n6</FONT>: the Nazghuls move to Weathertop</TD>
+        <TD COLSPAN="1"><FONT POINT-SIZE="10">n6</FONT>: the Nazghuls move to<br/>Weathertop</TD>
     </TR>
     
    </TABLE>
 > fillcolor="#FFFFFF"]
     n7 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
-        <TD COLSPAN="1"><FONT POINT-SIZE="10">n7</FONT>: Nazghuls dispatched from Mordor</TD>
+        <TD COLSPAN="1"><FONT POINT-SIZE="10">n7</FONT>: Nazghuls dispatched from<br/>Mordor</TD>
     </TR>
     
    </TABLE>
@@ -69,35 +69,35 @@ digraph {
 > fillcolor="#FFFFFF"]
     n9 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
-        <TD COLSPAN="1"><FONT POINT-SIZE="10">n9</FONT>: the fellowship meets at Rivendell "one<br/>does not simply walk into mordor"</TD>
+        <TD COLSPAN="1"><FONT POINT-SIZE="10">n9</FONT>: the fellowship meets at<br/>Rivendell "one does not<br/>simply walk into mordor"</TD>
     </TR>
     
    </TABLE>
 > fillcolor="#FFFFFF"]
     n10 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
-        <TD COLSPAN="1"><FONT POINT-SIZE="10">n10</FONT>: Gimli leaves the mountains</TD>
+        <TD COLSPAN="1"><FONT POINT-SIZE="10">n10</FONT>: Gimli leaves the moun-<br/>tains</TD>
     </TR>
     
    </TABLE>
 > fillcolor="#FFFFFF"]
     n11 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
-        <TD COLSPAN="1"><FONT POINT-SIZE="10">n11</FONT>: Legolas travels from Mirkwood</TD>
+        <TD COLSPAN="1"><FONT POINT-SIZE="10">n11</FONT>: Legolas travels from<br/>Mirkwood</TD>
     </TR>
     
    </TABLE>
 > fillcolor="#FFFFFF"]
     n12 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
-        <TD COLSPAN="1"><FONT POINT-SIZE="10">n12</FONT>: Boromir seeks the sword that is broken</TD>
+        <TD COLSPAN="1"><FONT POINT-SIZE="10">n12</FONT>: Boromir seeks the sword<br/>that is broken</TD>
     </TR>
     
    </TABLE>
 > fillcolor="#FFFFFF"]
     n13 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
-        <TD COLSPAN="1"><FONT POINT-SIZE="10">n13</FONT>: Boromir fights in the battle for<br/>Osgiliath</TD>
+        <TD COLSPAN="1"><FONT POINT-SIZE="10">n13</FONT>: Boromir fights in the<br/>battle for Osgiliath</TD>
     </TR>
     
    </TABLE>

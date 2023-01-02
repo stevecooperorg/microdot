@@ -192,8 +192,8 @@ impl Exporter for GraphVizExporter {
 
         let label_vm = NodeHtmlLabelViewModel {
             id,
-            label: label_text.clone(),
-            label_wrapped: escape_label(&label_text),
+            label: escape_label(&label_text),
+            label_wrapped: to_dot_label_string(&label_text),
             hash_tags,
             colspan,
             bgcolor,
@@ -261,8 +261,15 @@ impl GraphVizExporter {
     }
 }
 
-fn escape_label(label: &str) -> String {
+fn to_dot_label_string(label: &str) -> String {
     format!("\"{}\"", label.replace('\n', "\\n").replace('"', "\\\""))
+}
+
+fn escape_label(label: &str) -> String {
+    label
+        .replace('&', "&amp;")
+        .replace('<', "&lt;")
+        .replace('>', "&gt;")
 }
 
 fn escape_id<S: Into<String>>(id: S) -> String {
@@ -333,7 +340,7 @@ mod tests {
         let label = NodeHtmlLabelViewModel {
             id: "n99".into(),
             label: lines.join("\n"),
-            label_wrapped: escape_label(&lines.join("\n")),
+            label_wrapped: to_dot_label_string(&lines.join("\n")),
             hash_tags: vec![
                 HashTagViewModel {
                     bgcolor: Color::from_rgb(255, 0, 0),
@@ -352,10 +359,17 @@ mod tests {
     }
 
     #[test]
-    fn escapes_label() {
-        assert_eq!(r#""abc""#, escape_label("abc"));
-        assert_eq!(r#""a\"bc""#, escape_label(r#"a"bc"#));
-        assert_eq!(r#""a\nbc""#, escape_label("a\nbc"));
+    fn converts_to_dot_label_string() {
+        assert_eq!(r#""abc""#, to_dot_label_string("abc"));
+        assert_eq!(r#""a\"bc""#, to_dot_label_string(r#"a"bc"#));
+        assert_eq!(r#""a\nbc""#, to_dot_label_string("a\nbc"));
+    }
+
+    #[test]
+    fn escapes_html_codes_in_label() {
+        assert_eq!(r#"abc"#, escape_label("abc"));
+        assert_eq!(r#"foo &lt;bar&gt;"#, escape_label(r#"foo <bar>"#));
+        assert_eq!(r#"a&amp;b"#, escape_label("a&b"));
     }
 
     #[test]
