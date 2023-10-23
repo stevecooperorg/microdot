@@ -139,7 +139,12 @@ https://applecolors.com/palettes
 
 # Run in Docker
 
-````
+```
+make docker-run FILE=problems.json
+```
+
+This will run your files in 
+
 docker build . --tag microdot:latest
 docker run --rm --mount type=bind,source="$(pwd)"/examples,target=/examples -it microdot:latest microdot --file /examples/story.json
 ````

@@ -1,0 +1,46 @@
+digraph {
+
+    graph [fontname = "helvetica" rankdir="TB" ranksep=0.75 nodesep=0.5];
+    node [fontname = "helvetica" shape = "box" width=2.5 style=filled];
+    edge [fontname = "helvetica" penwidth=3 color="#000000"];
+
+    n0 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    <TR>
+        <TD COLSPAN="1"><FONT POINT-SIZE="10">n0</FONT>: it's very slow</TD>
+    </TR>
+    
+   </TABLE>
+> fillcolor="#FFFFFF"]
+    n1 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    <TR>
+        <TD COLSPAN="1"><FONT POINT-SIZE="10">n1</FONT>: the network is very<br/>rubbish</TD>
+    </TR>
+    
+    <TR>
+        
+            <TD BGCOLOR="#00BBEA"><FONT COLOR="#000000">#NET</FONT></TD>
+        
+    </TR>
+    
+   </TABLE>
+> fillcolor="#FFFFFF"]
+    n2 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    <TR>
+        <TD COLSPAN="1"><FONT POINT-SIZE="10">n2</FONT>: O(n3) algos</TD>
+    </TR>
+    
+   </TABLE>
+> fillcolor="#FFFFFF"]
+    n3 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    <TR>
+        <TD COLSPAN="1"><FONT POINT-SIZE="10">n3</FONT>: we forgot to initialise<br/>the terraform</TD>
+    </TR>
+    
+   </TABLE>
+> fillcolor="#FFFFFF"]
+
+    "n2" -> "n0" [label="e1"];
+    "n1" -> "n3" [label="e3"];
+    "n3" -> "n0" [label="e4"];
+
+}

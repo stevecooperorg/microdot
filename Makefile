@@ -40,4 +40,16 @@ dot:
 commit:
 	./bin/auto-commit
 
+docker-build:
+	docker build . --tag microdot:latest
+
+FILE=/examples/story.json
+
+docker-run: docker-build
+	mkdir -p "$$HOME/microdot"
+	docker run --rm \
+		--mount type=bind,source="$$HOME/microdot",target=/microdot \
+		-it microdot:latest microdot \
+		--file "/microdot/${FILE}"
+
 safe-commit: fmt check test commit

@@ -4,6 +4,7 @@ COPY . .
 RUN cargo install --path microdot
 
 FROM debian:bookworm-slim
-RUN apt-get update && apt-get install -y libfontconfig && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y libfontconfig graphviz && rm -rf /var/lib/apt/lists/*
 COPY --from=builder /usr/local/cargo/bin/microdot /usr/local/bin/microdot
-CMD ["microdot"]
+WORKDIR /microdot
+CMD ["/usr/local/bin/microdot"]

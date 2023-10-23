@@ -1,0 +1,35 @@
+{
+  "edges": [
+    {
+      "from": "n2",
+      "to": "n0"
+    },
+    {
+      "from": "n1",
+      "to": "n3"
+    },
+    {
+      "from": "n3",
+      "to": "n0"
+    }
+  ],
+  "is_left_right": false,
+  "nodes": [
+    {
+      "id": "n0",
+      "label": "it's very slow"
+    },
+    {
+      "id": "n1",
+      "label": "the network is very rubbish #NET"
+    },
+    {
+      "id": "n2",
+      "label": "O(n3) algos"
+    },
+    {
+      "id": "n3",
+      "label": "we forgot to initialise the terraform"
+    }
+  ]
+}
