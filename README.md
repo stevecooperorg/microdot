@@ -135,3 +135,11 @@ Color Palettes:
 https://applecolors.com/palettes
 
 #ED4145 #F1B02F #EADE84 #A3D064 #11B2AA #177C99
+
+
+# Run in Docker
+
+````
+docker build . --tag microdot:latest
+docker run --rm --mount type=bind,source="$(pwd)"/examples,target=/examples -it microdot:latest microdot --file /examples/story.json
+````
