@@ -135,10 +135,3 @@ Color Palettes:
 https://applecolors.com/palettes
 
 #ED4145 #F1B02F #EADE84 #A3D064 #11B2AA #177C99
-
-
-# Run in Docker
-
-```
-make docker-run FILE=problems.json
-```
