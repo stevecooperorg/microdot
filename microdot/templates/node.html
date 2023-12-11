@@ -1,13 +1,11 @@
-    {{id}} [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    {{id}} [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="{{ colspan }}"><FONT POINT-SIZE="10">{{ id }}</FONT>: {{ label|linebreaksbr|safe }}</TD>
     </TR>
     {% if hash_tags.len() > 0 %}
-    <TR>
         {% for hash in hash_tags %}
-            {{ hash|safe }}
+           {{ hash|safe }}
         {% endfor %}
-    </TR>
     {% endif %}
    </TABLE>
 > fillcolor="{{bgcolor}}"]

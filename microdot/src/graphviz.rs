@@ -154,7 +154,8 @@ impl Exporter for GraphVizExporter {
 
         let wrap_size = if self.is_left_right { 40 } else { 25 };
         let wrapping_options = {
-            let dictionary = Standard::from_embedded(Language::EnglishUS).unwrap();
+            let mut dictionary = Standard::from_embedded(Language::EnglishUS).unwrap();
+            dictionary.minima = (3,3);
             let splitter = WordSplitter::Hyphenation(dictionary);
             Options::new(wrap_size).word_splitter(splitter)
         };
