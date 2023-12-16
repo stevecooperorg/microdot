@@ -130,7 +130,6 @@ pub fn compile(path: &Path, _display_mode: DisplayMode, format: OutputFormat) ->
 }
 
 pub struct GraphVizExporter {
-    inner_content: String,
     nodes: Vec<NodeHtmlLabelViewModel>,
     subgraphs: HashMap<String, Vec<NodeHtmlLabelViewModel>>,
     edges: Vec<EdgeViewModel>,
@@ -209,18 +208,10 @@ impl Exporter for GraphVizExporter {
             bgcolor,
         };
 
-        let line = label_vm.render().unwrap();
-
-        self.inner_content.push_str(&line);
-        self.inner_content.push('\n');
+        self.nodes.push(label_vm);
     }
 
     fn add_edge(&mut self, id: &Id, from: &Id, to: &Id) {
-        if self.is_first_edge {
-            self.inner_content.push('\n');
-            self.is_first_edge = false;
-        }
-
         let edge_vm = EdgeViewModel {
             display_mode: self.display_mode,
             id: id.clone(),
@@ -228,9 +219,7 @@ impl Exporter for GraphVizExporter {
             to: to.clone(),
         };
 
-        let line = edge_vm.render().unwrap();
-        self.inner_content.push_str(&line);
-        self.inner_content.push('\n');
+        self.edges.push(edge_vm);
     }
 }
 
@@ -272,7 +261,6 @@ impl Template for EdgeViewModel {
 impl GraphVizExporter {
     pub fn new(display_mode: DisplayMode) -> Self {
         Self {
-            inner_content: "".into(),
             is_left_right: false,
             is_first_edge: true,
             nodes: Default::default(),
@@ -282,18 +270,39 @@ impl GraphVizExporter {
         }
     }
 
+    pub fn build(&self) -> String {
+        let mut built = String::new();
+        for node in &self.nodes {
+            let line = node.render().unwrap();
+
+            built.push_str(&line);
+            built.push('\n');
+        }
+
+        built.push('\n');
+
+        for edge in &self.edges {
+            let line = edge.render().unwrap();
+            built.push_str(&line);
+            built.push('\n');
+        }
+
+        built
+    }
+
     pub fn export_dot(&mut self, graph: &Graph) -> String {
         graph.export(self);
 
         let rank_dir = if self.is_left_right { "LR" } else { "TB" };
         let rank_dir = rank_dir.to_string();
         let edge_color = ColorScheme::normal().get_stroke_color();
+        let inner_content = self.build();
 
         let width = if self.is_left_right { 4.0f32 } else { 2.5f32 };
         let vm = GraphViewModel {
             rank_dir,
             edge_color,
-            inner_content: self.inner_content.clone(),
+            inner_content,
             width,
         };
         vm.render().unwrap()
