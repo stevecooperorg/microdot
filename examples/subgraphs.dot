@@ -4,6 +4,48 @@ digraph {
     node [fontname = "helvetica" shape = "box" width=4 style=filled];
     edge [fontname = "helvetica" penwidth=3 color="#000000"];
 
+  subgraph cluster_TEST {
+    n4 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    <TR>
+        <TD COLSPAN="1"><FONT POINT-SIZE="10">n4</FONT>: tester installs PR branch code into dev<br/>environment</TD>
+    </TR>
+    
+        
+           <TR>
+<TD BGCOLOR="#AAAB43"><FONT COLOR="#000000">#SG_TEST</FONT></TD>
+</TR>
+        
+    
+   </TABLE>
+> fillcolor="#FFFFFF"]
+    n5 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    <TR>
+        <TD COLSPAN="1"><FONT POINT-SIZE="10">n5</FONT>: tester tests PR branch code</TD>
+    </TR>
+    
+        
+           <TR>
+<TD BGCOLOR="#AAAB43"><FONT COLOR="#000000">#SG_TEST</FONT></TD>
+</TR>
+        
+    
+   </TABLE>
+> fillcolor="#FFFFFF"]
+    n6 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    <TR>
+        <TD COLSPAN="1"><FONT POINT-SIZE="10">n6</FONT>: tester approves PR</TD>
+    </TR>
+    
+        
+           <TR>
+<TD BGCOLOR="#AAAB43"><FONT COLOR="#000000">#SG_TEST</FONT></TD>
+</TR>
+        
+    
+   </TABLE>
+> fillcolor="#FFFFFF"]
+  }
+  subgraph cluster_DEV {
     n0 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="1"><FONT POINT-SIZE="10">n0</FONT>: developer writes code</TD>
@@ -56,45 +98,6 @@ digraph {
     
    </TABLE>
 > fillcolor="#FFFFFF"]
-    n4 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
-    <TR>
-        <TD COLSPAN="1"><FONT POINT-SIZE="10">n4</FONT>: tester installs PR branch code into dev<br/>environment</TD>
-    </TR>
-    
-        
-           <TR>
-<TD BGCOLOR="#AAAB43"><FONT COLOR="#000000">#SG_TEST</FONT></TD>
-</TR>
-        
-    
-   </TABLE>
-> fillcolor="#FFFFFF"]
-    n5 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
-    <TR>
-        <TD COLSPAN="1"><FONT POINT-SIZE="10">n5</FONT>: tester tests PR branch code</TD>
-    </TR>
-    
-        
-           <TR>
-<TD BGCOLOR="#AAAB43"><FONT COLOR="#000000">#SG_TEST</FONT></TD>
-</TR>
-        
-    
-   </TABLE>
-> fillcolor="#FFFFFF"]
-    n6 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
-    <TR>
-        <TD COLSPAN="1"><FONT POINT-SIZE="10">n6</FONT>: tester approves PR</TD>
-    </TR>
-    
-        
-           <TR>
-<TD BGCOLOR="#AAAB43"><FONT COLOR="#000000">#SG_TEST</FONT></TD>
-</TR>
-        
-    
-   </TABLE>
-> fillcolor="#FFFFFF"]
     n7 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="1"><FONT POINT-SIZE="10">n7</FONT>: developer merges PR</TD>
@@ -108,6 +111,7 @@ digraph {
     
    </TABLE>
 > fillcolor="#FFFFFF"]
+  }
 
     "n0" -> "n1" [label="e0"];
     "n1" -> "n2" [label="e1"];

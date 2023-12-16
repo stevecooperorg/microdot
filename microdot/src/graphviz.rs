@@ -195,7 +195,7 @@ impl Exporter for GraphVizExporter {
 
         let subgraph_id = hash_tags
             .iter()
-            .find(|t| t.label.starts_with("SG_"))
+            .find(|t| t.label.starts_with("#SG_"))
             .map(|t| t.label.clone());
 
         let label_vm = NodeHtmlLabelViewModel {
@@ -209,7 +209,7 @@ impl Exporter for GraphVizExporter {
 
         let target = match subgraph_id {
             Some(subgraph_id) => {
-                let subgraph_id = subgraph_id.replace("SG_", "");
+                let subgraph_id = subgraph_id.replace("#SG_", "");
                 self.subgraphs.entry(subgraph_id).or_default()
             }
             None => &mut self.nodes,
@@ -280,9 +280,18 @@ impl GraphVizExporter {
         let mut built = String::new();
         for node in &self.nodes {
             let line = node.render().unwrap();
-
             built.push_str(&line);
             built.push('\n');
+        }
+
+        for (subgraph_id, nodes) in self.subgraphs.iter() {
+            built.push_str(&format!("  subgraph cluster_{} {{\n", subgraph_id));
+            for node in nodes {
+                let line = node.render().unwrap();
+                built.push_str(&line);
+                built.push('\n');
+            }
+            built.push_str("  }\n");
         }
 
         built.push('\n');
