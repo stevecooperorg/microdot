@@ -131,6 +131,9 @@ pub fn compile(path: &Path, _display_mode: DisplayMode, format: OutputFormat) ->
 
 pub struct GraphVizExporter {
     inner_content: String,
+    nodes: Vec<NodeHtmlLabelViewModel>,
+    subgraphs: HashMap<String, Vec<NodeHtmlLabelViewModel>>,
+    edges: Vec<EdgeViewModel>,
     is_left_right: bool,
     is_first_edge: bool,
     display_mode: DisplayMode,
@@ -191,6 +194,11 @@ impl Exporter for GraphVizExporter {
         } else {
             hash_tags.len()
         };
+
+        let subgraph_id = hash_tags
+            .iter()
+            .filter(|t| t.label.starts_with("SG_"))
+            .next();
 
         let label_vm = NodeHtmlLabelViewModel {
             id,
@@ -267,6 +275,9 @@ impl GraphVizExporter {
             inner_content: "".into(),
             is_left_right: false,
             is_first_edge: true,
+            nodes: Default::default(),
+            edges: Default::default(),
+            subgraphs: Default::default(),
             display_mode,
         }
     }
