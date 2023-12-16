@@ -81,13 +81,6 @@ digraph {
     
    </TABLE>
 > fillcolor="#FFFFFF"]
-    n11 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
-    <TR>
-        <TD COLSPAN="1"><FONT POINT-SIZE="10">n11</FONT>: Legolas travels from<br/>Mirkwood</TD>
-    </TR>
-    
-   </TABLE>
-> fillcolor="#FFFFFF"]
 
     "n0" -> "n1" [label="e0"];
     "n1" -> "n2" [label="e1"];
@@ -101,6 +94,5 @@ digraph {
     "n8" -> "n9" [label="e9"];
     "n0" -> "n9" [label="e10"];
     "n10" -> "n9" [label="e11"];
-    "n11" -> "n9" [label="e12"];
 
 }

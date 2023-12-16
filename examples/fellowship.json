@@ -47,14 +47,6 @@
     {
       "from": "n10",
       "to": "n9"
-    },
-    {
-      "from": "n11",
-      "to": "n9"
-    },
-    {
-      "from": "n12",
-      "to": "n9"
     }
   ],
   "is_left_right": false,
@@ -102,14 +94,6 @@
     {
       "id": "n10",
       "label": "Gimli leaves the mountains"
-    },
-    {
-      "id": "n11",
-      "label": "Legolas travels from Mirkwood"
-    },
-    {
-      "id": "n12",
-      "label": "Boromir seeks the sword that is broken"
     }
   ]
 }
