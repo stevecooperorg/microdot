@@ -447,7 +447,7 @@ mod tests {
 
         assert_parse_command!(
             "r foo",
-            Command::RenameNodeUnlabelled { id: Id::new("foo") }.into()
+            Command::RenameNodeUnlabelled { id: Id::new("foo") }
         );
 
         assert_parse_command!("save", Command::Save);
@@ -479,7 +479,7 @@ mod tests {
 
         let help_commands_line: Vec<_> = help_parser_content
             .split('\n')
-            .filter(|l| l.len() > 0)
+            .filter(|l| !l.is_empty())
             .collect();
 
         help_commands_line

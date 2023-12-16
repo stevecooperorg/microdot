@@ -333,7 +333,7 @@ mod tests {
 
     #[test]
     fn runs_node_template() {
-        let lines = vec![
+        let lines = [
             "this is the first",
             "line in the thing",
             "and here is a third",
@@ -419,7 +419,7 @@ Cras ut egestas velit."#;
     fn test_graphviz_installed() {
         let version = installed_graphviz_version().expect("could not find graphviz version");
         let major_version = *version
-            .split(".")
+            .split('.')
             .collect::<Vec<_>>()
             .first()
             .expect("could not find major version");
