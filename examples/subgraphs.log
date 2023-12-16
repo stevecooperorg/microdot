@@ -1,0 +1,19 @@
+>> lr
+(Direction changed to LR)
+>> i developer writes code #SG_DEV
+(inserted node n0: 'developer writes code #SG_DEV')
+>> aft n0 developer commits code #SG_DEV
+(inserted node n1: 'developer commits code #SG_DEV' after n0)
+>> aft n1 developer raises PR #SG_DEV
+(inserted node n2: 'developer raises PR #SG_DEV' after n1)
+>> aft n2 developer2 reviews PR #SG_DEV
+(inserted node n3: 'developer2 reviews PR #SG_DEV' after n2)
+>> aft n3 tester installs PR branch code into dev environment #SG_TEST
+(inserted node n4: 'tester installs PR branch code into dev environment #SG_TEST' after n3)
+>> aft n4 tester tests PR branch code #SG_TEST
+(inserted node n5: 'tester tests PR branch code #SG_TEST' after n4)
+>> aft n5 tester approves PR #SG_TEST
+(inserted node n6: 'tester approves PR #SG_TEST' after n5)
+>> aft n6 developer merges PR #SG_DEV
+(inserted node n7: 'developer merges PR #SG_DEV' after n6)
+CTRL-D

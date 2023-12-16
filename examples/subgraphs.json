@@ -1,0 +1,67 @@
+{
+  "edges": [
+    {
+      "from": "n0",
+      "to": "n1"
+    },
+    {
+      "from": "n1",
+      "to": "n2"
+    },
+    {
+      "from": "n2",
+      "to": "n3"
+    },
+    {
+      "from": "n3",
+      "to": "n4"
+    },
+    {
+      "from": "n4",
+      "to": "n5"
+    },
+    {
+      "from": "n5",
+      "to": "n6"
+    },
+    {
+      "from": "n6",
+      "to": "n7"
+    }
+  ],
+  "is_left_right": true,
+  "nodes": [
+    {
+      "id": "n0",
+      "label": "developer writes code #SG_DEV"
+    },
+    {
+      "id": "n1",
+      "label": "developer commits code #SG_DEV"
+    },
+    {
+      "id": "n2",
+      "label": "developer raises PR #SG_DEV"
+    },
+    {
+      "id": "n3",
+      "label": "developer2 reviews PR #SG_DEV"
+    },
+    {
+      "id": "n4",
+      "label": "tester installs PR branch code into dev environment #SG_TEST"
+    },
+    {
+      "id": "n5",
+      "label": "tester tests PR branch code #SG_TEST"
+    },
+    {
+      "id": "n6",
+      "label": "tester approves PR #SG_TEST"
+    },
+    {
+      "id": "n7",
+      "label": "developer merges PR #SG_DEV"
+    }
+  ]
+}

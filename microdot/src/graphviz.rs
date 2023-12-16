@@ -407,6 +407,11 @@ Cras ut egestas velit."#;
     }
 
     #[test]
+    fn test_graphviz_compile_subgraphs() {
+        compile_input_string_content(git_root().unwrap().join("examples/subgraphs.txt"));
+    }
+
+    #[test]
     fn test_graphviz_compile_business() {
         compile_input_string_content(git_root().unwrap().join("examples/business_example_1.txt"));
     }

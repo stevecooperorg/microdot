@@ -1,0 +1,9 @@
+lr
+i developer writes code #SG_DEV
+aft n0 developer commits code #SG_DEV
+aft n1 developer raises PR #SG_DEV
+aft n2 developer2 reviews PR #SG_DEV
+aft n3 tester installs PR branch code into dev environment #SG_TEST
+aft n4 tester tests PR branch code #SG_TEST
+aft n5 tester approves PR #SG_TEST
+aft n6 developer merges PR #SG_DEV
