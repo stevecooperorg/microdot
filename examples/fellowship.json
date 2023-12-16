@@ -55,10 +55,6 @@
     {
       "from": "n12",
       "to": "n9"
-    },
-    {
-      "from": "n13",
-      "to": "n12"
     }
   ],
   "is_left_right": false,
@@ -114,10 +110,6 @@
     {
       "id": "n12",
       "label": "Boromir seeks the sword that is broken"
-    },
-    {
-      "id": "n13",
-      "label": "Boromir fights in the battle for Osgiliath"
     }
   ]
 }
