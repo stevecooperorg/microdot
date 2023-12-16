@@ -2,11 +2,9 @@ use microdot_core::command::GraphCommand;
 use microdot_core::{Id, Label, Line};
 use rustyline::{Editor, Helper};
 
-pub mod colors;
 pub mod graphviz;
 pub mod helper;
 pub mod json;
-pub mod palettes;
 pub mod parser;
 pub mod repl;
 mod storage;

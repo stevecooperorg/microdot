@@ -1,8 +1,8 @@
-use crate::colors::{Color, ColorScheme, Colors};
 use anyhow::{anyhow, Context, Result};
 use askama::Template;
 use command_macros::cmd;
 use hyphenation::{Language, Load, Standard};
+use microdot_colors::colors::{Color, ColorScheme, Colors};
 use microdot_core::exporter::{Exporter, NodeHighlight};
 use microdot_core::graph::Graph;
 use microdot_core::hash::extract_hashtags;
