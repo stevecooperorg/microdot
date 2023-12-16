@@ -1,3 +1,4 @@
+use crate::util::write_if_different;
 use anyhow::{anyhow, Context, Result};
 use askama::Template;
 use command_macros::cmd;
@@ -123,7 +124,7 @@ pub fn compile(path: &Path, _display_mode: DisplayMode, format: OutputFormat) ->
     let out_file = path.with_extension(format.to_string());
 
     compile_dot_str(input_str, _display_mode, format).and_then(|string| {
-        std::fs::write(out_file, string)?;
+        write_if_different(out_file, string)?;
         Ok(())
     })
 }

@@ -1,3 +1,4 @@
+use crate::util::write_if_different;
 use anyhow::{Context, Result};
 use std::path::{Path, PathBuf};
 
@@ -29,7 +30,7 @@ impl Store for FileStore {
 
     fn write<P: AsRef<Path>, S: AsRef<str>>(&self, path: P, content: S) -> Result<()> {
         let bytes = content.as_ref().as_bytes();
-        std::fs::write(path, bytes).with_context(|| {
+        write_if_different(path, bytes).with_context(|| {
             format!(
                 "writing to file store rooted at {}",
                 self.root.to_string_lossy()

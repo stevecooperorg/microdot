@@ -70,7 +70,7 @@ pub fn write_if_different<P: AsRef<Path>, C: AsRef<[u8]>>(
     let contents = contents.as_ref();
 
     let needs_write = match std::fs::read(path) {
-        Ok(current_content) => current_content == contents,
+        Ok(current_content) => current_content != contents,
         Err(_) => true,
     };
 
@@ -121,5 +121,68 @@ impl Interaction for AutoInteraction {
 
     fn should_compile(&self) -> bool {
         false
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use std::fs::File;
+    use std::io::{Read, Write};
+    use std::path::PathBuf;
+    use tempfile::tempdir;
+
+    #[test]
+    fn write_if_different_should_write_if_file_does_not_exist() {
+        let dir = tempdir().unwrap();
+        let path = dir.path().join("test.txt");
+        let contents = "hello world";
+
+        write_if_different(&path, contents).unwrap();
+
+        check_content_equal(&path, contents);
+    }
+
+    #[test]
+    fn write_if_different_should_not_write_if_file_exists_and_contents_are_the_same() {
+        let dir = tempdir().unwrap();
+        let path = dir.path().join("test.txt");
+        let contents = "hello world";
+
+        std::fs::write(&path, contents).unwrap();
+        let original_time = get_file_modified_time(&path).unwrap();
+
+        write_if_different(&path, contents).unwrap();
+        check_content_equal(&path, contents);
+        let new_time = get_file_modified_time(&path).unwrap();
+        assert_eq!(original_time, new_time);
+    }
+
+    #[test]
+    fn write_if_different_should_write_if_file_exists_and_contents_are_different() {
+        let dir = tempdir().unwrap();
+        let path = dir.path().join("test.txt");
+
+        std::fs::write(&path, "old content").unwrap();
+        let original_time = get_file_modified_time(&path).unwrap();
+
+        write_if_different(&path, "new content").unwrap();
+        check_content_equal(&path, "new content");
+        let new_time = get_file_modified_time(&path).unwrap();
+        assert_ne!(original_time, new_time);
+    }
+
+    fn get_file_modified_time(path: &PathBuf) -> Option<std::time::SystemTime> {
+        let metadata = std::fs::metadata(path).ok()?;
+        let modified = metadata.modified().ok()?;
+        Some(modified)
+    }
+
+    fn check_content_equal(path: &PathBuf, contents: &str) {
+        let mut file = File::open(&path).unwrap();
+        let mut read_contents = String::new();
+        file.read_to_string(&mut read_contents).unwrap();
+
+        assert_eq!(contents, read_contents);
     }
 }

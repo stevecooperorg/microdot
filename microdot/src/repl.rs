@@ -1,6 +1,7 @@
 use crate::graphviz::{DisplayMode, GraphVizExporter, OutputFormat};
 use crate::json::JsonExporter;
 use crate::parser::parse_line;
+use crate::util::write_if_different;
 use crate::{graphviz, svg, Command, Interaction};
 use anyhow::{anyhow, Result};
 use microdot_core::graph::Graph;
@@ -135,12 +136,12 @@ fn compile_graph<I: Interaction>(
 fn save_dot_file(json_file: &Path, graph: &Graph) -> Result<PathBuf> {
     let mut json_exporter = JsonExporter::new();
     let json = json_exporter.export_json(graph);
-    std::fs::write(json_file, json)?;
+    write_if_different(json_file, json)?;
 
     let mut dot_exporter = GraphVizExporter::new(DisplayMode::Interactive);
     let interactive_dot = dot_exporter.export_dot(graph);
     let interactive_dot_file = json_file.with_extension("dot");
-    std::fs::write(&interactive_dot_file, interactive_dot)?;
+    write_if_different(&interactive_dot_file, interactive_dot)?;
 
     Ok(interactive_dot_file)
 }

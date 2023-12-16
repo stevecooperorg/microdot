@@ -1,5 +1,5 @@
 use askama::Template;
-use libmicrodot::util::{compile_input_string_content, git_root};
+use libmicrodot::util::{compile_input_string_content, git_root, write_if_different};
 use std::fs;
 use std::path::PathBuf;
 
@@ -36,5 +36,5 @@ fn prepare_readme() {
 
     let readme_path = git_root.join("README.md");
     let readme_content = readme.render().unwrap();
-    fs::write(readme_path, readme_content).unwrap();
+    write_if_different(readme_path, readme_content).unwrap();
 }
