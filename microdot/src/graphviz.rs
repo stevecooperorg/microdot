@@ -134,7 +134,6 @@ pub struct GraphVizExporter {
     subgraphs: HashMap<String, Vec<NodeHtmlLabelViewModel>>,
     edges: Vec<EdgeViewModel>,
     is_left_right: bool,
-    is_first_edge: bool,
     display_mode: DisplayMode,
 }
 
@@ -196,8 +195,8 @@ impl Exporter for GraphVizExporter {
 
         let subgraph_id = hash_tags
             .iter()
-            .filter(|t| t.label.starts_with("SG_"))
-            .next();
+            .find(|t| t.label.starts_with("SG_"))
+            .map(|t| t.label.clone());
 
         let label_vm = NodeHtmlLabelViewModel {
             id,
@@ -208,7 +207,15 @@ impl Exporter for GraphVizExporter {
             bgcolor,
         };
 
-        self.nodes.push(label_vm);
+        let target = match subgraph_id {
+            Some(subgraph_id) => {
+                let subgraph_id = subgraph_id.replace("SG_", "");
+                self.subgraphs.entry(subgraph_id).or_default()
+            }
+            None => &mut self.nodes,
+        };
+
+        target.push(label_vm);
     }
 
     fn add_edge(&mut self, id: &Id, from: &Id, to: &Id) {
@@ -262,7 +269,6 @@ impl GraphVizExporter {
     pub fn new(display_mode: DisplayMode) -> Self {
         Self {
             is_left_right: false,
-            is_first_edge: true,
             nodes: Default::default(),
             edges: Default::default(),
             subgraphs: Default::default(),

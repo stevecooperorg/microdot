@@ -128,7 +128,7 @@ impl Interaction for AutoInteraction {
 mod test {
     use super::*;
     use std::fs::File;
-    use std::io::{Read, Write};
+    use std::io::Read;
     use std::path::PathBuf;
     use tempfile::tempdir;
 
@@ -179,7 +179,7 @@ mod test {
     }
 
     fn check_content_equal(path: &PathBuf, contents: &str) {
-        let mut file = File::open(&path).unwrap();
+        let mut file = File::open(path).unwrap();
         let mut read_contents = String::new();
         file.read_to_string(&mut read_contents).unwrap();
 
