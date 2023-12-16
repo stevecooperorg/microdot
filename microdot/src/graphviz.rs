@@ -48,7 +48,7 @@ pub fn installed_graphviz_version_inner() -> Option<String> {
         None => return None,
     };
     let stderr = String::from_utf8_lossy(&stderr).to_string();
-    let rx = Regex::new(r#"^dot - graphviz version (?P<ver>[0-9\.]+)"#).expect("not a valid rx");
+    let rx = Regex::new(r"^dot - graphviz version (?P<ver>[0-9\.]+)").expect("not a valid rx");
     let caps = rx.captures(&stderr).map(|c| {
         c.name("ver")
             .expect("should have named group")
@@ -120,7 +120,7 @@ fn compile_dot_str<S: AsRef<str>>(
 }
 pub fn compile(path: &Path, _display_mode: DisplayMode, format: OutputFormat) -> Result<()> {
     let input_str = std::fs::read_to_string(path)?;
-    let out_file = path.with_extension(&format.to_string());
+    let out_file = path.with_extension(format.to_string());
 
     compile_dot_str(input_str, _display_mode, format).and_then(|string| {
         std::fs::write(out_file, string)?;
@@ -155,7 +155,7 @@ impl Exporter for GraphVizExporter {
         let wrap_size = if self.is_left_right { 40 } else { 25 };
         let wrapping_options = {
             let mut dictionary = Standard::from_embedded(Language::EnglishUS).unwrap();
-            dictionary.minima = (3,3);
+            dictionary.minima = (3, 3);
             let splitter = WordSplitter::Hyphenation(dictionary);
             Options::new(wrap_size).word_splitter(splitter)
         };
@@ -169,7 +169,7 @@ impl Exporter for GraphVizExporter {
             DisplayMode::Presentation => "".to_string(),
         };
 
-        let label_text = fill(&label_text, &wrapping_options);
+        let label_text = fill(&label_text, wrapping_options);
 
         let bgcolor = match highlight {
             NodeHighlight::Normal => Colors::white(),

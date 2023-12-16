@@ -151,41 +151,41 @@ pub fn parse_line(line: Line) -> Command {
 
     if let Ok(res) = insert_node().parse(text) {
         return GraphCommand::InsertNode {
-            label: Label::new(&res),
+            label: Label::new(res),
         }
         .into();
     }
 
     if let Ok(res) = delete_node().parse(text) {
-        return GraphCommand::DeleteNode { id: Id::new(&res) }.into();
+        return GraphCommand::DeleteNode { id: Id::new(res) }.into();
     }
 
     if let Ok(res) = select_node().parse(text) {
-        return GraphCommand::SelectNode { id: Id::new(&res) }.into();
+        return GraphCommand::SelectNode { id: Id::new(res) }.into();
     }
 
     if let Ok((from, to)) = link_edge().parse(text) {
         return GraphCommand::LinkEdge {
-            from: Id::new(&from),
-            to: Id::new(&to),
+            from: Id::new(from),
+            to: Id::new(to),
         }
         .into();
     }
 
     if let Ok(id) = unlink_edge().parse(text) {
-        return GraphCommand::UnlinkEdge { id: Id::new(&id) }.into();
+        return GraphCommand::UnlinkEdge { id: Id::new(id) }.into();
     }
 
     if let Ok((id, label)) = rename_node().parse(text) {
         return GraphCommand::RenameNode {
-            id: Id::new(&id),
-            label: Label::new(&label),
+            id: Id::new(id),
+            label: Label::new(label),
         }
         .into();
     }
 
     if let Ok(id) = rename_node_unlabelled().parse(text) {
-        return Command::RenameNodeUnlabelled { id: Id::new(&id) };
+        return Command::RenameNodeUnlabelled { id: Id::new(id) };
     }
 
     if let Ok(()) = lr().parse(text) {

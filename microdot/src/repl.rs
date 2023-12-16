@@ -1,14 +1,13 @@
-use crate::fdg::FdgExporter;
 use crate::graphviz::{DisplayMode, GraphVizExporter, OutputFormat};
 use crate::json::JsonExporter;
 use crate::parser::parse_line;
 use crate::{graphviz, svg, Command, Interaction};
-use anyhow::{anyhow, Context, Result};
+use anyhow::{anyhow, Result};
 use microdot_core::graph::Graph;
 use microdot_core::{CommandResult, Line};
 use rustyline::error::ReadlineError;
 use std::path::{Path, PathBuf};
-use std::sync::{Arc, LockResult, RwLock};
+use std::sync::{Arc, RwLock};
 
 pub fn repl<I: Interaction>(
     interaction: &mut I,
@@ -108,7 +107,6 @@ pub fn repl<I: Interaction>(
 
 enum RenderMethod {
     GraphViz,
-    Fdg,
 }
 
 const RENDER_METHOD: RenderMethod = RenderMethod::GraphViz;
@@ -129,23 +127,9 @@ fn compile_graph<I: Interaction>(
                 compile_dot(interactive_dot_file);
             }
         }
-        RenderMethod::Fdg => {
-            if interaction.should_compile() {
-                compile_fdg(json_file, &graph)?;
-            }
-        }
     }
 
     Ok(())
-}
-
-fn compile_fdg(json_file: &Path, graph: &Graph) -> Result<PathBuf> {
-    let mut fdg_exporter = FdgExporter::default();
-    let svg = fdg_exporter.export(graph);
-    let svg_file = json_file.with_extension("svg");
-    std::fs::write(&svg_file, svg)?;
-
-    Ok(svg_file)
 }
 
 fn save_dot_file(json_file: &Path, graph: &Graph) -> Result<PathBuf> {

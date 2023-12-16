@@ -3,7 +3,6 @@ use microdot_core::{Id, Label, Line};
 use rustyline::{Editor, Helper};
 
 pub mod colors;
-mod fdg;
 pub mod graphviz;
 pub mod helper;
 pub mod json;
