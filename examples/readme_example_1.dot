@@ -4,25 +4,27 @@ digraph {
     node [fontname = "helvetica" shape = "box" width=2.5 style=filled];
     edge [fontname = "helvetica" penwidth=3 color="#000000"];
 
-    n0 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    n0 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="1"><FONT POINT-SIZE="10">n0</FONT>: this happens first</TD>
     </TR>
     
    </TABLE>
 > fillcolor="#FFFFFF"]
-    n1 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    n1 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="2"><FONT POINT-SIZE="10">n1</FONT>: and then this happens</TD>
     </TR>
     
-    <TR>
         
-            <TD BGCOLOR="#FF7F7F"><FONT COLOR="#000000">#TAG1</FONT></TD>
+           <TR>
+<TD BGCOLOR="#FF7F7F"><FONT COLOR="#000000">#TAG1</FONT></TD>
+</TR>
         
-            <TD BGCOLOR="#E2954D"><FONT COLOR="#000000">#TAG2</FONT></TD>
+           <TR>
+<TD BGCOLOR="#E2954D"><FONT COLOR="#000000">#TAG2</FONT></TD>
+</TR>
         
-    </TR>
     
    </TABLE>
 > fillcolor="#FFFFFF"]

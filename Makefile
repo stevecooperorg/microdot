@@ -26,7 +26,7 @@ check:
 	cargo clippy -- -Dwarnings
 
 watch:
-	cargo watch -x "clippy -- -Dwarnings"
+	cargo watch -x "test" -x "clippy -- -Dwarnings"
 
 build: target/debug/microdot
 

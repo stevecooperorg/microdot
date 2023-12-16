@@ -4,42 +4,42 @@ digraph {
     node [fontname = "helvetica" shape = "box" width=4 style=filled];
     edge [fontname = "helvetica" penwidth=3 color="#000000"];
 
-    n0 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    n0 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="1"><FONT POINT-SIZE="10">n0</FONT>: customers get delivery too slowly</TD>
     </TR>
     
    </TABLE>
 > fillcolor="#FFFFFF"]
-    n1 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    n1 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="1"><FONT POINT-SIZE="10">n1</FONT>: orders need to be processed by hand</TD>
     </TR>
     
    </TABLE>
 > fillcolor="#FFFFFF"]
-    n2 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    n2 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="1"><FONT POINT-SIZE="10">n2</FONT>: no developer capacity to automate orders</TD>
     </TR>
     
    </TABLE>
 > fillcolor="#FFFFFF"]
-    n3 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    n3 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="1"><FONT POINT-SIZE="10">n3</FONT>: developers engaged in low-value work</TD>
     </TR>
     
    </TABLE>
 > fillcolor="#FFFFFF"]
-    n4 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    n4 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="1"><FONT POINT-SIZE="10">n4</FONT>: shipping labels generated once a day</TD>
     </TR>
     
    </TABLE>
 > fillcolor="#FFFFFF"]
-    n5 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    n5 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="1"><FONT POINT-SIZE="10">n5</FONT>: printers need rebooting but everyone in<br/>IT is busy util 3pm</TD>
     </TR>

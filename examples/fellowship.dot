@@ -4,98 +4,98 @@ digraph {
     node [fontname = "helvetica" shape = "box" width=2.5 style=filled];
     edge [fontname = "helvetica" penwidth=3 color="#000000"];
 
-    n0 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    n0 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="1"><FONT POINT-SIZE="10">n0</FONT>: Gandalf comes to the<br/>shire</TD>
     </TR>
     
    </TABLE>
 > fillcolor="#FFFFFF"]
-    n1 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    n1 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="1"><FONT POINT-SIZE="10">n1</FONT>: Frodo departs with the<br/>ring</TD>
     </TR>
     
    </TABLE>
 > fillcolor="#FFFFFF"]
-    n2 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    n2 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="1"><FONT POINT-SIZE="10">n2</FONT>: the inn at Bree</TD>
     </TR>
     
    </TABLE>
 > fillcolor="#FFFFFF"]
-    n3 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    n3 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="1"><FONT POINT-SIZE="10">n3</FONT>: the hobbits escape with<br/>Aragorn</TD>
     </TR>
     
    </TABLE>
 > fillcolor="#D0CCCC"]
-    n4 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    n4 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="1"><FONT POINT-SIZE="10">n4</FONT>: nazghuls catch up at<br/>Weathertop; Frodo is<br/>injured</TD>
     </TR>
     
    </TABLE>
 > fillcolor="#FFFFFF"]
-    n5 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    n5 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="1"><FONT POINT-SIZE="10">n5</FONT>: Nazghuls move to Bree</TD>
     </TR>
     
    </TABLE>
 > fillcolor="#FFFFFF"]
-    n6 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    n6 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="1"><FONT POINT-SIZE="10">n6</FONT>: the Nazghuls move to<br/>Weathertop</TD>
     </TR>
     
    </TABLE>
 > fillcolor="#FFFFFF"]
-    n7 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    n7 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="1"><FONT POINT-SIZE="10">n7</FONT>: Nazghuls dispatched from<br/>Mordor</TD>
     </TR>
     
    </TABLE>
 > fillcolor="#FFFFFF"]
-    n8 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    n8 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="1"><FONT POINT-SIZE="10">n8</FONT>: flight to the ford</TD>
     </TR>
     
    </TABLE>
 > fillcolor="#FFFFFF"]
-    n9 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    n9 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="1"><FONT POINT-SIZE="10">n9</FONT>: the fellowship meets at<br/>Rivendell "one does not<br/>simply walk into mordor"</TD>
     </TR>
     
    </TABLE>
 > fillcolor="#FFFFFF"]
-    n10 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    n10 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="1"><FONT POINT-SIZE="10">n10</FONT>: Gimli leaves the moun-<br/>tains</TD>
     </TR>
     
    </TABLE>
 > fillcolor="#FFFFFF"]
-    n11 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    n11 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="1"><FONT POINT-SIZE="10">n11</FONT>: Legolas travels from<br/>Mirkwood</TD>
     </TR>
     
    </TABLE>
 > fillcolor="#FFFFFF"]
-    n12 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    n12 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="1"><FONT POINT-SIZE="10">n12</FONT>: Boromir seeks the sword<br/>that is broken</TD>
     </TR>
     
    </TABLE>
 > fillcolor="#FFFFFF"]
-    n13 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    n13 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="1"><FONT POINT-SIZE="10">n13</FONT>: Boromir fights in the<br/>battle for Osgiliath</TD>
     </TR>
