@@ -213,11 +213,33 @@ impl Exporter for GraphVizExporter {
             self.is_first_edge = false;
         }
 
+        let edge_vm = EdgeViewModel {
+            display_mode: self.display_mode,
+            id: id.clone(),
+            from: from.clone(),
+            to: to.clone(),
+        };
+
+        let line = edge_vm.render().unwrap();
+        self.inner_content.push_str(&line);
+        self.inner_content.push('\n');
+    }
+}
+
+struct EdgeViewModel {
+    display_mode: DisplayMode,
+    id: Id,
+    from: Id,
+    to: Id,
+}
+
+impl Template for EdgeViewModel {
+    fn render_into(&self, writer: &mut (impl std::fmt::Write + ?Sized)) -> askama::Result<()> {
         let edge_params = hashmap! {
-            "id" => id.to_string(),
-            "escaped_id" => escape_id(id.to_string()),
-            "escaped_from" => escape_id(from.to_string()),
-            "escaped_to" => escape_id(to.to_string()),
+            "id" => self.id.to_string(),
+            "escaped_id" => escape_id(self.id.to_string()),
+            "escaped_from" => escape_id(self.from.to_string()),
+            "escaped_to" => escape_id(self.to.to_string()),
         };
 
         let line = match self.display_mode {
@@ -230,9 +252,13 @@ impl Exporter for GraphVizExporter {
             }
         };
 
-        self.inner_content.push_str(&line);
-        self.inner_content.push('\n');
+        writer.write_str(&line)?;
+        Ok(())
     }
+
+    const EXTENSION: Option<&'static str> = None;
+    const SIZE_HINT: usize = 0;
+    const MIME_TYPE: &'static str = "";
 }
 
 impl GraphVizExporter {
