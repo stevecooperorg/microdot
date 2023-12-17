@@ -81,6 +81,12 @@ fn main() -> Result<(), anyhow::Error> {
 }
 
 fn load_graph(json_file: &Path) -> Result<Graph, anyhow::Error> {
+    let json_file = if !json_file.exists() && json_file.extension().is_none() {
+        json_file.with_extension("json")
+    } else {
+        json_file.to_path_buf()
+    };
+
     let json_content = if json_file.exists() {
         println!(
             "loading existing graph from {}",
