@@ -9,7 +9,7 @@ pub enum HashState {
     Hashed(usize),
 }
 
-#[derive(PartialEq, Eq, Debug)]
+#[derive(PartialEq, Eq, Debug, Hash, Clone)]
 pub struct HashTag {
     tag: String,
 }

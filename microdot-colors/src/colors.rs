@@ -32,6 +32,14 @@ impl Color {
         self.inner.blue
     }
 
+    pub fn mix(&self, other: Color) -> Color {
+        let r = (self.r() as f64 + other.r() as f64) / 2.0;
+        let g = (self.g() as f64 + other.g() as f64) / 2.0;
+        let b = (self.b() as f64 + other.b() as f64) / 2.0;
+
+        Color::from_rgb(r as u8, g as u8, b as u8)
+    }
+
     pub fn to_html_string(&self) -> String {
         fn push_hex(s: &mut String, byte: u8) {
             use std::fmt::Write;
@@ -159,6 +167,13 @@ mod tests {
         assert_eq!("#000000", &Colors::black().to_html_string());
         assert_eq!("#FFFFFF", &Colors::white().to_html_string());
         assert_eq!("#FF0000", &Color::from_rgb(255, 0, 0).to_html_string());
+    }
+
+    #[test]
+    fn it_can_mix_colors() {
+        let actual = Color::from_rgb(255, 0, 0).mix(Color::from_rgb(0, 255, 0));
+        let expected = Color::from_rgb(127, 127, 0);
+        assert_eq!(actual, expected);
     }
 
     #[test]

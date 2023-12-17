@@ -6,7 +6,7 @@ use hyphenation::{Language, Load, Standard};
 use microdot_colors::colors::{Color, ColorScheme, Colors};
 use microdot_core::exporter::{Exporter, NodeHighlight};
 use microdot_core::graph::Graph;
-use microdot_core::hash::extract_hashtags;
+use microdot_core::hash::{extract_hashtags, HashTag};
 use microdot_core::{Id, Label};
 use once_cell::sync::OnceCell;
 use regex::Regex;
@@ -131,7 +131,7 @@ pub fn compile(path: &Path, _display_mode: DisplayMode, format: OutputFormat) ->
 
 pub struct GraphVizExporter {
     nodes: Vec<NodeHtmlLabelViewModel>,
-    subgraphs: HashMap<String, Vec<NodeHtmlLabelViewModel>>,
+    subgraphs: HashMap<HashTag, Vec<NodeHtmlLabelViewModel>>,
     edges: Vec<EdgeViewModel>,
     is_left_right: bool,
     display_mode: DisplayMode,
@@ -179,20 +179,23 @@ impl Exporter for GraphVizExporter {
             NodeHighlight::CurrentNode => Colors::white(),
         };
 
-        let mut hash_tags: Vec<_> = hash_tags
+        let subgraph_id: Option<HashTag> = hash_tags
+            .iter()
+            .find(|t| t.to_string().starts_with("#SG_"))
+            .cloned();
+
+        let hash_tags: Vec<_> = hash_tags
+            .iter()
+            .filter(|t| !t.to_string().starts_with("#SG_"))
+            .collect();
+
+        let hash_tags: Vec<_> = hash_tags
             .iter()
             .map(|tag| HashTagViewModel {
                 label: tag.to_string(),
                 bgcolor: ColorScheme::series(tag.hash()).get_fill_color(),
             })
             .collect();
-
-        let subgraph_id = hash_tags
-            .iter()
-            .find(|t| t.label.starts_with("#SG_"))
-            .map(|t| t.label.clone());
-
-        hash_tags.retain(|t| !t.label.starts_with("#SG_"));
 
         let colspan: usize = if hash_tags.is_empty() {
             1
@@ -210,10 +213,7 @@ impl Exporter for GraphVizExporter {
         };
 
         let target = match subgraph_id {
-            Some(subgraph_id) => {
-                let subgraph_id = subgraph_id.replace("#SG_", "");
-                self.subgraphs.entry(subgraph_id).or_default()
-            }
+            Some(subgraph_id) => self.subgraphs.entry(subgraph_id).or_default(),
             None => &mut self.nodes,
         };
 
@@ -287,7 +287,16 @@ impl GraphVizExporter {
         }
 
         for (subgraph_id, nodes) in self.subgraphs.iter() {
-            built.push_str(&format!("  subgraph cluster_{} {{\n", subgraph_id));
+            let bgcolor = ColorScheme::series(subgraph_id.hash())
+                .get_fill_color()
+                .mix(Colors::white());
+            built.push_str(&format!(
+                "  subgraph cluster_{} {{\n",
+                subgraph_id.to_string().replace("#", "")
+            ));
+            built.push('\n');
+            built.push_str(&format!("  bgcolor=\"{}\"", bgcolor));
+            built.push('\n');
             for node in nodes {
                 let line = node.render().unwrap();
                 built.push_str(&line);
