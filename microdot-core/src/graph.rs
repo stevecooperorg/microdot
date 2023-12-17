@@ -84,7 +84,7 @@ impl Graph {
 
     pub fn apply_command(&mut self, command: GraphCommand) -> CommandResult {
         match command {
-            GraphCommand::DeleteNode { id } => self.delete_node(&id, false),
+            GraphCommand::DeleteNode { id, keep_edges } => self.delete_node(&id, keep_edges),
             GraphCommand::ExpandEdge { id, label } => self.expand_edge(&id, &label),
             GraphCommand::InsertAfterNode { id, label } => self.inject_after_node(&id, &label),
             GraphCommand::InsertBeforeNode { id, label } => self.inject_before_node(&id, &label),

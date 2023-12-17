@@ -98,6 +98,11 @@ fn delete_node<'a>() -> Parser<'a, u8, String> {
     keyword(b"d") * id()
 }
 
+fn delete_node_keep_edge<'a>() -> Parser<'a, u8, String> {
+    // d foo
+    keyword(b"dd") * id()
+}
+
 fn select_node<'a>() -> Parser<'a, u8, String> {
     // d foo
     keyword(b"sel") * id()
@@ -156,8 +161,20 @@ pub fn parse_line(line: Line) -> Command {
         .into();
     }
 
+    if let Ok(res) = delete_node_keep_edge().parse(text) {
+        return GraphCommand::DeleteNode {
+            id: Id::new(res),
+            keep_edges: true,
+        }
+        .into();
+    }
+
     if let Ok(res) = delete_node().parse(text) {
-        return GraphCommand::DeleteNode { id: Id::new(res) }.into();
+        return GraphCommand::DeleteNode {
+            id: Id::new(res),
+            keep_edges: false,
+        }
+        .into();
     }
 
     if let Ok(res) = select_node().parse(text) {

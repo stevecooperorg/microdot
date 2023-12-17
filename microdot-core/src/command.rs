@@ -2,7 +2,7 @@ use crate::{Id, Label};
 
 #[derive(PartialEq, Eq, Debug)]
 pub enum GraphCommand {
-    DeleteNode { id: Id },
+    DeleteNode { id: Id, keep_edges: bool },
     ExpandEdge { id: Id, label: Label },
     InsertAfterNode { id: Id, label: Label },
     InsertBeforeNode { id: Id, label: Label },
@@ -17,7 +17,14 @@ pub enum GraphCommand {
 impl GraphCommand {
     pub fn to_help_string(&self) -> String {
         match self {
-            GraphCommand::DeleteNode { id } => format!("Delete the <{}> node", id),
+            GraphCommand::DeleteNode {
+                id,
+                keep_edges: false,
+            } => format!("Delete the <{}> node", id),
+            GraphCommand::DeleteNode {
+                id,
+                keep_edges: true,
+            } => format!("Delete the <{}> node and keep edges", id),
             GraphCommand::ExpandEdge { id, label } => format!(
                 "Expand the <{}> edge with a new node labelled \"{}\"",
                 id, label
