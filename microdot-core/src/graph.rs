@@ -275,9 +275,14 @@ impl Graph {
                 // delete all edges to or from this node
                 let mut edges_touching: BTreeSet<Id> = Default::default();
 
+                let mut from_nodes: BTreeSet<Id> = Default::default();
+                let mut to_nodes: BTreeSet<Id> = Default::default();
+
                 for edge in &self.edges {
                     if &edge.from == id || &edge.to == id {
                         edges_touching.insert(edge.id.clone());
+                        from_nodes.insert(edge.from.clone());
+                        to_nodes.insert(edge.to.clone());
                     }
                 }
 
@@ -291,6 +296,14 @@ impl Graph {
 
                 if self.current_node == Some(id.clone()) {
                     self.current_node = None;
+                }
+
+                if keep_connected {
+                    for from in &from_nodes {
+                        for to in &to_nodes {
+                            self.link_edge(from, to);
+                        }
+                    }
                 }
 
                 CommandResult::new(format!("node {} removed", id))
