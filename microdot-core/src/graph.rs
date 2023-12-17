@@ -345,8 +345,8 @@ mod tests {
         let (id2, _) = graph.insert_node(Label::new("second node"));
         let (id3, _) = graph.insert_node(Label::new("third node"));
 
-        let e12 = graph.link_edge(&id1, &id2);
-        let e23 = graph.link_edge(&id2, &id3);
+        let _e12 = graph.link_edge(&id1, &id2);
+        let _e23 = graph.link_edge(&id2, &id3);
 
         // delete the middle node - should delete the edges too
         graph.delete_node(&id2, false);
@@ -362,8 +362,8 @@ mod tests {
         let (id2, _) = graph.insert_node(Label::new("second node"));
         let (id3, _) = graph.insert_node(Label::new("third node"));
 
-        let e12 = graph.link_edge(&id1, &id2);
-        let e23 = graph.link_edge(&id2, &id3);
+        let _e12 = graph.link_edge(&id1, &id2);
+        let _e23 = graph.link_edge(&id2, &id3);
 
         // delete the middle node - should delete the edges too
         graph.delete_node(&id2, true);

@@ -179,7 +179,7 @@ impl Exporter for GraphVizExporter {
             NodeHighlight::CurrentNode => Colors::white(),
         };
 
-        let hash_tags: Vec<_> = hash_tags
+        let mut hash_tags: Vec<_> = hash_tags
             .iter()
             .map(|tag| HashTagViewModel {
                 label: tag.to_string(),
@@ -187,16 +187,18 @@ impl Exporter for GraphVizExporter {
             })
             .collect();
 
+        let subgraph_id = hash_tags
+            .iter()
+            .find(|t| t.label.starts_with("#SG_"))
+            .map(|t| t.label.clone());
+
+        hash_tags.retain(|t| !t.label.starts_with("#SG_"));
+
         let colspan: usize = if hash_tags.is_empty() {
             1
         } else {
             hash_tags.len()
         };
-
-        let subgraph_id = hash_tags
-            .iter()
-            .find(|t| t.label.starts_with("#SG_"))
-            .map(|t| t.label.clone());
 
         let label_vm = NodeHtmlLabelViewModel {
             id,

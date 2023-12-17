@@ -431,7 +431,20 @@ mod tests {
 
         assert_parse_command!(
             "d foo",
-            GraphCommand::DeleteNode { id: Id::new("foo") }.into()
+            GraphCommand::DeleteNode {
+                id: Id::new("foo"),
+                keep_edges: false
+            }
+            .into()
+        );
+
+        assert_parse_command!(
+            "dd foo",
+            GraphCommand::DeleteNode {
+                id: Id::new("foo"),
+                keep_edges: true
+            }
+            .into()
         );
 
         assert_parse_command!(

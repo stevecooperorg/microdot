@@ -20,20 +20,16 @@
 <g id="node1" class="node">
 <title>n4</title>
 <polygon fill="#ffffff" stroke="black" points="1732,-191 1444,-191 1444,-119 1732,-119 1732,-191"/>
-<text text-anchor="start" x="1463.88" y="-164.2" font-family="Helvetica,sans-Serif" font-size="10.00">n4</text>
-<text text-anchor="start" x="1474.38" y="-164.2" font-family="Helvetica,sans-Serif" font-size="14.00">: tester installs PR branch code into dev</text>
-<text text-anchor="start" x="1550.5" y="-150.2" font-family="Helvetica,sans-Serif" font-size="14.00">environment</text>
-<polygon fill="#aaab43" stroke="none" points="1463.88,-133.5 1463.88,-148.5 1712.12,-148.5 1712.12,-133.5 1463.88,-133.5"/>
-<text text-anchor="start" x="1553.12" y="-135.2" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">#SG_TEST</text>
+<text text-anchor="start" x="1463.88" y="-156.7" font-family="Helvetica,sans-Serif" font-size="10.00">n4</text>
+<text text-anchor="start" x="1474.38" y="-156.7" font-family="Helvetica,sans-Serif" font-size="14.00">: tester installs PR branch code into dev</text>
+<text text-anchor="start" x="1550.5" y="-142.7" font-family="Helvetica,sans-Serif" font-size="14.00">environment</text>
 </g>
 <!-- n5 -->
 <g id="node2" class="node">
 <title>n5</title>
 <polygon fill="#ffffff" stroke="black" points="2089,-191 1801,-191 1801,-119 2089,-119 2089,-191"/>
-<text text-anchor="start" x="1852.75" y="-157.7" font-family="Helvetica,sans-Serif" font-size="10.00">n5</text>
-<text text-anchor="start" x="1863.25" y="-157.7" font-family="Helvetica,sans-Serif" font-size="14.00">: tester tests PR branch code</text>
-<polygon fill="#aaab43" stroke="none" points="1852.75,-140 1852.75,-155 2037.25,-155 2037.25,-140 1852.75,-140"/>
-<text text-anchor="start" x="1910.12" y="-141.7" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">#SG_TEST</text>
+<text text-anchor="start" x="1852.75" y="-150.2" font-family="Helvetica,sans-Serif" font-size="10.00">n5</text>
+<text text-anchor="start" x="1863.25" y="-150.2" font-family="Helvetica,sans-Serif" font-size="14.00">: tester tests PR branch code</text>
 </g>
 <!-- n4&#45;&gt;n5 -->
 <g id="edge5" class="edge">
@@ -46,10 +42,8 @@
 <g id="node3" class="node">
 <title>n6</title>
 <polygon fill="#ffffff" stroke="black" points="2446,-191 2158,-191 2158,-119 2446,-119 2446,-191"/>
-<text text-anchor="start" x="2235.25" y="-157.7" font-family="Helvetica,sans-Serif" font-size="10.00">n6</text>
-<text text-anchor="start" x="2245.75" y="-157.7" font-family="Helvetica,sans-Serif" font-size="14.00">: tester approves PR</text>
-<polygon fill="#aaab43" stroke="none" points="2235.25,-140 2235.25,-155 2368.75,-155 2368.75,-140 2235.25,-140"/>
-<text text-anchor="start" x="2267.12" y="-141.7" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">#SG_TEST</text>
+<text text-anchor="start" x="2235.25" y="-150.2" font-family="Helvetica,sans-Serif" font-size="10.00">n6</text>
+<text text-anchor="start" x="2245.75" y="-150.2" font-family="Helvetica,sans-Serif" font-size="14.00">: tester approves PR</text>
 </g>
 <!-- n5&#45;&gt;n6 -->
 <g id="edge6" class="edge">
@@ -62,10 +56,8 @@
 <g id="node8" class="node">
 <title>n7</title>
 <polygon fill="#ffffff" stroke="black" points="304,-88 16,-88 16,-16 304,-16 304,-88"/>
-<text text-anchor="start" x="85.38" y="-54.7" font-family="Helvetica,sans-Serif" font-size="10.00">n7</text>
-<text text-anchor="start" x="95.88" y="-54.7" font-family="Helvetica,sans-Serif" font-size="14.00">: developer merges PR</text>
-<polygon fill="#22aeff" stroke="none" points="85.38,-37 85.38,-52 234.62,-52 234.62,-37 85.38,-37"/>
-<text text-anchor="start" x="128.5" y="-38.7" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">#SG_DEV</text>
+<text text-anchor="start" x="85.38" y="-47.2" font-family="Helvetica,sans-Serif" font-size="10.00">n7</text>
+<text text-anchor="start" x="95.88" y="-47.2" font-family="Helvetica,sans-Serif" font-size="14.00">: developer merges PR</text>
 </g>
 <!-- n6&#45;&gt;n7 -->
 <g id="edge7" class="edge">
@@ -78,19 +70,15 @@
 <g id="node4" class="node">
 <title>n0</title>
 <polygon fill="#ffffff" stroke="black" points="304,-196 16,-196 16,-124 304,-124 304,-196"/>
-<text text-anchor="start" x="85.38" y="-162.7" font-family="Helvetica,sans-Serif" font-size="10.00">n0</text>
-<text text-anchor="start" x="95.88" y="-162.7" font-family="Helvetica,sans-Serif" font-size="14.00">: developer writes code</text>
-<polygon fill="#22aeff" stroke="none" points="85.38,-145 85.38,-160 234.62,-160 234.62,-145 85.38,-145"/>
-<text text-anchor="start" x="128.5" y="-146.7" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">#SG_DEV</text>
+<text text-anchor="start" x="85.38" y="-155.2" font-family="Helvetica,sans-Serif" font-size="10.00">n0</text>
+<text text-anchor="start" x="95.88" y="-155.2" font-family="Helvetica,sans-Serif" font-size="14.00">: developer writes code</text>
 </g>
 <!-- n1 -->
 <g id="node5" class="node">
 <title>n1</title>
 <polygon fill="#ffffff" stroke="black" points="661,-195 373,-195 373,-123 661,-123 661,-195"/>
-<text text-anchor="start" x="434.12" y="-161.7" font-family="Helvetica,sans-Serif" font-size="10.00">n1</text>
-<text text-anchor="start" x="444.62" y="-161.7" font-family="Helvetica,sans-Serif" font-size="14.00">: developer commits code</text>
-<polygon fill="#22aeff" stroke="none" points="434.12,-144 434.12,-159 599.88,-159 599.88,-144 434.12,-144"/>
-<text text-anchor="start" x="485.5" y="-145.7" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">#SG_DEV</text>
+<text text-anchor="start" x="434.12" y="-154.2" font-family="Helvetica,sans-Serif" font-size="10.00">n1</text>
+<text text-anchor="start" x="444.62" y="-154.2" font-family="Helvetica,sans-Serif" font-size="14.00">: developer commits code</text>
 </g>
 <!-- n0&#45;&gt;n1 -->
 <g id="edge1" class="edge">
@@ -103,10 +91,8 @@
 <g id="node6" class="node">
 <title>n2</title>
 <polygon fill="#ffffff" stroke="black" points="1018,-193 730,-193 730,-121 1018,-121 1018,-193"/>
-<text text-anchor="start" x="804.25" y="-159.7" font-family="Helvetica,sans-Serif" font-size="10.00">n2</text>
-<text text-anchor="start" x="814.75" y="-159.7" font-family="Helvetica,sans-Serif" font-size="14.00">: developer raises PR</text>
-<polygon fill="#22aeff" stroke="none" points="804.25,-142 804.25,-157 943.75,-157 943.75,-142 804.25,-142"/>
-<text text-anchor="start" x="842.5" y="-143.7" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">#SG_DEV</text>
+<text text-anchor="start" x="804.25" y="-152.2" font-family="Helvetica,sans-Serif" font-size="10.00">n2</text>
+<text text-anchor="start" x="814.75" y="-152.2" font-family="Helvetica,sans-Serif" font-size="14.00">: developer raises PR</text>
 </g>
 <!-- n1&#45;&gt;n2 -->
 <g id="edge2" class="edge">
@@ -119,10 +105,8 @@
 <g id="node7" class="node">
 <title>n3</title>
 <polygon fill="#ffffff" stroke="black" points="1375,-192 1087,-192 1087,-120 1375,-120 1375,-192"/>
-<text text-anchor="start" x="1152.62" y="-158.7" font-family="Helvetica,sans-Serif" font-size="10.00">n3</text>
-<text text-anchor="start" x="1163.12" y="-158.7" font-family="Helvetica,sans-Serif" font-size="14.00">: developer2 reviews PR</text>
-<polygon fill="#22aeff" stroke="none" points="1152.62,-141 1152.62,-156 1309.38,-156 1309.38,-141 1152.62,-141"/>
-<text text-anchor="start" x="1199.5" y="-142.7" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">#SG_DEV</text>
+<text text-anchor="start" x="1152.62" y="-151.2" font-family="Helvetica,sans-Serif" font-size="10.00">n3</text>
+<text text-anchor="start" x="1163.12" y="-151.2" font-family="Helvetica,sans-Serif" font-size="14.00">: developer2 reviews PR</text>
 </g>
 <!-- n2&#45;&gt;n3 -->
 <g id="edge3" class="edge">
