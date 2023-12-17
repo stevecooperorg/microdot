@@ -1,6 +1,7 @@
 use crate::command::GraphCommand;
 use crate::exporter::{Exporter, NodeHighlight};
 use crate::{CommandResult, Id, Label};
+use std::collections::BTreeSet;
 
 #[derive(Default)]
 pub struct Graph {
@@ -83,7 +84,7 @@ impl Graph {
 
     pub fn apply_command(&mut self, command: GraphCommand) -> CommandResult {
         match command {
-            GraphCommand::DeleteNode { id } => self.delete_node(&id),
+            GraphCommand::DeleteNode { id } => self.delete_node(&id, false),
             GraphCommand::ExpandEdge { id, label } => self.expand_edge(&id, &label),
             GraphCommand::InsertAfterNode { id, label } => self.inject_after_node(&id, &label),
             GraphCommand::InsertBeforeNode { id, label } => self.inject_before_node(&id, &label),
@@ -268,15 +269,15 @@ impl Graph {
         CommandResult::new(format!("Added edge {} from {} to {}", id, from, to))
     }
 
-    fn delete_node(&mut self, id: &Id) -> CommandResult {
+    fn delete_node(&mut self, id: &Id, keep_connected: bool) -> CommandResult {
         match self.find_node_idx(id) {
             Some(idx) => {
                 // delete all edges to or from this node
-                let mut edges_touching: Vec<Id> = vec![];
+                let mut edges_touching: BTreeSet<Id> = Default::default();
 
                 for edge in &self.edges {
-                    if (&edge.from == id || &edge.to == id) && !edges_touching.contains(&edge.id) {
-                        edges_touching.push(edge.id.clone())
+                    if &edge.from == id || &edge.to == id {
+                        edges_touching.insert(edge.id.clone());
                     }
                 }
 
@@ -322,5 +323,39 @@ mod tests {
         assert_eq!(graph.current_node, Some(id2));
         graph.select_node(&id1);
         assert_eq!(graph.current_node, Some(id1));
+    }
+
+    #[test]
+    fn can_delete_a_node() {
+        let mut graph = Graph::new();
+        let (id1, _) = graph.insert_node(Label::new("first node"));
+        let (id2, _) = graph.insert_node(Label::new("second node"));
+        let (id3, _) = graph.insert_node(Label::new("third node"));
+
+        let e12 = graph.link_edge(&id1, &id2);
+        let e23 = graph.link_edge(&id2, &id3);
+
+        // delete the middle node - should delete the edges too
+        graph.delete_node(&id2, false);
+
+        assert_eq!(graph.nodes.len(), 2);
+        assert_eq!(graph.edges.len(), 0);
+    }
+
+    #[test]
+    fn can_delete_a_node_but_keep_edges() {
+        let mut graph = Graph::new();
+        let (id1, _) = graph.insert_node(Label::new("first node"));
+        let (id2, _) = graph.insert_node(Label::new("second node"));
+        let (id3, _) = graph.insert_node(Label::new("third node"));
+
+        let e12 = graph.link_edge(&id1, &id2);
+        let e23 = graph.link_edge(&id2, &id3);
+
+        // delete the middle node - should delete the edges too
+        graph.delete_node(&id2, true);
+
+        assert_eq!(graph.nodes.len(), 2);
+        assert_eq!(graph.edges.len(), 1);
     }
 }
