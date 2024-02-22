@@ -3,12 +3,6 @@ use std::collections::hash_map::DefaultHasher;
 use std::collections::HashSet;
 use std::hash::{Hash, Hasher};
 
-#[derive(PartialEq, Eq, Debug)]
-pub enum HashState {
-    None,
-    Hashed(usize),
-}
-
 #[derive(PartialEq, Eq, Debug, Hash, Clone)]
 pub struct HashTag {
     tag: String,
@@ -58,22 +52,6 @@ pub fn extract_hashtags(input: &str) -> (Vec<HashTag>, String) {
     (hashtags, new_label)
 }
 
-#[allow(dead_code)]
-fn hashtag_signature(input: &str) -> HashState {
-    let (hashes, _) = extract_hashtags(input);
-    if hashes.is_empty() {
-        return HashState::None;
-    }
-
-    let combo = hashes
-        .into_iter()
-        .map(|hash| hash.tag)
-        .collect::<Vec<_>>()
-        .join("");
-    let hash = generate_hash(&combo);
-    HashState::Hashed(hash)
-}
-
 fn generate_hash(input: &str) -> usize {
     let mut s = DefaultHasher::new();
     input.hash(&mut s);
@@ -115,32 +93,5 @@ mod tests {
                 "a #hashtag at the".to_string()
             )
         );
-    }
-
-    #[test]
-    fn it_calculates_hashtag_signatures() {
-        fn eq(a: &str, b: &str) {
-            let ai = hashtag_signature(a);
-            let bi = hashtag_signature(b);
-            assert_eq!(
-                ai, bi,
-                "signatures are not the same for '{}' and '{}'",
-                a, b
-            )
-        }
-
-        fn ne(a: &str, b: &str) {
-            let ai = hashtag_signature(a);
-            let bi = hashtag_signature(b);
-            assert_ne!(ai, bi, "signatures are the same for '{}' and '{}'", a, b)
-        }
-
-        assert_eq!(HashState::None, hashtag_signature("no hashtags here"));
-        assert_ne!(HashState::None, hashtag_signature("hashtag! #HASH"));
-        eq("a #HASH", "b #HASH");
-        eq("#HASH a", "a #HASH");
-        eq("#A #B", "#B #A");
-        eq("#A #A", "#A");
-        ne("#HASHA a", "a #HASHB");
     }
 }
