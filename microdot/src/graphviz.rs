@@ -5,8 +5,8 @@ use command_macros::cmd;
 use hyphenation::{Language, Load, Standard};
 use microdot_colors::colors::{Color, ColorScheme, Colors};
 use microdot_core::exporter::{Exporter, NodeHighlight};
-use microdot_core::graph::Graph;
-use microdot_core::hash::{extract_hashtags, HashTag};
+use microdot_core::graph::{Graph, NodeInfo};
+use microdot_core::hash::{HashTag};
 use microdot_core::{Id, Label};
 use once_cell::sync::OnceCell;
 use regex::Regex;
@@ -162,9 +162,9 @@ impl Exporter for GraphVizExporter {
             Options::new(wrap_size).word_splitter(splitter)
         };
 
-        let base_label = &label.to_string();
-
-        let (hash_tags, label_text) = extract_hashtags(base_label);
+        let NodeInfo {
+            label: label_text, tags, variables: _, subgraph
+        } = NodeInfo::parse(label);
 
         let id = match self.display_mode {
             DisplayMode::Interactive => id.to_string(),
@@ -179,17 +179,7 @@ impl Exporter for GraphVizExporter {
             NodeHighlight::CurrentNode => Colors::white(),
         };
 
-        let subgraph_id: Option<HashTag> = hash_tags
-            .iter()
-            .find(|t| t.to_string().starts_with("#SG_"))
-            .cloned();
-
-        let hash_tags: Vec<_> = hash_tags
-            .iter()
-            .filter(|t| !t.to_string().starts_with("#SG_"))
-            .collect();
-
-        let hash_tags: Vec<_> = hash_tags
+        let hash_tags: Vec<_> = tags
             .iter()
             .map(|tag| HashTagViewModel {
                 label: tag.to_string(),
@@ -212,7 +202,7 @@ impl Exporter for GraphVizExporter {
             bgcolor,
         };
 
-        let target = match subgraph_id {
+        let target = match subgraph {
             Some(subgraph_id) => self.subgraphs.entry(subgraph_id).or_default(),
             None => &mut self.nodes,
         };
@@ -292,7 +282,7 @@ impl GraphVizExporter {
                 .mix(Colors::white());
             built.push_str(&format!(
                 "  subgraph cluster_{} {{\n",
-                subgraph_id.to_string().replace("#", "")
+                subgraph_id.to_string().replace('#', "")
             ));
             built.push('\n');
             built.push_str(&format!("  bgcolor=\"{}\"", bgcolor));

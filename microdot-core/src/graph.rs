@@ -2,6 +2,7 @@ use crate::command::GraphCommand;
 use crate::exporter::{Exporter, NodeHighlight};
 use crate::{CommandResult, Id, Label};
 use std::collections::BTreeSet;
+use crate::hash::{extract_hashtags, HashTag};
 
 #[derive(Default)]
 pub struct Graph {
@@ -18,6 +19,68 @@ struct Node {
     id: Id,
     label: Label,
 }
+
+pub enum VariableValue {
+    String(String),
+    Number(f64),
+    Boolean(bool),
+    Time(Time)
+}
+
+pub enum Time {
+    Minute(u32),
+    Hour(u32),
+    Day(u32),
+    Month(u32),
+    Year(u32)
+}
+
+pub struct Variable {
+    pub name: String,
+    pub value: VariableValue
+}
+
+pub struct NodeInfo {
+    pub label: String,
+    pub tags: Vec<HashTag>,
+    pub variables: Vec<Variable>,
+    pub subgraph: Option<HashTag>
+}
+
+impl NodeInfo {
+    pub fn new(label: String) -> Self {
+        NodeInfo {
+            label,
+            tags: Vec::new(),
+            variables: Vec::new(),
+            subgraph: None
+        }
+    }
+    pub fn parse(label: &Label) -> Self {
+        let base_label = &label.to_string();
+
+        let (tags, label) = extract_hashtags(base_label);
+
+        let subgraph: Option<HashTag> = tags
+            .iter()
+            .find(|t| t.to_string().starts_with("#SG_"))
+            .cloned();
+
+        let tags: Vec<_> = tags
+            .into_iter()
+            .filter(|t| !t.to_string().starts_with("#SG_"))
+            .collect();
+
+
+        NodeInfo {
+            label,
+            tags,
+            variables: Vec::new(),
+            subgraph
+        }
+    }
+}
+
 
 struct Edge {
     id: Id,
