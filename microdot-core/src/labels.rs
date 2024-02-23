@@ -120,4 +120,17 @@ mod tests {
         };
         assert_eq!(actual, expected);
     }
+
+    #[test]
+    fn it_parses_node_label_with_end_subgraph() {
+
+        let actual = NodeInfo::parse(&Label("a #hashtag in the middle and a #SG_SUBGRAPH".to_string()));
+        let expected = NodeInfo {
+            label: "a #hashtag in the middle and a".to_string(),
+            tags: vec![HashTag::new("#hashtag")],
+            variables: Vec::new(),
+            subgraph: Some(HashTag::new("#SG_SUBGRAPH"))
+        };
+        assert_eq!(actual, expected);
+    }
 }
