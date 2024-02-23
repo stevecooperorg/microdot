@@ -19,12 +19,15 @@ struct Node {
     label: Label,
 }
 
+#[derive(Debug, PartialEq, Clone)]
 pub enum VariableValue {
     String(String),
     Number(f64),
     Boolean(bool),
     Time(Time)
 }
+
+#[derive(Debug, PartialEq, Eq, Clone)]
 
 pub enum Time {
     Minute(u32),
@@ -34,6 +37,7 @@ pub enum Time {
     Year(u32)
 }
 
+#[derive(Debug, PartialEq, Clone)]
 pub struct Variable {
     pub name: String,
     pub value: VariableValue

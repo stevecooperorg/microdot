@@ -4,6 +4,7 @@ use crate::graph::Variable;
 use crate::hash::HashTag;
 use crate::Label;
 
+#[derive(Debug, PartialEq, Clone)]
 pub struct NodeInfo {
     pub label: String,
     pub tags: Vec<HashTag>,
@@ -12,7 +13,8 @@ pub struct NodeInfo {
 }
 
 impl NodeInfo {
-    pub fn new(label: String) -> Self {
+    pub fn new(label: impl Into<String>) -> Self {
+        let label = label.into();
         NodeInfo {
             label,
             tags: Vec::new(),
@@ -45,7 +47,8 @@ impl NodeInfo {
     }
 }
 
-fn extract_hashtags(input: &str) -> (Vec<HashTag>, String) {
+fn extract_hashtags(input: impl AsRef<str>) -> (Vec<HashTag>, String) {
+    let input = input.as_ref();
     let rx = Regex::new("#[A-Za-z][A-Za-z0-9_-]*").expect("not a regex");
     let mut hashes = HashSet::new();
     for hash in rx.captures_iter(input) {
@@ -82,29 +85,39 @@ mod tests {
     use super::*;
 
     #[test]
-    fn it_extracts_hashtags() {
-        let actual = extract_hashtags("no hashtags");
-        assert_eq!(actual, (vec![], "no hashtags".to_string()));
+    fn it_parses_node_label_with_no_markup() {
+        let actual = NodeInfo::parse(&Label("no hashtags".to_string()));
+        let expected = NodeInfo {
+            label: "no hashtags".to_string(),
+            tags: Vec::new(),
+            variables: Vec::new(),
+            subgraph: None
+        };
+        assert_eq!(actual, expected);
 
-        let actual = extract_hashtags("a #hashtag in the middle");
-        assert_eq!(
-            actual,
-            (
-                vec![HashTag::new("#hashtag")],
-                "a #hashtag in the middle".to_string()
-            )
-        );
+    }
+    #[test]
+    fn it_parses_node_label_with_inner_hashtag() {
 
-        let actual = extract_hashtags("a #hashtag at the #end");
-        assert_eq!(
-            actual,
-            (
-                vec![
-                    HashTag::new("#end"),
-                    HashTag::new("#hashtag")
-                ],
-                "a #hashtag at the".to_string()
-            )
-        );
+        let actual = NodeInfo::parse(&Label("a #hashtag in the middle".to_string()));
+        let expected = NodeInfo {
+            label: "a #hashtag in the middle".to_string(),
+            tags: vec![HashTag::new("#hashtag")],
+            variables: Vec::new(),
+            subgraph: None
+        };
+        assert_eq!(actual, expected);
+    }
+    #[test]
+    fn it_parses_node_label_with_end_hashtag() {
+
+        let actual = NodeInfo::parse(&Label("a #hashtag at the #end".to_string()));
+        let expected = NodeInfo {
+            label: "a #hashtag at the".to_string(),
+            tags: vec![HashTag::new("#end"), HashTag::new("#hashtag")],
+            variables: Vec::new(),
+            subgraph: None
+        };
+        assert_eq!(actual, expected);
     }
 }
