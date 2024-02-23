@@ -2,6 +2,7 @@ pub mod command;
 pub mod exporter;
 pub mod graph;
 pub mod hash;
+pub mod labels;
 
 macro_rules! new_string_type {
     ($id: ident) => {

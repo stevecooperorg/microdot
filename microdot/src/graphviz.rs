@@ -5,7 +5,7 @@ use command_macros::cmd;
 use hyphenation::{Language, Load, Standard};
 use microdot_colors::colors::{Color, ColorScheme, Colors};
 use microdot_core::exporter::{Exporter, NodeHighlight};
-use microdot_core::graph::{Graph, NodeInfo};
+use microdot_core::graph::{Graph};
 use microdot_core::hash::{HashTag};
 use microdot_core::{Id, Label};
 use once_cell::sync::OnceCell;
@@ -17,6 +17,7 @@ use std::path::Path;
 use std::process::{Command, Output, Stdio};
 use textwrap::wrap_algorithms::{wrap_optimal_fit, Penalties};
 use textwrap::{fill, Options, WordSplitter};
+use microdot_core::labels::NodeInfo;
 
 macro_rules! hashmap {
     (@single $($x:tt)*) => (());
