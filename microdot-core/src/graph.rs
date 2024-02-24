@@ -3,6 +3,7 @@ use crate::exporter::{Exporter, NodeHighlight};
 use crate::{CommandResult, Id, Label};
 use regex::Regex;
 use std::collections::BTreeSet;
+use std::fmt::{Display, Formatter};
 use std::hash::{Hash, Hasher};
 
 #[derive(Default)]
@@ -69,12 +70,10 @@ impl VariableValue {
             VariableValue::Boolean(value.parse().unwrap())
         } else if let Ok(n) = value.parse() {
             VariableValue::Number(n)
+        } else if let Some(time) = Time::parse(&value) {
+            VariableValue::Time(time)
         } else {
-            if let Some(time) = Time::parse(&value) {
-                VariableValue::Time(time)
-            } else {
-                VariableValue::String(value)
-            }
+            VariableValue::String(value)
         }
     }
 
@@ -111,17 +110,19 @@ impl PartialEq for Time {
     }
 }
 
-impl Time {
-    pub fn to_string(&self) -> String {
+impl Display for Time {
+    fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
         match self {
-            Time::Minute(m) => format!("{} minutes", m),
-            Time::Hour(h) => format!("{} hours", h),
-            Time::Day(d) => format!("{} days", d),
-            Time::Month(m) => format!("{} months", m),
-            Time::Year(y) => format!("{} years", y),
+            Time::Minute(m) => write!(f, "{} minutes", m),
+            Time::Hour(h) => write!(f, "{} hours", h),
+            Time::Day(d) => write!(f, "{} days", d),
+            Time::Month(m) => write!(f, "{} months", m),
+            Time::Year(y) => write!(f, "{} years", y),
         }
     }
+}
 
+impl Time {
     pub fn to_minutes(&self) -> u32 {
         match self {
             Time::Minute(m) => *m,

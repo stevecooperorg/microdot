@@ -53,8 +53,8 @@ fn extract_variables(input: impl AsRef<str>) -> (Vec<Variable>, String) {
     let rx = Regex::new("\\$([A-Za-z][A-Za-z0-9_-]*)=([A-Za-z0-9_-]+)").expect("not a regex");
     let mut variables = HashSet::new();
     for (_, [name, value]) in rx.captures_iter(input).map(|c| c.extract()) {
-        let variableValue = VariableValue::infer(value);
-        let variable = Variable::new(name, variableValue);
+        let variable_value = VariableValue::infer(value);
+        let variable = Variable::new(name, variable_value);
         variables.insert(variable);
     }
 
@@ -135,7 +135,7 @@ mod tests {
         for (input, expected) in variables {
             assert!(rx.is_match(input), "could not match variable: {}", input);
             let actual = Variable::parse(input)
-                .expect(format!("could not parse variable: {}", input).as_str());
+                .unwrap_or_else(|| panic!("could not parse variable: {}", input));
             assert_eq!(actual, expected);
         }
     }
