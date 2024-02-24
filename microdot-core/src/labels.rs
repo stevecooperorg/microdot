@@ -1,4 +1,4 @@
-use crate::graph::{Variable, VariableValue};
+use crate::graph::Variable;
 use crate::hash::HashTag;
 use crate::Label;
 use regex::Regex;
@@ -39,6 +39,8 @@ impl NodeInfo {
             .filter(|t| !t.to_string().starts_with("#SG_"))
             .collect();
 
+        let label = label.trim().to_string();
+
         NodeInfo {
             label,
             tags,
@@ -49,13 +51,18 @@ impl NodeInfo {
 }
 
 fn extract_variables(input: impl AsRef<str>) -> (Vec<Variable>, String) {
-    let input = input.as_ref();
-    let rx = Regex::new("\\$([A-Za-z][A-Za-z0-9_-]*)=([A-Za-z0-9_-]+)").expect("not a regex");
+    // extract variables and remove padding whitespace
+    let mut input = input.as_ref().to_string();
+
     let mut variables = HashSet::new();
-    for (_, [name, value]) in rx.captures_iter(input).map(|c| c.extract()) {
-        let variable_value = VariableValue::infer(value);
-        let variable = Variable::new(name, variable_value);
+    let rx = Variable::variable_rx();
+    while let Some(caps) = rx.captures(&input) {
+        let cap = caps.get(0).unwrap();
+        let captured_str = cap.as_str();
+        let variable = Variable::parse(captured_str)
+            .unwrap_or_else(|| panic!("could not parse variable: {}", captured_str));
         variables.insert(variable);
+        input.replace_range(cap.start()..cap.end(), "");
     }
 
     let variables = variables.into_iter().collect();
@@ -96,7 +103,7 @@ fn extract_hashtags(input: impl AsRef<str>) -> (Vec<HashTag>, String) {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::graph::Time;
+    use crate::graph::{Time, VariableValue};
 
     #[test]
     fn it_matches_variables() {
@@ -131,9 +138,7 @@ mod tests {
             ),
         ];
 
-        let rx = Variable::variable_rx();
         for (input, expected) in variables {
-            assert!(rx.is_match(input), "could not match variable: {}", input);
             let actual = Variable::parse(input)
                 .unwrap_or_else(|| panic!("could not parse variable: {}", input));
             assert_eq!(actual, expected);
@@ -192,7 +197,7 @@ mod tests {
     fn it_parses_node_label_with_boolean_variable() {
         let actual = NodeInfo::parse(&Label("positive choice $choice=true".to_string()));
         let expected = NodeInfo {
-            label: "a positive choice".to_string(),
+            label: "positive choice".to_string(),
             tags: vec![],
             variables: vec![Variable::boolean("choice", true)],
             subgraph: None,
