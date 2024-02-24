@@ -1,7 +1,9 @@
 use crate::command::GraphCommand;
 use crate::exporter::{Exporter, NodeHighlight};
 use crate::{CommandResult, Id, Label};
+use regex::Regex;
 use std::collections::BTreeSet;
+use std::hash::{Hash, Hasher};
 
 #[derive(Default)]
 pub struct Graph {
@@ -19,28 +21,171 @@ struct Node {
     label: Label,
 }
 
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Debug, Clone)]
 pub enum VariableValue {
     String(String),
     Number(f64),
     Boolean(bool),
-    Time(Time)
+    Time(Time),
 }
 
-#[derive(Debug, PartialEq, Eq, Clone)]
+impl Eq for VariableValue {}
+
+impl PartialEq for VariableValue {
+    fn eq(&self, other: &Self) -> bool {
+        match (self, other) {
+            (VariableValue::String(s1), VariableValue::String(s2)) => s1 == s2,
+            (VariableValue::Number(n1), VariableValue::Number(n2)) => n1 == n2,
+            (VariableValue::Boolean(b1), VariableValue::Boolean(b2)) => b1 == b2,
+            (VariableValue::Time(t1), VariableValue::Time(t2)) => t1 == t2,
+            _ => false,
+        }
+    }
+}
+impl Hash for VariableValue {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        match self {
+            VariableValue::String(s) => s.hash(state),
+            VariableValue::Number(n) => n.to_string().hash(state),
+            VariableValue::Boolean(b) => b.hash(state),
+            VariableValue::Time(t) => t.to_string().hash(state),
+        }
+    }
+}
+
+impl VariableValue {
+    pub fn as_string(&self) -> String {
+        match self {
+            VariableValue::String(s) => s.clone(),
+            VariableValue::Number(n) => n.to_string(),
+            VariableValue::Boolean(b) => b.to_string(),
+            VariableValue::Time(t) => t.to_string(),
+        }
+    }
+
+    pub fn infer(value: impl Into<String>) -> Self {
+        let value = value.into();
+        if value == "true" || value == "false" {
+            VariableValue::Boolean(value.parse().unwrap())
+        } else if let Ok(n) = value.parse() {
+            VariableValue::Number(n)
+        } else {
+            if let Some(time) = Time::parse(&value) {
+                VariableValue::Time(time)
+            } else {
+                VariableValue::String(value)
+            }
+        }
+    }
+
+    pub fn boolean(value: bool) -> Self {
+        VariableValue::Boolean(value)
+    }
+
+    pub fn number(value: f64) -> Self {
+        VariableValue::Number(value)
+    }
+
+    pub fn string(value: impl Into<String>) -> Self {
+        VariableValue::String(value.into())
+    }
+
+    pub fn time(value: Time) -> Self {
+        VariableValue::Time(value)
+    }
+}
+
+#[derive(Debug, Clone)]
 
 pub enum Time {
     Minute(u32),
     Hour(u32),
     Day(u32),
     Month(u32),
-    Year(u32)
+    Year(u32),
 }
 
-#[derive(Debug, PartialEq, Clone)]
+impl PartialEq for Time {
+    fn eq(&self, other: &Self) -> bool {
+        self.to_minutes() == other.to_minutes()
+    }
+}
+
+impl Time {
+    pub fn to_string(&self) -> String {
+        match self {
+            Time::Minute(m) => format!("{} minutes", m),
+            Time::Hour(h) => format!("{} hours", h),
+            Time::Day(d) => format!("{} days", d),
+            Time::Month(m) => format!("{} months", m),
+            Time::Year(y) => format!("{} years", y),
+        }
+    }
+
+    pub fn to_minutes(&self) -> u32 {
+        match self {
+            Time::Minute(m) => *m,
+            Time::Hour(h) => h * 60,
+            Time::Day(d) => d * 60 * 24,
+            Time::Month(m) => m * 60 * 24 * 30,
+            Time::Year(y) => y * 60 * 24 * 365,
+        }
+    }
+
+    pub fn parse(input: &str) -> Option<Self> {
+        let rx = Regex::new(r"(\d+)\s*(m|h|d|M|y)").expect("not a regex");
+        if let Some(caps) = rx.captures(input) {
+            let value = caps.get(1).unwrap().as_str().parse().unwrap();
+            let unit = caps.get(2).unwrap().as_str();
+            match unit {
+                "m" => Some(Time::Minute(value)),
+                "h" => Some(Time::Hour(value)),
+                "d" => Some(Time::Day(value)),
+                "M" => Some(Time::Month(value)),
+                "y" => Some(Time::Year(value)),
+                _ => None,
+            }
+        } else {
+            None
+        }
+    }
+}
+
+#[derive(Debug, PartialEq, Eq, Hash, Clone)]
 pub struct Variable {
     pub name: String,
-    pub value: VariableValue
+    pub value: VariableValue,
+}
+
+impl Variable {
+    pub fn new(name: impl Into<String>, value: VariableValue) -> Self {
+        Variable {
+            name: name.into(),
+            value,
+        }
+    }
+    pub fn boolean(name: impl Into<String>, value: bool) -> Self {
+        Variable {
+            name: name.into(),
+            value: VariableValue::Boolean(value),
+        }
+    }
+
+    pub fn variable_rx() -> Regex {
+        Regex::new("\\$([A-Za-z][A-Za-z0-9_-]*)=([A-Za-z0-9_-]+)").expect("not a regex")
+    }
+
+    pub fn parse(input: &str) -> Option<Self> {
+        let rx = Variable::variable_rx();
+        if let Some(caps) = rx.captures(input) {
+            let name = caps.get(1).unwrap().as_str();
+            let value = caps.get(2).unwrap().as_str();
+            let value = VariableValue::infer(value);
+            Some(Variable::new(name, value))
+        } else {
+            None
+        }
+    }
 }
 
 struct Edge {
