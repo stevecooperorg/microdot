@@ -46,8 +46,10 @@ impl PGraph {
     }
 }
 
-#[allow(dead_code)]
-fn find_shortest_path(graph: &Graph, get_weights: impl GetWeight<crate::graph::Node>) -> Vec<Id> {
+pub fn find_shortest_path(
+    graph: &Graph,
+    get_weights: impl GetWeight<crate::graph::Node>,
+) -> Vec<Id> {
     // convert our graph to a petgraph so we can use the algorithms;
     let mut pgraph: PGraph = PGraph::new();
     graph.to_petgraph(&mut pgraph, get_weights);
@@ -94,9 +96,18 @@ fn find_shortest_path(graph: &Graph, get_weights: impl GetWeight<crate::graph::N
     }
 }
 
-struct CostCalculator {
+pub struct CostCalculator {
     variable_name: String,
     find_longest: bool,
+}
+
+impl CostCalculator {
+    pub fn new(variable_name: impl Into<String>, find_longest: bool) -> Self {
+        CostCalculator {
+            variable_name: variable_name.into(),
+            find_longest,
+        }
+    }
 }
 
 impl GetWeight<Node> for CostCalculator {
@@ -122,8 +133,6 @@ impl GetWeight<Node> for CostCalculator {
 #[cfg(test)]
 pub mod tests {
     use super::*;
-    use crate::graph::VariableValue;
-    use crate::labels::NodeInfo;
     use crate::Label;
 
     fn uniform_weight<T>(_node: &T) -> Weight {
@@ -195,22 +204,10 @@ pub mod tests {
         graph.link_edge(&q2, &q3);
         graph.link_edge(&q3, &q4);
 
-        let longest_path = find_shortest_path(
-            &graph,
-            CostCalculator {
-                variable_name: "cost".to_string(),
-                find_longest: true,
-            },
-        );
+        let longest_path = find_shortest_path(&graph, CostCalculator::new("cost", true));
         assert_eq!(longest_path, vec![q1.clone(), s1, q4.clone()]);
 
-        let shortest_path = find_shortest_path(
-            &graph,
-            CostCalculator {
-                variable_name: "cost".to_string(),
-                find_longest: false,
-            },
-        );
+        let shortest_path = find_shortest_path(&graph, CostCalculator::new("cost", false));
         assert_eq!(shortest_path, vec![q1, q2, q3, q4]);
     }
 }

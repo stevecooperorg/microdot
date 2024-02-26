@@ -5,6 +5,7 @@ use crate::util::write_if_different;
 use crate::{graphviz, svg, Command, Interaction};
 use anyhow::{anyhow, Result};
 use microdot_core::graph::Graph;
+use microdot_core::pet::{find_shortest_path, CostCalculator};
 use microdot_core::{CommandResult, Line};
 use rustyline::error::ReadlineError;
 use std::path::{Path, PathBuf};
@@ -75,6 +76,24 @@ pub fn repl<I: Interaction>(
                     }
                     Command::Save => {
                         interaction.log(format!("saving to {}", json_file.to_string_lossy()));
+                        true
+                    }
+                    Command::CriticalPathAnalysis { variable_name } => {
+                        let graph = graph.read().unwrap();
+                        interaction.log(format!(
+                            "performing critical path analysis using variable {}",
+                            variable_name
+                        ));
+
+                        let shortest_path =
+                            find_shortest_path(&graph, CostCalculator::new(variable_name, true));
+
+                        for (i, node) in shortest_path.iter().enumerate() {
+                            if let Some(label) = graph.find_node_label(node) {
+                                interaction.log(format!("Step {}: {}", i + 1, label));
+                            }
+                        }
+
                         true
                     }
                     Command::ParseError { .. } => {

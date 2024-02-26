@@ -6,16 +6,16 @@ digraph {
 
     n0 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
-        <TD COLSPAN="2"><FONT POINT-SIZE="10">n0</FONT>: first step</TD>
+        <TD COLSPAN="2"><FONT POINT-SIZE="10">n0</FONT>: init project</TD>
     </TR>
     
         
            <TR>
-<TD BGCOLOR="#F37FC0"><FONT COLOR="#000000">cost=4</FONT></TD>
+<TD BGCOLOR="#F37FC0"><FONT COLOR="#000000">cost=5</FONT></TD>
 </TR>
         
            <TR>
-<TD BGCOLOR="#22AEFF"><FONT COLOR="#000000">t=4 days</FONT></TD>
+<TD BGCOLOR="#22AEFF"><FONT COLOR="#000000">t=1 days</FONT></TD>
 </TR>
         
     
@@ -23,20 +23,84 @@ digraph {
 > fillcolor="#FFFFFF"]
     n1 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
-        <TD COLSPAN="3"><FONT POINT-SIZE="10">n1</FONT>: second step</TD>
+        <TD COLSPAN="2"><FONT POINT-SIZE="10">n1</FONT>: quick next step</TD>
     </TR>
     
         
            <TR>
+<TD BGCOLOR="#22AEFF"><FONT COLOR="#000000">t=10 minutes</FONT></TD>
+</TR>
+        
+           <TR>
+<TD BGCOLOR="#F37FC0"><FONT COLOR="#000000">cost=1</FONT></TD>
+</TR>
+        
+    
+   </TABLE>
+> fillcolor="#FFFFFF"]
+    n2 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    <TR>
+        <TD COLSPAN="2"><FONT POINT-SIZE="10">n2</FONT>: rapid but hard</TD>
+    </TR>
+    
+        
+           <TR>
+<TD BGCOLOR="#22AEFF"><FONT COLOR="#000000">t=10 minutes</FONT></TD>
+</TR>
+        
+           <TR>
 <TD BGCOLOR="#F37FC0"><FONT COLOR="#000000">cost=9</FONT></TD>
+</TR>
+        
+    
+   </TABLE>
+> fillcolor="#FFFFFF"]
+    n3 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    <TR>
+        <TD COLSPAN="2"><FONT POINT-SIZE="10">n3</FONT>: rapid and easy</TD>
+    </TR>
+    
+        
+           <TR>
+<TD BGCOLOR="#F37FC0"><FONT COLOR="#000000">cost=1</FONT></TD>
+</TR>
+        
+           <TR>
+<TD BGCOLOR="#22AEFF"><FONT COLOR="#000000">t=10 minutes</FONT></TD>
+</TR>
+        
+    
+   </TABLE>
+> fillcolor="#FFFFFF"]
+    n4 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    <TR>
+        <TD COLSPAN="2"><FONT POINT-SIZE="10">n4</FONT>: end</TD>
+    </TR>
+    
+        
+           <TR>
+<TD BGCOLOR="#F37FC0"><FONT COLOR="#000000">cost=1</FONT></TD>
 </TR>
         
            <TR>
 <TD BGCOLOR="#22AEFF"><FONT COLOR="#000000">t=1 days</FONT></TD>
 </TR>
         
+    
+   </TABLE>
+> fillcolor="#FFFFFF"]
+    n5 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    <TR>
+        <TD COLSPAN="2"><FONT POINT-SIZE="10">n5</FONT>: slow and easy</TD>
+    </TR>
+    
+        
            <TR>
-<TD BGCOLOR="#E2954D"><FONT COLOR="#000000">slack=6 hours</FONT></TD>
+<TD BGCOLOR="#F37FC0"><FONT COLOR="#000000">cost=1</FONT></TD>
+</TR>
+        
+           <TR>
+<TD BGCOLOR="#22AEFF"><FONT COLOR="#000000">t=1 days</FONT></TD>
 </TR>
         
     
@@ -44,5 +108,10 @@ digraph {
 > fillcolor="#FFFFFF"]
 
     "n0" -> "n1" [label="e0"];
+    "n1" -> "n2" [label="e1"];
+    "n2" -> "n3" [label="e2"];
+    "n3" -> "n4" [label="e3"];
+    "n1" -> "n5" [label="e4"];
+    "n5" -> "n4" [label="e5"];
 
 }

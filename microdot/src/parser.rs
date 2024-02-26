@@ -76,6 +76,10 @@ fn search<'a>() -> Parser<'a, u8, String> {
     (keyword(b"search") | keyword(b"s") | keyword(b"/")) * label()
 }
 
+fn crit<'a>() -> Parser<'a, u8, String> {
+    (keyword(b"crit")) * label()
+}
+
 fn exit<'a>() -> Parser<'a, u8, ()> {
     keyword(b"exit").discard()
 }
@@ -270,6 +274,9 @@ pub fn parse_line(line: Line) -> Command {
             sub_label: Label::new(sub_label),
         };
     }
+    if let Ok(variable_name) = crit().parse(text) {
+        return Command::CriticalPathAnalysis { variable_name };
+    }
 
     Command::ParseError { line }
 }
@@ -355,6 +362,7 @@ mod tests {
         assert_consumes_all![print_json(), b"j", ()];
         assert_consumes_all![print_json(), b"json", ()];
         assert_consumes_all![save(), b"save", ()];
+        assert_consumes_all![crit(), b"crit cost", "cost"];
         assert_consumes_all![search(), b"/foo", "foo"];
         assert_consumes_all![search(), b"s foo", "foo"];
         assert_consumes_all![search(), b"search foo", "foo"];

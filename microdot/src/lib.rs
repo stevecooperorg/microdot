@@ -20,6 +20,7 @@ pub enum Command {
     PrintJson,
     RenameNodeUnlabelled { id: Id },
     Save,
+    CriticalPathAnalysis { variable_name: String },
     Show,
     Exit,
     ParseError { line: Line },
@@ -40,6 +41,7 @@ impl Command {
                 format!("rename <{}> but no new label text supplied", id)
             }
             Command::Save => "save the graph to disc".into(),
+            Command::CriticalPathAnalysis { .. } => "perform a critical path analysis".into(),
             Command::Show => "open the diagram in Gapplin".into(),
             Command::Exit => "exit microdot".into(),
             Command::ParseError { line } => format!("could not parse: \"{}\"", line),

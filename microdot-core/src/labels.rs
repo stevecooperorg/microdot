@@ -23,6 +23,10 @@ impl Variables {
     pub fn get(&self, name: &str) -> Option<&Variable> {
         self.variables.iter().find(|v| v.name == name)
     }
+
+    pub fn iter(&self) -> std::slice::Iter<'_, Variable> {
+        self.variables.iter()
+    }
 }
 
 #[derive(Debug, PartialEq, Clone)]
