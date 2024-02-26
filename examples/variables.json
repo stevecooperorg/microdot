@@ -9,11 +9,11 @@
   "nodes": [
     {
       "id": "n0",
-      "label": "first step $t=4d"
+      "label": "first step $t=4d $cost=4"
     },
     {
       "id": "n1",
-      "label": "second step $t=1d $slack=6h"
+      "label": "second step $t=1d $slack=6h $cost=9"
     }
   ]
 }

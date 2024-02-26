@@ -6,9 +6,13 @@ digraph {
 
     n0 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
-        <TD COLSPAN="1"><FONT POINT-SIZE="10">n0</FONT>: first step</TD>
+        <TD COLSPAN="2"><FONT POINT-SIZE="10">n0</FONT>: first step</TD>
     </TR>
     
+        
+           <TR>
+<TD BGCOLOR="#F37FC0"><FONT COLOR="#000000">cost=4</FONT></TD>
+</TR>
         
            <TR>
 <TD BGCOLOR="#22AEFF"><FONT COLOR="#000000">t=4 days</FONT></TD>
@@ -19,16 +23,20 @@ digraph {
 > fillcolor="#FFFFFF"]
     n1 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
-        <TD COLSPAN="2"><FONT POINT-SIZE="10">n1</FONT>: second step</TD>
+        <TD COLSPAN="3"><FONT POINT-SIZE="10">n1</FONT>: second step</TD>
     </TR>
     
         
            <TR>
-<TD BGCOLOR="#FF7F7F"><FONT COLOR="#000000">t=1 days</FONT></TD>
+<TD BGCOLOR="#22AEFF"><FONT COLOR="#000000">t=1 days</FONT></TD>
 </TR>
         
            <TR>
-<TD BGCOLOR="#87B353"><FONT COLOR="#000000">slack=6 hours</FONT></TD>
+<TD BGCOLOR="#E2954D"><FONT COLOR="#000000">slack=6 hours</FONT></TD>
+</TR>
+        
+           <TR>
+<TD BGCOLOR="#F37FC0"><FONT COLOR="#000000">cost=9</FONT></TD>
 </TR>
         
     

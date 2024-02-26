@@ -8,6 +8,7 @@ use microdot_core::exporter::{Exporter, NodeHighlight};
 use microdot_core::graph::Graph;
 use microdot_core::hash::HashTag;
 use microdot_core::labels::NodeInfo;
+use microdot_core::util::generate_hash;
 use microdot_core::{Id, Label};
 use once_cell::sync::OnceCell;
 use regex::Regex;
@@ -195,7 +196,7 @@ impl Exporter for GraphVizExporter {
         for var in variables {
             let model = HashTagViewModel {
                 label: format!("{}", var),
-                bgcolor: ColorScheme::series(var.hash()).get_fill_color(),
+                bgcolor: ColorScheme::series(generate_hash(&var.name)).get_fill_color(),
             };
             hash_tags.push(model);
         }

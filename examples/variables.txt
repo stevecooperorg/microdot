@@ -1,2 +1,2 @@
-i first step $t=4d
-aft n0 second step $t=1d $slack=6h
+i first step $t=4d $cost=4
+aft n0 second step $t=1d $slack=6h $cost=9
