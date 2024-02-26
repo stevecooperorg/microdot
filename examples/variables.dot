@@ -28,7 +28,7 @@ digraph {
     
         
            <TR>
-<TD BGCOLOR="#22AEFF"><FONT COLOR="#000000">t=1 days</FONT></TD>
+<TD BGCOLOR="#F37FC0"><FONT COLOR="#000000">cost=9</FONT></TD>
 </TR>
         
            <TR>
@@ -36,7 +36,7 @@ digraph {
 </TR>
         
            <TR>
-<TD BGCOLOR="#F37FC0"><FONT COLOR="#000000">cost=9</FONT></TD>
+<TD BGCOLOR="#22AEFF"><FONT COLOR="#000000">t=1 days</FONT></TD>
 </TR>
         
     

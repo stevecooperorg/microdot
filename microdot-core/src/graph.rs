@@ -1,9 +1,10 @@
 use crate::command::GraphCommand;
 use crate::exporter::{Exporter, NodeHighlight};
+use crate::pet::{GetWeight, PGraph};
 use crate::util::generate_hash;
 use crate::{CommandResult, Id, Label};
 use regex::Regex;
-use std::collections::BTreeSet;
+use std::collections::{BTreeMap, BTreeSet};
 use std::fmt::{Display, Formatter};
 use std::hash::{Hash, Hasher};
 
@@ -18,9 +19,15 @@ pub struct Graph {
     current_node: Option<Id>,
 }
 
-struct Node {
+pub struct Node {
     id: Id,
     label: Label,
+}
+
+impl Node {
+    pub fn label(&self) -> &Label {
+        &self.label
+    }
 }
 
 #[derive(Debug, Clone)]
@@ -261,6 +268,22 @@ impl Graph {
             .map(|(idx, _)| idx)
     }
 
+    pub fn to_petgraph(&self, graph: &mut PGraph, get_weights: impl GetWeight<Node>) {
+        let mut indexes = BTreeMap::new();
+        for node in &self.nodes {
+            let weight = get_weights.get_weight(node);
+            let id = graph.add_node(node.id.clone(), weight);
+
+            indexes.insert(node.id.clone(), id);
+        }
+
+        for edge in &self.edges {
+            let from = *indexes.get(&edge.from).unwrap();
+            let to = *indexes.get(&edge.to).unwrap();
+
+            graph.add_edge(from, to);
+        }
+    }
     pub fn export<X: Exporter>(&self, exporter: &mut X) {
         exporter.set_direction(self.is_left_right);
 
@@ -509,6 +532,28 @@ impl Graph {
             }
             None => CommandResult::new(format!("node {} not found", id)),
         }
+    }
+
+    pub fn sources(&self) -> Vec<Id> {
+        // find nodes with no incoming edges
+        let mut node_ids = self.nodes.iter().map(|n| &n.id).collect::<BTreeSet<_>>();
+        let port_ids = self.edges.iter().map(|e| &e.to).collect::<BTreeSet<_>>();
+        // find the difference
+        for edge in &port_ids {
+            node_ids.remove(edge);
+        }
+        node_ids.into_iter().cloned().collect()
+    }
+
+    pub fn sinks(&self) -> Vec<Id> {
+        // find nodes with no incoming edges
+        let mut node_ids = self.nodes.iter().map(|n| &n.id).collect::<BTreeSet<_>>();
+        let port_ids = self.edges.iter().map(|e| &e.from).collect::<BTreeSet<_>>();
+        // find the difference
+        for edge in &port_ids {
+            node_ids.remove(edge);
+        }
+        node_ids.into_iter().cloned().collect()
     }
 }
 

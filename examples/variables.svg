@@ -25,12 +25,12 @@
 <polygon fill="#ffffff" stroke="black" points="288,-72 0,-72 0,0 288,0 288,-72"/>
 <text text-anchor="start" x="98.62" y="-53.7" font-family="Helvetica,sans-Serif" font-size="10.00">n1</text>
 <text text-anchor="start" x="109.12" y="-53.7" font-family="Helvetica,sans-Serif" font-size="14.00">: second step</text>
-<polygon fill="#22aeff" stroke="none" points="99,-36 99,-51 186,-51 186,-36 99,-36"/>
-<text text-anchor="start" x="116.62" y="-37.7" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">t=1 days</text>
+<polygon fill="#f37fc0" stroke="none" points="99,-36 99,-51 186,-51 186,-36 99,-36"/>
+<text text-anchor="start" x="122.25" y="-37.7" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">cost=9</text>
 <polygon fill="#e2954d" stroke="none" points="99,-21 99,-36 186,-36 186,-21 99,-21"/>
 <text text-anchor="start" x="100.5" y="-22.7" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">slack=6 hours</text>
-<polygon fill="#f37fc0" stroke="none" points="99,-6 99,-21 186,-21 186,-6 99,-6"/>
-<text text-anchor="start" x="122.25" y="-7.7" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">cost=9</text>
+<polygon fill="#22aeff" stroke="none" points="99,-6 99,-21 186,-21 186,-6 99,-6"/>
+<text text-anchor="start" x="116.62" y="-7.7" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">t=1 days</text>
 </g>
 <!-- n0&#45;&gt;n1 -->
 <g id="edge1" class="edge">
