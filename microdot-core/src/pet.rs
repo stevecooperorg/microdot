@@ -180,11 +180,11 @@ pub mod tests {
         let mut graph = Graph::new();
         // create a graph with a quick path and a slow path -- the quick path has
         // more nodes in it, but the slow path is more expensive.
-        let q1 = graph.insert_node(Label("quick1 $cost=1".to_string())).0;
-        let s1 = graph.insert_node(Label("slow1 $cost=10".to_string())).0;
-        let q2 = graph.insert_node(Label("quick2 $cost=1".to_string())).0;
-        let q3 = graph.insert_node(Label("quick3 $cost=1".to_string())).0;
-        let q4 = graph.insert_node(Label("quick4 $cost=1".to_string())).0;
+        let q1 = graph.insert_node(Label("quick1 $cost=10m".to_string())).0;
+        let s1 = graph.insert_node(Label("slow1 $cost=1d".to_string())).0;
+        let q2 = graph.insert_node(Label("quick2 $cost=10m".to_string())).0;
+        let q3 = graph.insert_node(Label("quick3 $cost=10m".to_string())).0;
+        let q4 = graph.insert_node(Label("quick4 $cost=10m".to_string())).0;
 
         // slow path q1 -> s1 -> q4
         graph.link_edge(&q1, &s1);
