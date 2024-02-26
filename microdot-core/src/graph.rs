@@ -1,5 +1,6 @@
 use crate::command::GraphCommand;
 use crate::exporter::{Exporter, NodeHighlight};
+use crate::util::generate_hash;
 use crate::{CommandResult, Id, Label};
 use regex::Regex;
 use std::collections::BTreeSet;
@@ -94,6 +95,24 @@ impl VariableValue {
     }
 }
 
+impl Display for VariableValue {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        let s = match self {
+            VariableValue::String(s) => s.to_string(),
+            VariableValue::Number(n) => n.to_string(),
+            VariableValue::Boolean(b) => {
+                if *b {
+                    "true".to_string()
+                } else {
+                    "false".to_string()
+                }
+            }
+            VariableValue::Time(t) => format!("{}", t),
+        };
+        write!(f, "{}", s)
+    }
+}
+
 #[derive(Debug, Clone)]
 
 pub enum Time {
@@ -158,6 +177,12 @@ pub struct Variable {
     pub value: VariableValue,
 }
 
+impl Display for Variable {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}={}", self.name, self.value)
+    }
+}
+
 impl Variable {
     pub fn new(name: impl Into<String>, value: VariableValue) -> Self {
         Variable {
@@ -186,6 +211,10 @@ impl Variable {
         } else {
             None
         }
+    }
+
+    pub fn hash(&self) -> usize {
+        generate_hash(&format!("{}", self))
     }
 }
 

@@ -1,0 +1,5 @@
+>> i first step $t=4d
+(inserted node n0: 'first step $t=4d')
+>> aft n0 second step $t=1d $slack=6h
+(inserted node n1: 'second step $t=1d $slack=6h' after n0)
+CTRL-D

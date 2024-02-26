@@ -5,8 +5,9 @@ use command_macros::cmd;
 use hyphenation::{Language, Load, Standard};
 use microdot_colors::colors::{Color, ColorScheme, Colors};
 use microdot_core::exporter::{Exporter, NodeHighlight};
-use microdot_core::graph::{Graph};
-use microdot_core::hash::{HashTag};
+use microdot_core::graph::Graph;
+use microdot_core::hash::HashTag;
+use microdot_core::labels::NodeInfo;
 use microdot_core::{Id, Label};
 use once_cell::sync::OnceCell;
 use regex::Regex;
@@ -17,7 +18,6 @@ use std::path::Path;
 use std::process::{Command, Output, Stdio};
 use textwrap::wrap_algorithms::{wrap_optimal_fit, Penalties};
 use textwrap::{fill, Options, WordSplitter};
-use microdot_core::labels::NodeInfo;
 
 macro_rules! hashmap {
     (@single $($x:tt)*) => (());
@@ -164,7 +164,10 @@ impl Exporter for GraphVizExporter {
         };
 
         let NodeInfo {
-            label: label_text, tags, variables: _, subgraph
+            label: label_text,
+            tags,
+            variables,
+            subgraph,
         } = NodeInfo::parse(label);
 
         let id = match self.display_mode {
@@ -180,13 +183,22 @@ impl Exporter for GraphVizExporter {
             NodeHighlight::CurrentNode => Colors::white(),
         };
 
-        let hash_tags: Vec<_> = tags
-            .iter()
-            .map(|tag| HashTagViewModel {
+        let mut hash_tags: Vec<_> = vec![];
+        for tag in &tags {
+            let model = HashTagViewModel {
                 label: tag.to_string(),
                 bgcolor: ColorScheme::series(tag.hash()).get_fill_color(),
-            })
-            .collect();
+            };
+            hash_tags.push(model);
+        }
+
+        for var in variables {
+            let model = HashTagViewModel {
+                label: format!("{}", var),
+                bgcolor: ColorScheme::series(var.hash()).get_fill_color(),
+            };
+            hash_tags.push(model);
+        }
 
         let colspan: usize = if hash_tags.is_empty() {
             1
@@ -472,6 +484,11 @@ Cras ut egestas velit."#;
     #[test]
     fn test_graphviz_compile_subgraphs() {
         compile_input_string_content(git_root().unwrap().join("examples/subgraphs.txt"));
+    }
+
+    #[test]
+    fn test_graphviz_compile_variables() {
+        compile_input_string_content(git_root().unwrap().join("examples/variables.txt"));
     }
 
     #[test]

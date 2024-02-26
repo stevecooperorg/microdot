@@ -1,0 +1,2 @@
+i first step $t=4d
+aft n0 second step $t=1d $slack=6h

@@ -1,5 +1,5 @@
-use std::collections::hash_map::DefaultHasher;
-use std::hash::{Hash, Hasher};
+use crate::util::generate_hash;
+use std::hash::Hash;
 
 #[derive(PartialEq, Eq, Debug, Hash, Clone)]
 pub struct HashTag {
@@ -12,9 +12,7 @@ impl HashTag {
     }
 
     pub fn new(tag: impl Into<String>) -> HashTag {
-        HashTag {
-            tag: tag.into(),
-        }
+        HashTag { tag: tag.into() }
     }
 }
 
@@ -22,11 +20,4 @@ impl ToString for HashTag {
     fn to_string(&self) -> String {
         self.tag.clone()
     }
-}
-
-
-fn generate_hash(input: &str) -> usize {
-    let mut s = DefaultHasher::new();
-    input.hash(&mut s);
-    s.finish() as usize
 }

@@ -1,0 +1,19 @@
+{
+  "edges": [
+    {
+      "from": "n0",
+      "to": "n1"
+    }
+  ],
+  "is_left_right": false,
+  "nodes": [
+    {
+      "id": "n0",
+      "label": "first step $t=4d"
+    },
+    {
+      "id": "n1",
+      "label": "second step $t=1d $slack=6h"
+    }
+  ]
+}

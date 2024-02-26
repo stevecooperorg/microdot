@@ -1,0 +1,40 @@
+digraph {
+
+    graph [fontname = "helvetica" rankdir="TB" ranksep=0.75 nodesep=0.5];
+    node [fontname = "helvetica" shape = "box" width=2.5 style=filled];
+    edge [fontname = "helvetica" penwidth=3 color="#000000"];
+
+    n0 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    <TR>
+        <TD COLSPAN="1"><FONT POINT-SIZE="10">n0</FONT>: first step</TD>
+    </TR>
+    
+        
+           <TR>
+<TD BGCOLOR="#22AEFF"><FONT COLOR="#000000">t=4 days</FONT></TD>
+</TR>
+        
+    
+   </TABLE>
+> fillcolor="#FFFFFF"]
+    n1 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    <TR>
+        <TD COLSPAN="2"><FONT POINT-SIZE="10">n1</FONT>: second step</TD>
+    </TR>
+    
+        
+           <TR>
+<TD BGCOLOR="#FF7F7F"><FONT COLOR="#000000">t=1 days</FONT></TD>
+</TR>
+        
+           <TR>
+<TD BGCOLOR="#87B353"><FONT COLOR="#000000">slack=6 hours</FONT></TD>
+</TR>
+        
+    
+   </TABLE>
+> fillcolor="#FFFFFF"]
+
+    "n0" -> "n1" [label="e0"];
+
+}
