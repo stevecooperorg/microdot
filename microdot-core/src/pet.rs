@@ -1,5 +1,6 @@
 //! petgraph functions.
-use crate::graph::Graph;
+use crate::graph::{Graph, Node, VariableValue};
+use crate::labels::NodeInfo;
 use crate::Id;
 use petgraph::algo::all_simple_paths;
 use petgraph::prelude::NodeIndex;
@@ -93,9 +94,36 @@ fn find_shortest_path(graph: &Graph, get_weights: impl GetWeight<crate::graph::N
     }
 }
 
+struct CostCalculator {
+    variable_name: String,
+    find_longest: bool,
+}
+
+impl GetWeight<Node> for CostCalculator {
+    fn get_weight(&self, item: &Node) -> Weight {
+        let NodeInfo { variables, .. } = NodeInfo::parse(item.label());
+        let cost = if let Some(cost) = variables.get(&self.variable_name) {
+            match &cost.value {
+                VariableValue::Number(n) => *n as i32,
+                VariableValue::Time(t) => t.to_minutes() as i32,
+                _ => 1,
+            }
+        } else {
+            1
+        };
+        if self.find_longest {
+            -cost
+        } else {
+            cost
+        }
+    }
+}
+
 #[cfg(test)]
 pub mod tests {
     use super::*;
+    use crate::graph::VariableValue;
+    use crate::labels::NodeInfo;
     use crate::Label;
 
     fn uniform_weight<T>(_node: &T) -> Weight {
@@ -145,5 +173,44 @@ pub mod tests {
         }
         let path = find_shortest_path(&graph, s1_is_expensive);
         assert_eq!(path, vec![q1, s1, q4]);
+    }
+
+    #[test]
+    pub fn shortest_path_can_be_found_via_a_variable() {
+        let mut graph = Graph::new();
+        // create a graph with a quick path and a slow path -- the quick path has
+        // more nodes in it, but the slow path is more expensive.
+        let q1 = graph.insert_node(Label("quick1 $cost=1".to_string())).0;
+        let s1 = graph.insert_node(Label("slow1 $cost=10".to_string())).0;
+        let q2 = graph.insert_node(Label("quick2 $cost=1".to_string())).0;
+        let q3 = graph.insert_node(Label("quick3 $cost=1".to_string())).0;
+        let q4 = graph.insert_node(Label("quick4 $cost=1".to_string())).0;
+
+        // slow path q1 -> s1 -> q4
+        graph.link_edge(&q1, &s1);
+        graph.link_edge(&s1, &q4);
+
+        // fast path q1 -> q2 -> q3 -> q4
+        graph.link_edge(&q1, &q2);
+        graph.link_edge(&q2, &q3);
+        graph.link_edge(&q3, &q4);
+
+        let longest_path = find_shortest_path(
+            &graph,
+            CostCalculator {
+                variable_name: "cost".to_string(),
+                find_longest: true,
+            },
+        );
+        assert_eq!(longest_path, vec![q1.clone(), s1, q4.clone()]);
+
+        let shortest_path = find_shortest_path(
+            &graph,
+            CostCalculator {
+                variable_name: "cost".to_string(),
+                find_longest: false,
+            },
+        );
+        assert_eq!(shortest_path, vec![q1, q2, q3, q4]);
     }
 }

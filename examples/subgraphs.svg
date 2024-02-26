@@ -9,86 +9,23 @@
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 216)">
 <polygon fill="white" stroke="none" points="-4,4 -4,-216 2466,-216 2466,4 -4,4"/>
 <g id="clust1" class="cluster">
-<title>cluster_SG_DEV</title>
-<polygon fill="#90d6ff" stroke="black" points="8,-8 8,-204 1383,-204 1383,-8 8,-8"/>
-</g>
-<g id="clust2" class="cluster">
 <title>cluster_SG_TEST</title>
 <polygon fill="#d4d5a1" stroke="black" points="1436,-111 1436,-199 2454,-199 2454,-111 1436,-111"/>
 </g>
-<!-- n0 -->
-<g id="node1" class="node">
-<title>n0</title>
-<polygon fill="#ffffff" stroke="black" points="304,-196 16,-196 16,-124 304,-124 304,-196"/>
-<text text-anchor="start" x="85.38" y="-155.2" font-family="Helvetica,sans-Serif" font-size="10.00">n0</text>
-<text text-anchor="start" x="95.88" y="-155.2" font-family="Helvetica,sans-Serif" font-size="14.00">: developer writes code</text>
-</g>
-<!-- n1 -->
-<g id="node2" class="node">
-<title>n1</title>
-<polygon fill="#ffffff" stroke="black" points="661,-195 373,-195 373,-123 661,-123 661,-195"/>
-<text text-anchor="start" x="434.12" y="-154.2" font-family="Helvetica,sans-Serif" font-size="10.00">n1</text>
-<text text-anchor="start" x="444.62" y="-154.2" font-family="Helvetica,sans-Serif" font-size="14.00">: developer commits code</text>
-</g>
-<!-- n0&#45;&gt;n1 -->
-<g id="edge1" class="edge">
-<title>n0&#45;&gt;n1</title>
-<path fill="none" stroke="#000000" stroke-width="3" d="M304.37,-159.6C322.13,-159.55 340.37,-159.49 358.34,-159.44"/>
-<polygon fill="#000000" stroke="#000000" stroke-width="3" points="358.14,-162.94 368.13,-159.42 358.12,-155.94 358.14,-162.94"/>
-<text text-anchor="middle" x="338.5" y="-160.7" font-family="Helvetica,sans-Serif" font-size="14.00">e0</text>
-</g>
-<!-- n2 -->
-<g id="node3" class="node">
-<title>n2</title>
-<polygon fill="#ffffff" stroke="black" points="1018,-193 730,-193 730,-121 1018,-121 1018,-193"/>
-<text text-anchor="start" x="804.25" y="-152.2" font-family="Helvetica,sans-Serif" font-size="10.00">n2</text>
-<text text-anchor="start" x="814.75" y="-152.2" font-family="Helvetica,sans-Serif" font-size="14.00">: developer raises PR</text>
-</g>
-<!-- n1&#45;&gt;n2 -->
-<g id="edge2" class="edge">
-<title>n1&#45;&gt;n2</title>
-<path fill="none" stroke="#000000" stroke-width="3" d="M661.37,-158.19C679.13,-158.09 697.37,-157.99 715.34,-157.89"/>
-<polygon fill="#000000" stroke="#000000" stroke-width="3" points="715.15,-161.39 725.13,-157.83 715.11,-154.39 715.15,-161.39"/>
-<text text-anchor="middle" x="695.5" y="-159.7" font-family="Helvetica,sans-Serif" font-size="14.00">e1</text>
-</g>
-<!-- n3 -->
-<g id="node4" class="node">
-<title>n3</title>
-<polygon fill="#ffffff" stroke="black" points="1375,-192 1087,-192 1087,-120 1375,-120 1375,-192"/>
-<text text-anchor="start" x="1152.62" y="-151.2" font-family="Helvetica,sans-Serif" font-size="10.00">n3</text>
-<text text-anchor="start" x="1163.12" y="-151.2" font-family="Helvetica,sans-Serif" font-size="14.00">: developer2 reviews PR</text>
-</g>
-<!-- n2&#45;&gt;n3 -->
-<g id="edge3" class="edge">
-<title>n2&#45;&gt;n3</title>
-<path fill="none" stroke="#000000" stroke-width="3" d="M1018.37,-156.6C1036.13,-156.55 1054.37,-156.49 1072.34,-156.44"/>
-<polygon fill="#000000" stroke="#000000" stroke-width="3" points="1072.14,-159.94 1082.13,-156.42 1072.12,-152.94 1072.14,-159.94"/>
-<text text-anchor="middle" x="1052.5" y="-157.7" font-family="Helvetica,sans-Serif" font-size="14.00">e2</text>
+<g id="clust2" class="cluster">
+<title>cluster_SG_DEV</title>
+<polygon fill="#90d6ff" stroke="black" points="8,-8 8,-204 1383,-204 1383,-8 8,-8"/>
 </g>
 <!-- n4 -->
-<g id="node6" class="node">
+<g id="node1" class="node">
 <title>n4</title>
 <polygon fill="#ffffff" stroke="black" points="1732,-191 1444,-191 1444,-119 1732,-119 1732,-191"/>
 <text text-anchor="start" x="1463.88" y="-156.7" font-family="Helvetica,sans-Serif" font-size="10.00">n4</text>
 <text text-anchor="start" x="1474.38" y="-156.7" font-family="Helvetica,sans-Serif" font-size="14.00">: tester installs PR branch code into dev</text>
 <text text-anchor="start" x="1550.5" y="-142.7" font-family="Helvetica,sans-Serif" font-size="14.00">environment</text>
 </g>
-<!-- n3&#45;&gt;n4 -->
-<g id="edge4" class="edge">
-<title>n3&#45;&gt;n4</title>
-<path fill="none" stroke="#000000" stroke-width="3" d="M1375.37,-155.6C1393.13,-155.55 1411.37,-155.49 1429.34,-155.44"/>
-<polygon fill="#000000" stroke="#000000" stroke-width="3" points="1429.14,-158.94 1439.13,-155.42 1429.12,-151.94 1429.14,-158.94"/>
-<text text-anchor="middle" x="1409.5" y="-156.7" font-family="Helvetica,sans-Serif" font-size="14.00">e3</text>
-</g>
-<!-- n7 -->
-<g id="node5" class="node">
-<title>n7</title>
-<polygon fill="#ffffff" stroke="black" points="304,-88 16,-88 16,-16 304,-16 304,-88"/>
-<text text-anchor="start" x="85.38" y="-47.2" font-family="Helvetica,sans-Serif" font-size="10.00">n7</text>
-<text text-anchor="start" x="95.88" y="-47.2" font-family="Helvetica,sans-Serif" font-size="14.00">: developer merges PR</text>
-</g>
 <!-- n5 -->
-<g id="node7" class="node">
+<g id="node2" class="node">
 <title>n5</title>
 <polygon fill="#ffffff" stroke="black" points="2089,-191 1801,-191 1801,-119 2089,-119 2089,-191"/>
 <text text-anchor="start" x="1852.75" y="-150.2" font-family="Helvetica,sans-Serif" font-size="10.00">n5</text>
@@ -102,7 +39,7 @@
 <text text-anchor="middle" x="1766.5" y="-156.7" font-family="Helvetica,sans-Serif" font-size="14.00">e4</text>
 </g>
 <!-- n6 -->
-<g id="node8" class="node">
+<g id="node3" class="node">
 <title>n6</title>
 <polygon fill="#ffffff" stroke="black" points="2446,-191 2158,-191 2158,-119 2446,-119 2446,-191"/>
 <text text-anchor="start" x="2235.25" y="-150.2" font-family="Helvetica,sans-Serif" font-size="10.00">n6</text>
@@ -115,12 +52,75 @@
 <polygon fill="#000000" stroke="#000000" stroke-width="3" points="2143.13,-158.5 2153.13,-155 2143.13,-151.5 2143.13,-158.5"/>
 <text text-anchor="middle" x="2123.5" y="-156.7" font-family="Helvetica,sans-Serif" font-size="14.00">e5</text>
 </g>
+<!-- n7 -->
+<g id="node8" class="node">
+<title>n7</title>
+<polygon fill="#ffffff" stroke="black" points="304,-88 16,-88 16,-16 304,-16 304,-88"/>
+<text text-anchor="start" x="85.38" y="-47.2" font-family="Helvetica,sans-Serif" font-size="10.00">n7</text>
+<text text-anchor="start" x="95.88" y="-47.2" font-family="Helvetica,sans-Serif" font-size="14.00">: developer merges PR</text>
+</g>
 <!-- n6&#45;&gt;n7 -->
 <g id="edge7" class="edge">
 <title>n6&#45;&gt;n7</title>
 <path fill="none" stroke="#000000" stroke-width="3" d="M2219.24,-118.56C2148.41,-90.33 2042.46,-56 1946,-56 516,-56 516,-56 516,-56 451.38,-56 380.16,-55.33 318.57,-54.54"/>
 <polygon fill="#000000" stroke="#000000" stroke-width="3" points="318.95,-51.04 308.9,-54.41 318.85,-58.04 318.95,-51.04"/>
 <text text-anchor="middle" x="1231" y="-57.7" font-family="Helvetica,sans-Serif" font-size="14.00">e6</text>
+</g>
+<!-- n0 -->
+<g id="node4" class="node">
+<title>n0</title>
+<polygon fill="#ffffff" stroke="black" points="304,-196 16,-196 16,-124 304,-124 304,-196"/>
+<text text-anchor="start" x="85.38" y="-155.2" font-family="Helvetica,sans-Serif" font-size="10.00">n0</text>
+<text text-anchor="start" x="95.88" y="-155.2" font-family="Helvetica,sans-Serif" font-size="14.00">: developer writes code</text>
+</g>
+<!-- n1 -->
+<g id="node5" class="node">
+<title>n1</title>
+<polygon fill="#ffffff" stroke="black" points="661,-195 373,-195 373,-123 661,-123 661,-195"/>
+<text text-anchor="start" x="434.12" y="-154.2" font-family="Helvetica,sans-Serif" font-size="10.00">n1</text>
+<text text-anchor="start" x="444.62" y="-154.2" font-family="Helvetica,sans-Serif" font-size="14.00">: developer commits code</text>
+</g>
+<!-- n0&#45;&gt;n1 -->
+<g id="edge1" class="edge">
+<title>n0&#45;&gt;n1</title>
+<path fill="none" stroke="#000000" stroke-width="3" d="M304.37,-159.6C322.13,-159.55 340.37,-159.49 358.34,-159.44"/>
+<polygon fill="#000000" stroke="#000000" stroke-width="3" points="358.14,-162.94 368.13,-159.42 358.12,-155.94 358.14,-162.94"/>
+<text text-anchor="middle" x="338.5" y="-160.7" font-family="Helvetica,sans-Serif" font-size="14.00">e0</text>
+</g>
+<!-- n2 -->
+<g id="node6" class="node">
+<title>n2</title>
+<polygon fill="#ffffff" stroke="black" points="1018,-193 730,-193 730,-121 1018,-121 1018,-193"/>
+<text text-anchor="start" x="804.25" y="-152.2" font-family="Helvetica,sans-Serif" font-size="10.00">n2</text>
+<text text-anchor="start" x="814.75" y="-152.2" font-family="Helvetica,sans-Serif" font-size="14.00">: developer raises PR</text>
+</g>
+<!-- n1&#45;&gt;n2 -->
+<g id="edge2" class="edge">
+<title>n1&#45;&gt;n2</title>
+<path fill="none" stroke="#000000" stroke-width="3" d="M661.37,-158.19C679.13,-158.09 697.37,-157.99 715.34,-157.89"/>
+<polygon fill="#000000" stroke="#000000" stroke-width="3" points="715.15,-161.39 725.13,-157.83 715.11,-154.39 715.15,-161.39"/>
+<text text-anchor="middle" x="695.5" y="-159.7" font-family="Helvetica,sans-Serif" font-size="14.00">e1</text>
+</g>
+<!-- n3 -->
+<g id="node7" class="node">
+<title>n3</title>
+<polygon fill="#ffffff" stroke="black" points="1375,-192 1087,-192 1087,-120 1375,-120 1375,-192"/>
+<text text-anchor="start" x="1152.62" y="-151.2" font-family="Helvetica,sans-Serif" font-size="10.00">n3</text>
+<text text-anchor="start" x="1163.12" y="-151.2" font-family="Helvetica,sans-Serif" font-size="14.00">: developer2 reviews PR</text>
+</g>
+<!-- n2&#45;&gt;n3 -->
+<g id="edge3" class="edge">
+<title>n2&#45;&gt;n3</title>
+<path fill="none" stroke="#000000" stroke-width="3" d="M1018.37,-156.6C1036.13,-156.55 1054.37,-156.49 1072.34,-156.44"/>
+<polygon fill="#000000" stroke="#000000" stroke-width="3" points="1072.14,-159.94 1082.13,-156.42 1072.12,-152.94 1072.14,-159.94"/>
+<text text-anchor="middle" x="1052.5" y="-157.7" font-family="Helvetica,sans-Serif" font-size="14.00">e2</text>
+</g>
+<!-- n3&#45;&gt;n4 -->
+<g id="edge4" class="edge">
+<title>n3&#45;&gt;n4</title>
+<path fill="none" stroke="#000000" stroke-width="3" d="M1375.37,-155.6C1393.13,-155.55 1411.37,-155.49 1429.34,-155.44"/>
+<polygon fill="#000000" stroke="#000000" stroke-width="3" points="1429.14,-158.94 1439.13,-155.42 1429.12,-151.94 1429.14,-158.94"/>
+<text text-anchor="middle" x="1409.5" y="-156.7" font-family="Helvetica,sans-Serif" font-size="14.00">e3</text>
 </g>
 </g>
 </svg>

@@ -32,11 +32,11 @@ digraph {
 </TR>
         
            <TR>
-<TD BGCOLOR="#E2954D"><FONT COLOR="#000000">slack=6 hours</FONT></TD>
+<TD BGCOLOR="#22AEFF"><FONT COLOR="#000000">t=1 days</FONT></TD>
 </TR>
         
            <TR>
-<TD BGCOLOR="#22AEFF"><FONT COLOR="#000000">t=1 days</FONT></TD>
+<TD BGCOLOR="#E2954D"><FONT COLOR="#000000">slack=6 hours</FONT></TD>
 </TR>
         
     

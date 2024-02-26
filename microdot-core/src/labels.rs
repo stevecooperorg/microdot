@@ -4,11 +4,32 @@ use crate::Label;
 use regex::Regex;
 use std::collections::HashSet;
 
+#[derive(Debug, PartialEq, Clone, Default)]
+
+pub struct Variables {
+    pub variables: Vec<Variable>,
+}
+
+impl Variables {
+    pub fn new() -> Self {
+        Variables {
+            variables: Vec::new(),
+        }
+    }
+
+    pub fn from_vec(variables: Vec<Variable>) -> Self {
+        Variables { variables }
+    }
+    pub fn get(&self, name: &str) -> Option<&Variable> {
+        self.variables.iter().find(|v| v.name == name)
+    }
+}
+
 #[derive(Debug, PartialEq, Clone)]
 pub struct NodeInfo {
     pub label: String,
     pub tags: Vec<HashTag>,
-    pub variables: Vec<Variable>,
+    pub variables: Variables,
     pub subgraph: Option<HashTag>,
 }
 
@@ -18,7 +39,7 @@ impl NodeInfo {
         NodeInfo {
             label,
             tags: Vec::new(),
-            variables: Vec::new(),
+            variables: Variables::new(),
             subgraph: None,
         }
     }
@@ -50,7 +71,7 @@ impl NodeInfo {
     }
 }
 
-fn extract_variables(input: impl AsRef<str>) -> (Vec<Variable>, String) {
+fn extract_variables(input: impl AsRef<str>) -> (Variables, String) {
     // extract variables and remove padding whitespace
     let mut input = input.as_ref().to_string();
 
@@ -66,6 +87,7 @@ fn extract_variables(input: impl AsRef<str>) -> (Vec<Variable>, String) {
     }
 
     let variables = variables.into_iter().collect();
+    let variables = Variables::from_vec(variables);
     (variables, input.to_string())
 }
 
@@ -151,7 +173,7 @@ mod tests {
         let expected = NodeInfo {
             label: "no hashtags".to_string(),
             tags: Vec::new(),
-            variables: Vec::new(),
+            variables: Default::default(),
             subgraph: None,
         };
         assert_eq!(actual, expected);
@@ -162,7 +184,7 @@ mod tests {
         let expected = NodeInfo {
             label: "a #hashtag in the middle".to_string(),
             tags: vec![HashTag::new("#hashtag")],
-            variables: Vec::new(),
+            variables: Default::default(),
             subgraph: None,
         };
         assert_eq!(actual, expected);
@@ -173,7 +195,7 @@ mod tests {
         let expected = NodeInfo {
             label: "a #hashtag at the".to_string(),
             tags: vec![HashTag::new("#end"), HashTag::new("#hashtag")],
-            variables: Vec::new(),
+            variables: Default::default(),
             subgraph: None,
         };
         assert_eq!(actual, expected);
@@ -187,7 +209,7 @@ mod tests {
         let expected = NodeInfo {
             label: "a #hashtag in the middle and a".to_string(),
             tags: vec![HashTag::new("#hashtag")],
-            variables: Vec::new(),
+            variables: Default::default(),
             subgraph: Some(HashTag::new("#SG_SUBGRAPH")),
         };
         assert_eq!(actual, expected);
@@ -199,7 +221,7 @@ mod tests {
         let expected = NodeInfo {
             label: "positive choice".to_string(),
             tags: vec![],
-            variables: vec![Variable::boolean("choice", true)],
+            variables: Variables::from_vec(vec![Variable::boolean("choice", true)]),
             subgraph: None,
         };
         assert_eq!(actual, expected);
