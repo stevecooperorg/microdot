@@ -22,6 +22,7 @@ impl Variables {
         variables.sort_by_key(|v| v.name.clone());
         Variables { variables }
     }
+
     pub fn get(&self, name: &str) -> Option<&Variable> {
         self.variables.iter().find(|v| v.name == name)
     }
