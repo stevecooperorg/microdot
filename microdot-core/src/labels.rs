@@ -59,7 +59,12 @@ impl NodeInfo {
         let subgraph: Option<HashTag> = tags
             .iter()
             .find(|t| t.to_string().starts_with("#SG_"))
-            .cloned();
+            .map(|t| {
+                // remove prefix;
+                let mut t = t.to_string();
+                t.replace_range(0..4, "");
+                HashTag::new(t)
+            });
 
         let tags: Vec<_> = tags
             .into_iter()
@@ -218,7 +223,7 @@ mod tests {
             label: "a #hashtag in the middle and a".to_string(),
             tags: vec![HashTag::new("#hashtag")],
             variables: Default::default(),
-            subgraph: Some(HashTag::new("#SG_SUBGRAPH")),
+            subgraph: Some(HashTag::new("SUBGRAPH")),
         };
         assert_eq!(actual, expected);
     }
