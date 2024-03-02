@@ -49,6 +49,40 @@ impl Color {
         Self::from_rgb(r, g, b)
     }
 
+    pub fn to_hsl(&self) -> (f64, f64, f64) {
+        let r = self.r() as f64 / 255.0;
+        let g = self.g() as f64 / 255.0;
+        let b = self.b() as f64 / 255.0;
+
+        let max = r.max(g.max(b));
+        let min = r.min(g.min(b));
+
+        let mut h = 0.0;
+        let mut s = 0.0;
+        let l = (max + min) / 2.0;
+
+        if max != min {
+            let d = max - min;
+            s = if l > 0.5 {
+                d / (2.0 - max - min)
+            } else {
+                d / (max + min)
+            };
+
+            h = if max == r {
+                (g - b) / d + (if g < b { 6.0 } else { 0.0 })
+            } else if max == g {
+                (b - r) / d + 2.0
+            } else {
+                (r - g) / d + 4.0
+            };
+
+            h /= 6.0;
+        }
+
+        (h * 360.0, s * 100.0, l * 100.0)
+    }
+
     fn r(&self) -> u8 {
         self.inner.red
     }
@@ -67,6 +101,19 @@ impl Color {
         let b = (self.b() as f64 + other.b() as f64) / 2.0;
 
         Color::from_rgb(r as u8, g as u8, b as u8)
+    }
+
+    pub fn mute(&self, saturation_decrease: f64, lightness_adjustment: f64) -> Self {
+        let (h, s, l) = self.to_hsl(); // Convert RGB to HSL
+
+        // Calculate new saturation, ensuring it doesn't go below 0 or above 100
+        let new_s = (s * saturation_decrease).max(0.0).min(100.0);
+
+        // Adjust lightness, ensuring it stays within bounds
+        let new_l = (l * lightness_adjustment).max(0.0).min(100.0);
+
+        // Convert back to RGB and return the new color
+        Color::from_hsl(h, new_s, new_l)
     }
 
     pub fn to_html_string(&self) -> String {
@@ -212,5 +259,27 @@ mod tests {
         for naughty in &naughty_strings {
             assert!(Color::from_html_string(naughty).is_err());
         }
+    }
+
+    #[test]
+    fn can_mute_colors() {
+        let actual = Color::from_rgb(255, 0, 0).mute(0.5, 1.0);
+        let expected = Color::from_rgb(191, 64, 64);
+        assert_eq!(actual, expected, "desaturation");
+
+        let actual = Color::from_rgb(255, 0, 0).mute(1.0, 0.5);
+        let expected = Color::from_rgb(128, 0, 0);
+        assert_eq!(actual, expected, "darken");
+    }
+
+    #[test]
+    fn can_convert_to_and_from_hsl() {
+        let color = Color::from_rgb(255, 0, 0);
+        let (h, s, l) = color.to_hsl();
+        assert_eq!(h, 0.0);
+        assert_eq!(s, 100.0);
+        assert_eq!(l, 50.0);
+        let actual = Color::from_hsl(h, s, l);
+        assert_eq!(actual, color);
     }
 }

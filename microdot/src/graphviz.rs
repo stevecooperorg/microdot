@@ -186,19 +186,16 @@ impl Exporter for GraphVizExporter {
 
         let mut hash_tags: Vec<_> = vec![];
         for tag in &tags {
-            let model = HashTagViewModel {
-                label: tag.to_string(),
-                bgcolor: ColorScheme::series(tag.hash()).get_fill_color(),
-            };
+            let label = tag.to_string();
+            let bgcolor = tag_adjust(ColorScheme::series(tag.hash()).get_fill_color());
+            let model = HashTagViewModel { label, bgcolor };
             hash_tags.push(model);
         }
 
         for var in variables.iter() {
             let label = format!("{}", var);
-            let bgcolor = ColorScheme::series(generate_hash(&var.name))
-                .get_fill_color()
-                .mix(Colors::white())
-                .mix(Colors::white());
+            let bgcolor =
+                tag_adjust(ColorScheme::series(generate_hash(&var.name)).get_fill_color());
             let model = HashTagViewModel { label, bgcolor };
             hash_tags.push(model);
         }
@@ -293,9 +290,7 @@ impl GraphVizExporter {
         }
 
         for (subgraph_id, nodes) in self.subgraphs.iter() {
-            let bgcolor = ColorScheme::series(subgraph_id.hash())
-                .get_fill_color()
-                .mix(Colors::white());
+            let bgcolor = subgraph_adjust(ColorScheme::series(subgraph_id.hash()).get_fill_color());
             built.push_str(&format!(
                 "  subgraph cluster_{} {{\n",
                 subgraph_id.to_string().replace('#', "")
@@ -344,6 +339,14 @@ impl GraphVizExporter {
 
 fn to_dot_label_string(label: &str) -> String {
     format!("\"{}\"", label.replace('\n', "\\n").replace('"', "\\\""))
+}
+
+fn tag_adjust(color: Color) -> Color {
+    color.mix(Colors::white()).mix(Colors::white())
+}
+
+fn subgraph_adjust(color: Color) -> Color {
+    color.mute(0.3f64, 1.5f64)
 }
 
 fn escape_label(label: &str) -> String {

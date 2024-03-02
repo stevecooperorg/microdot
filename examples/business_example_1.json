@@ -29,27 +29,27 @@
   "nodes": [
     {
       "id": "n0",
-      "label": "customers get delivery too slowly"
+      "label": "#customers get delivery too slowly #SG_RESULT"
     },
     {
       "id": "n1",
-      "label": "orders need to be processed by hand"
+      "label": "orders need to be processed by hand #SG_CURRENT"
     },
     {
       "id": "n2",
-      "label": "no developer capacity to automate orders"
+      "label": "no developer capacity to automate orders #SG_CURRENT"
     },
     {
       "id": "n3",
-      "label": "developers engaged in low-value work"
+      "label": "developers engaged in low-value work #SG_CURRENT"
     },
     {
       "id": "n4",
-      "label": "shipping labels generated once a day"
+      "label": "shipping labels generated once a day #SG_BLOCKER"
     },
     {
       "id": "n5",
-      "label": "printers need rebooting but everyone in IT is busy util 3pm"
+      "label": "printers need rebooting but everyone in IT is busy util 3pm #SG_BLOCKER"
     }
   ]
 }

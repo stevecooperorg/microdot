@@ -1,17 +1,17 @@
 >> lr
 (Direction changed to LR)
->> i customers get delivery too slowly
-(inserted node n0: 'customers get delivery too slowly')
->> bef n0 orders need to be processed by hand
-(inserted node n1: 'orders need to be processed by hand' before n0)
->> bef n1 no developer capacity to automate orders
-(inserted node n2: 'no developer capacity to automate orders' before n1)
->> bef n2 developers engaged in low-value work
-(inserted node n3: 'developers engaged in low-value work' before n2)
->> bef n0 shipping labels generated once a day
-(inserted node n4: 'shipping labels generated once a day' before n0)
->> bef n4 printers need rebooting but everyone in IT is busy util 3pm
-(inserted node n5: 'printers need rebooting but everyone in IT is busy util 3pm' before n4)
+>> i #customers get delivery too slowly #SG_RESULT
+(inserted node n0: '#customers get delivery too slowly #SG_RESULT')
+>> bef n0 orders need to be processed by hand #SG_CURRENT
+(inserted node n1: 'orders need to be processed by hand #SG_CURRENT' before n0)
+>> bef n1 no developer capacity to automate orders #SG_CURRENT
+(inserted node n2: 'no developer capacity to automate orders #SG_CURRENT' before n1)
+>> bef n2 developers engaged in low-value work #SG_CURRENT
+(inserted node n3: 'developers engaged in low-value work #SG_CURRENT' before n2)
+>> bef n0 shipping labels generated once a day #SG_BLOCKER
+(inserted node n4: 'shipping labels generated once a day #SG_BLOCKER' before n0)
+>> bef n4 printers need rebooting but everyone in IT is busy util 3pm #SG_BLOCKER
+(inserted node n5: 'printers need rebooting but everyone in IT is busy util 3pm #SG_BLOCKER' before n4)
 >> l n3 n5
 (Added edge e5 from n3 to n5)
 CTRL-D

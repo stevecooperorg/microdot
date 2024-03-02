@@ -4,68 +4,9 @@ digraph {
     node [fontname = "helvetica" shape = "box" width=2.5 style=filled];
     edge [fontname = "helvetica" penwidth=3 color="#000000"];
 
-  subgraph cluster_FAST {
-  label="FAST"
-  bgcolor="#8FEFE0"
-    n2 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
-    <TR>
-        <TD COLSPAN="2"><FONT POINT-SIZE="10">n2</FONT>: rapid but hard</TD>
-    </TR>
-    
-        
-           <TR>
-<TD BGCOLOR="#DFF7C7"><FONT COLOR="#000000">cost=9</FONT></TD>
-</TR>
-        
-           <TR>
-<TD BGCOLOR="#D0F7C7"><FONT COLOR="#000000">t=10 minutes</FONT></TD>
-</TR>
-        
-    
-   </TABLE>
-> fillcolor="#FFFFFF"]
-    n3 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
-    <TR>
-        <TD COLSPAN="2"><FONT POINT-SIZE="10">n3</FONT>: rapid and easy</TD>
-    </TR>
-    
-        
-           <TR>
-<TD BGCOLOR="#DFF7C7"><FONT COLOR="#000000">cost=1</FONT></TD>
-</TR>
-        
-           <TR>
-<TD BGCOLOR="#D0F7C7"><FONT COLOR="#000000">t=10 minutes</FONT></TD>
-</TR>
-        
-    
-   </TABLE>
-> fillcolor="#FFFFFF"]
-  }
-  subgraph cluster_END {
-  label="END"
-  bgcolor="#8FE0EF"
-    n4 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
-    <TR>
-        <TD COLSPAN="2"><FONT POINT-SIZE="10">n4</FONT>: end</TD>
-    </TR>
-    
-        
-           <TR>
-<TD BGCOLOR="#DFF7C7"><FONT COLOR="#000000">cost=1</FONT></TD>
-</TR>
-        
-           <TR>
-<TD BGCOLOR="#D0F7C7"><FONT COLOR="#000000">t=1 day</FONT></TD>
-</TR>
-        
-    
-   </TABLE>
-> fillcolor="#FFFFFF"]
-  }
   subgraph cluster_INIT {
   label="INIT"
-  bgcolor="#EF8FC9"
+  bgcolor="#CEB1C2"
     n0 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="2"><FONT POINT-SIZE="10">n0</FONT>: init project</TD>
@@ -103,10 +44,69 @@ digraph {
   }
   subgraph cluster_SLOW {
   label="SLOW"
-  bgcolor="#8FA7EF"
+  bgcolor="#B1B8CE"
     n5 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="2"><FONT POINT-SIZE="10">n5</FONT>: slow and easy</TD>
+    </TR>
+    
+        
+           <TR>
+<TD BGCOLOR="#DFF7C7"><FONT COLOR="#000000">cost=1</FONT></TD>
+</TR>
+        
+           <TR>
+<TD BGCOLOR="#D0F7C7"><FONT COLOR="#000000">t=1 day</FONT></TD>
+</TR>
+        
+    
+   </TABLE>
+> fillcolor="#FFFFFF"]
+  }
+  subgraph cluster_FAST {
+  label="FAST"
+  bgcolor="#B1CEC9"
+    n2 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    <TR>
+        <TD COLSPAN="2"><FONT POINT-SIZE="10">n2</FONT>: rapid but hard</TD>
+    </TR>
+    
+        
+           <TR>
+<TD BGCOLOR="#DFF7C7"><FONT COLOR="#000000">cost=9</FONT></TD>
+</TR>
+        
+           <TR>
+<TD BGCOLOR="#D0F7C7"><FONT COLOR="#000000">t=10 minutes</FONT></TD>
+</TR>
+        
+    
+   </TABLE>
+> fillcolor="#FFFFFF"]
+    n3 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    <TR>
+        <TD COLSPAN="2"><FONT POINT-SIZE="10">n3</FONT>: rapid and easy</TD>
+    </TR>
+    
+        
+           <TR>
+<TD BGCOLOR="#DFF7C7"><FONT COLOR="#000000">cost=1</FONT></TD>
+</TR>
+        
+           <TR>
+<TD BGCOLOR="#D0F7C7"><FONT COLOR="#000000">t=10 minutes</FONT></TD>
+</TR>
+        
+    
+   </TABLE>
+> fillcolor="#FFFFFF"]
+  }
+  subgraph cluster_END {
+  label="END"
+  bgcolor="#B1C9CE"
+    n4 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    <TR>
+        <TD COLSPAN="2"><FONT POINT-SIZE="10">n4</FONT>: end</TD>
     </TR>
     
         
