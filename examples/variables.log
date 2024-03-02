@@ -8,21 +8,21 @@
 (inserted node n3: 'rapid and easy $t=10m $cost=1' after n2)
 >> aft n3 end $t=1d $cost=1
 (inserted node n4: 'end $t=1d $cost=1' after n3)
->> aft n1 slow and easy $t=1d $cost=1
-(inserted node n5: 'slow and easy $t=1d $cost=1' after n1)
+>> aft n1 slow and easy $t=1d $cost=1 #SG_SUBGRAPH
+(inserted node n5: 'slow and easy $t=1d $cost=1 #SG_SUBGRAPH' after n1)
 >> l n5 n4
 (Added edge e5 from n5 to n4)
 >> crit t
 performing critical path analysis using variable t
-Step 1: init project $t=1d $cost=5
-Step 2: quick next step $t=10m $cost=1
-Step 3: slow and easy $t=1d $cost=1
-Step 4: end $t=1d $cost=1
+Step 1: 1 day: init project $t=1d $cost=5
+Step 2: 10 minutes: quick next step $t=10m $cost=1
+Step 3: 1 day: slow and easy $t=1d $cost=1 #SG_SUBGRAPH
+Step 4: 1 day: end $t=1d $cost=1
 >> crit cost
 performing critical path analysis using variable cost
-Step 1: init project $t=1d $cost=5
-Step 2: quick next step $t=10m $cost=1
-Step 3: rapid but hard $t=10m $cost=9
-Step 4: rapid and easy $t=10m $cost=1
-Step 5: end $t=1d $cost=1
+Step 1: 5: init project $t=1d $cost=5
+Step 2: 1: quick next step $t=10m $cost=1
+Step 3: 9: rapid but hard $t=10m $cost=9
+Step 4: 1: rapid and easy $t=10m $cost=1
+Step 5: 1: end $t=1d $cost=1
 CTRL-D

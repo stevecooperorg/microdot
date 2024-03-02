@@ -4,6 +4,7 @@ Commands:
 
   - i new node label    - Insert a node labelled "new node label" into the graph
   - d n1                - Delete the <n1> node
+  - dd n1               - Delete the <n1> node and keep any edges connected
   - r n1 newnodetext    - Rename the <n1> node to "newnodetext"
   - l n1 n2             - Link the <n1> node to the <n2> node
   - u e4                - Unlink the <e4> edge
@@ -18,6 +19,7 @@ Commands:
   - p                   - print the dot definition for this graph to the terminal
   - j                   - print the json definition for this graph to the terminal
   - exit                - exit microdot
+  - crit varname        - do a critical path analysis on the graph using <varname> as the cost
 
 Usage:
 

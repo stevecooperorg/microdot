@@ -11,11 +11,11 @@ digraph {
     
         
            <TR>
-<TD BGCOLOR="#F37FC0"><FONT COLOR="#000000">cost=5</FONT></TD>
+<TD BGCOLOR="#C7EAFF"><FONT COLOR="#000000">t=1 day</FONT></TD>
 </TR>
         
            <TR>
-<TD BGCOLOR="#22AEFF"><FONT COLOR="#000000">t=1 days</FONT></TD>
+<TD BGCOLOR="#FCDFEF"><FONT COLOR="#000000">cost=5</FONT></TD>
 </TR>
         
     
@@ -28,11 +28,11 @@ digraph {
     
         
            <TR>
-<TD BGCOLOR="#22AEFF"><FONT COLOR="#000000">t=10 minutes</FONT></TD>
+<TD BGCOLOR="#FCDFEF"><FONT COLOR="#000000">cost=1</FONT></TD>
 </TR>
         
            <TR>
-<TD BGCOLOR="#F37FC0"><FONT COLOR="#000000">cost=1</FONT></TD>
+<TD BGCOLOR="#C7EAFF"><FONT COLOR="#000000">t=10 minutes</FONT></TD>
 </TR>
         
     
@@ -45,11 +45,11 @@ digraph {
     
         
            <TR>
-<TD BGCOLOR="#22AEFF"><FONT COLOR="#000000">t=10 minutes</FONT></TD>
+<TD BGCOLOR="#C7EAFF"><FONT COLOR="#000000">t=10 minutes</FONT></TD>
 </TR>
         
            <TR>
-<TD BGCOLOR="#F37FC0"><FONT COLOR="#000000">cost=9</FONT></TD>
+<TD BGCOLOR="#FCDFEF"><FONT COLOR="#000000">cost=9</FONT></TD>
 </TR>
         
     
@@ -62,11 +62,11 @@ digraph {
     
         
            <TR>
-<TD BGCOLOR="#F37FC0"><FONT COLOR="#000000">cost=1</FONT></TD>
+<TD BGCOLOR="#FCDFEF"><FONT COLOR="#000000">cost=1</FONT></TD>
 </TR>
         
            <TR>
-<TD BGCOLOR="#22AEFF"><FONT COLOR="#000000">t=10 minutes</FONT></TD>
+<TD BGCOLOR="#C7EAFF"><FONT COLOR="#000000">t=10 minutes</FONT></TD>
 </TR>
         
     
@@ -79,16 +79,19 @@ digraph {
     
         
            <TR>
-<TD BGCOLOR="#F37FC0"><FONT COLOR="#000000">cost=1</FONT></TD>
+<TD BGCOLOR="#C7EAFF"><FONT COLOR="#000000">t=1 day</FONT></TD>
 </TR>
         
            <TR>
-<TD BGCOLOR="#22AEFF"><FONT COLOR="#000000">t=1 days</FONT></TD>
+<TD BGCOLOR="#FCDFEF"><FONT COLOR="#000000">cost=1</FONT></TD>
 </TR>
         
     
    </TABLE>
 > fillcolor="#FFFFFF"]
+  subgraph cluster_SG_SUBGRAPH {
+
+  bgcolor="#F0CAA6"
     n5 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="2"><FONT POINT-SIZE="10">n5</FONT>: slow and easy</TD>
@@ -96,16 +99,17 @@ digraph {
     
         
            <TR>
-<TD BGCOLOR="#F37FC0"><FONT COLOR="#000000">cost=1</FONT></TD>
+<TD BGCOLOR="#FCDFEF"><FONT COLOR="#000000">cost=1</FONT></TD>
 </TR>
         
            <TR>
-<TD BGCOLOR="#22AEFF"><FONT COLOR="#000000">t=1 days</FONT></TD>
+<TD BGCOLOR="#C7EAFF"><FONT COLOR="#000000">t=1 day</FONT></TD>
 </TR>
         
     
    </TABLE>
 > fillcolor="#FFFFFF"]
+  }
 
     "n0" -> "n1" [label="e0"];
     "n1" -> "n2" [label="e1"];

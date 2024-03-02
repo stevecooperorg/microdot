@@ -194,10 +194,12 @@ impl Exporter for GraphVizExporter {
         }
 
         for var in variables.iter() {
-            let model = HashTagViewModel {
-                label: format!("{}", var),
-                bgcolor: ColorScheme::series(generate_hash(&var.name)).get_fill_color(),
-            };
+            let label = format!("{}", var);
+            let bgcolor = ColorScheme::series(generate_hash(&var.name))
+                .get_fill_color()
+                .mix(Colors::white())
+                .mix(Colors::white());
+            let model = HashTagViewModel { label, bgcolor };
             hash_tags.push(model);
         }
 

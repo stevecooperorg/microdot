@@ -85,12 +85,19 @@ pub fn repl<I: Interaction>(
                             variable_name
                         ));
 
-                        let shortest_path =
-                            find_shortest_path(&graph, CostCalculator::new(variable_name, true));
+                        let shortest_path = find_shortest_path(
+                            &graph,
+                            CostCalculator::new(variable_name.clone(), true),
+                        );
 
                         for (i, node) in shortest_path.iter().enumerate() {
                             if let Some(label) = graph.find_node_label(node) {
-                                interaction.log(format!("Step {}: {}", i + 1, label));
+                                let val = match graph.find_node_variable_value(node, &variable_name)
+                                {
+                                    Some(val) => format!("{}", val),
+                                    None => "".to_string(),
+                                };
+                                interaction.log(format!("Step {}: {}: {}", i + 1, val, label));
                             }
                         }
 

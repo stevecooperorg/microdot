@@ -24,7 +24,7 @@ impl GraphCommand {
             GraphCommand::DeleteNode {
                 id,
                 keep_edges: true,
-            } => format!("Delete the <{}> node and keep edges", id),
+            } => format!("Delete the <{}> node and keep any edges connected", id),
             GraphCommand::ExpandEdge { id, label } => format!(
                 "Expand the <{}> edge with a new node labelled \"{}\"",
                 id, label

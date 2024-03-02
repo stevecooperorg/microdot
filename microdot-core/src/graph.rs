@@ -1,5 +1,6 @@
 use crate::command::GraphCommand;
 use crate::exporter::{Exporter, NodeHighlight};
+use crate::labels::NodeInfo;
 use crate::pet::{GetWeight, PGraph};
 use crate::util::generate_hash;
 use crate::{CommandResult, Id, Label};
@@ -7,6 +8,12 @@ use regex::Regex;
 use std::collections::{BTreeMap, BTreeSet};
 use std::fmt::{Display, Formatter};
 use std::hash::{Hash, Hasher};
+use std::ops::Add;
+
+const HOUR: u32 = 60;
+const DAY: u32 = HOUR * 8;
+const MONTH: u32 = DAY * 20;
+const YEAR: u32 = DAY * 260;
 
 #[derive(Default)]
 pub struct Graph {
@@ -130,6 +137,17 @@ pub enum Time {
     Year(u32),
 }
 
+impl Add for Time {
+    type Output = Self;
+
+    fn add(self, other: Self) -> Self {
+        let m1 = self.to_minutes();
+        let m2 = other.to_minutes();
+        let total = m1 + m2;
+        Time::Minute(total)
+    }
+}
+
 impl PartialEq for Time {
     fn eq(&self, other: &Self) -> bool {
         self.to_minutes() == other.to_minutes()
@@ -138,13 +156,49 @@ impl PartialEq for Time {
 
 impl Display for Time {
     fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
-        match self {
-            Time::Minute(m) => write!(f, "{} minutes", m),
-            Time::Hour(h) => write!(f, "{} hours", h),
-            Time::Day(d) => write!(f, "{} days", d),
-            Time::Month(m) => write!(f, "{} months", m),
-            Time::Year(y) => write!(f, "{} years", y),
+        let mut remaining = self.to_minutes();
+        let years = remaining / YEAR;
+        remaining -= years * YEAR;
+        let months = remaining / MONTH;
+        remaining -= months * MONTH;
+        let days = remaining / DAY;
+        remaining -= days * DAY;
+        let hours = remaining / HOUR;
+        remaining -= hours * HOUR;
+
+        let mut result = vec![];
+        if years > 0 {
+            result.push(format!(
+                "{} year{}",
+                years,
+                if years == 1 { "" } else { "s" }
+            ));
         }
+        if months > 0 {
+            result.push(format!(
+                "{} month{}",
+                months,
+                if months == 1 { "" } else { "s" }
+            ));
+        }
+        if days > 0 {
+            result.push(format!("{} day{}", days, if days == 1 { "" } else { "s" }));
+        }
+        if hours > 0 {
+            result.push(format!(
+                "{} hour{}",
+                hours,
+                if hours == 1 { "" } else { "s" }
+            ));
+        }
+        if remaining > 0 {
+            result.push(format!(
+                "{} minute{}",
+                remaining,
+                if remaining == 1 { "" } else { "s" }
+            ));
+        }
+        write!(f, "{}", result.join(" "))
     }
 }
 
@@ -152,10 +206,10 @@ impl Time {
     pub fn to_minutes(&self) -> u32 {
         match self {
             Time::Minute(m) => *m,
-            Time::Hour(h) => h * 60,
-            Time::Day(d) => d * 60 * 24,
-            Time::Month(m) => m * 60 * 24 * 30,
-            Time::Year(y) => y * 60 * 24 * 365,
+            Time::Hour(h) => h * HOUR,
+            Time::Day(d) => d * DAY,
+            Time::Month(m) => m * MONTH,
+            Time::Year(y) => y * YEAR,
         }
     }
 
@@ -334,6 +388,22 @@ impl Graph {
         }
 
         None
+    }
+
+    pub fn find_node_variable_value(&self, id: &Id, variable_name: &str) -> Option<VariableValue> {
+        let label = match self.find_node_label(id) {
+            Some(label) => label,
+            None => return None,
+        };
+        let NodeInfo {
+            label: _,
+            tags: _,
+            variables,
+            subgraph: _,
+        } = NodeInfo::parse(&label);
+        variables
+            .get(variable_name)
+            .map(|value| value.value.clone())
     }
 
     pub fn highlight_search_results(&mut self, sub_label: Label) -> CommandResult {
@@ -614,5 +684,88 @@ mod tests {
 
         assert_eq!(graph.nodes.len(), 2);
         assert_eq!(graph.edges.len(), 1);
+    }
+}
+
+#[cfg(test)]
+mod time_tests {
+    use super::*;
+
+    #[test]
+    fn can_parse_time() {
+        let time = Time::parse("1m").unwrap();
+        assert_eq!(time, Time::Minute(1));
+
+        let time = Time::parse("1h").unwrap();
+        assert_eq!(time, Time::Hour(1));
+
+        let time = Time::parse("1d").unwrap();
+        assert_eq!(time, Time::Day(1));
+
+        let time = Time::parse("1M").unwrap();
+        assert_eq!(time, Time::Month(1));
+
+        let time = Time::parse("1y").unwrap();
+        assert_eq!(time, Time::Year(1));
+    }
+
+    #[test]
+    fn it_can_convert_time_to_minutes() {
+        let time = Time::Minute(1);
+        assert_eq!(time.to_minutes(), 1);
+
+        let time = Time::Hour(1);
+        assert_eq!(time.to_minutes(), HOUR);
+
+        // eight hour days
+        let time = Time::Day(1);
+        assert_eq!(time.to_minutes(), DAY);
+
+        //20 working days
+        let time = Time::Month(1);
+        assert_eq!(time.to_minutes(), DAY * 20);
+
+        // 260 working days of eight hours
+        let time = Time::Year(1);
+        assert_eq!(time.to_minutes(), DAY * 260);
+    }
+
+    #[test]
+    fn it_can_print() {
+        let time = Time::Minute(1);
+        assert_eq!(format!("{}", time), "1 minute");
+
+        let time = Time::Minute(2);
+        assert_eq!(format!("{}", time), "2 minutes");
+
+        let time = Time::Hour(1);
+        assert_eq!(format!("{}", time), "1 hour");
+
+        let time = Time::Hour(2);
+        assert_eq!(format!("{}", time), "2 hours");
+
+        let time = Time::Day(1);
+        assert_eq!(format!("{}", time), "1 day");
+
+        let time = Time::Day(2);
+        assert_eq!(format!("{}", time), "2 days");
+
+        let time = Time::Month(1);
+        assert_eq!(format!("{}", time), "1 month");
+
+        let time = Time::Month(2);
+        assert_eq!(format!("{}", time), "2 months");
+
+        let time = Time::Year(1);
+        assert_eq!(format!("{}", time), "1 year");
+
+        let time = Time::Year(2);
+        assert_eq!(format!("{}", time), "2 years");
+
+        let time = Time::Minute(60 * 9 + 15);
+        assert_eq!(format!("{}", time), "1 day 1 hour 15 minutes");
+
+        let time = Time::Day(1) + Time::Hour(1) + Time::Minute(15);
+        assert_eq!(format!("{}", time), "1 day 1 hour 15 minutes");
     }
 }

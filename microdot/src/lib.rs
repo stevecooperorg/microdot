@@ -41,7 +41,10 @@ impl Command {
                 format!("rename <{}> but no new label text supplied", id)
             }
             Command::Save => "save the graph to disc".into(),
-            Command::CriticalPathAnalysis { .. } => "perform a critical path analysis".into(),
+            Command::CriticalPathAnalysis { variable_name } => format!(
+                "do a critical path analysis on the graph using <{}> as the cost",
+                variable_name
+            ),
             Command::Show => "open the diagram in Gapplin".into(),
             Command::Exit => "exit microdot".into(),
             Command::ParseError { line } => format!("could not parse: \"{}\"", line),

@@ -3,7 +3,7 @@ aft n0 quick next step $t=10m $cost=1
 aft n1 rapid but hard $t=10m $cost=9
 aft n2 rapid and easy $t=10m $cost=1
 aft n3 end $t=1d $cost=1
-aft n1 slow and easy $t=1d $cost=1
+aft n1 slow and easy $t=1d $cost=1 #SG_SUBGRAPH
 l n5 n4
 crit t
 crit cost
