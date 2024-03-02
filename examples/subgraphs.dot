@@ -4,31 +4,6 @@ digraph {
     node [fontname = "helvetica" shape = "box" width=4 style=filled];
     edge [fontname = "helvetica" penwidth=3 color="#000000"];
 
-  subgraph cluster_SG_TEST {
-
-  bgcolor="#D4D5A1"
-    n4 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
-    <TR>
-        <TD COLSPAN="1"><FONT POINT-SIZE="10">n4</FONT>: tester installs PR branch code into dev<br/>environment</TD>
-    </TR>
-    
-   </TABLE>
-> fillcolor="#FFFFFF"]
-    n5 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
-    <TR>
-        <TD COLSPAN="1"><FONT POINT-SIZE="10">n5</FONT>: tester tests PR branch code</TD>
-    </TR>
-    
-   </TABLE>
-> fillcolor="#FFFFFF"]
-    n6 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
-    <TR>
-        <TD COLSPAN="1"><FONT POINT-SIZE="10">n6</FONT>: tester approves PR</TD>
-    </TR>
-    
-   </TABLE>
-> fillcolor="#FFFFFF"]
-  }
   subgraph cluster_SG_DEV {
 
   bgcolor="#90D6FF"
@@ -63,6 +38,31 @@ digraph {
     n7 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="1"><FONT POINT-SIZE="10">n7</FONT>: developer merges PR</TD>
+    </TR>
+    
+   </TABLE>
+> fillcolor="#FFFFFF"]
+  }
+  subgraph cluster_SG_TEST {
+
+  bgcolor="#D4D5A1"
+    n4 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    <TR>
+        <TD COLSPAN="1"><FONT POINT-SIZE="10">n4</FONT>: tester installs PR branch code into dev<br/>environment</TD>
+    </TR>
+    
+   </TABLE>
+> fillcolor="#FFFFFF"]
+    n5 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    <TR>
+        <TD COLSPAN="1"><FONT POINT-SIZE="10">n5</FONT>: tester tests PR branch code</TD>
+    </TR>
+    
+   </TABLE>
+> fillcolor="#FFFFFF"]
+    n6 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    <TR>
+        <TD COLSPAN="1"><FONT POINT-SIZE="10">n6</FONT>: tester approves PR</TD>
     </TR>
     
    </TABLE>

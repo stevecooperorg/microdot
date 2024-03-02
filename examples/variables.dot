@@ -28,11 +28,11 @@ digraph {
     
         
            <TR>
-<TD BGCOLOR="#C7EAFF"><FONT COLOR="#000000">t=10 minutes</FONT></TD>
+<TD BGCOLOR="#FCDFEF"><FONT COLOR="#000000">cost=1</FONT></TD>
 </TR>
         
            <TR>
-<TD BGCOLOR="#FCDFEF"><FONT COLOR="#000000">cost=1</FONT></TD>
+<TD BGCOLOR="#C7EAFF"><FONT COLOR="#000000">t=10 minutes</FONT></TD>
 </TR>
         
     
@@ -62,11 +62,11 @@ digraph {
     
         
            <TR>
-<TD BGCOLOR="#C7EAFF"><FONT COLOR="#000000">t=10 minutes</FONT></TD>
+<TD BGCOLOR="#FCDFEF"><FONT COLOR="#000000">cost=1</FONT></TD>
 </TR>
         
            <TR>
-<TD BGCOLOR="#FCDFEF"><FONT COLOR="#000000">cost=1</FONT></TD>
+<TD BGCOLOR="#C7EAFF"><FONT COLOR="#000000">t=10 minutes</FONT></TD>
 </TR>
         
     

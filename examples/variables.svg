@@ -25,10 +25,10 @@
 <polygon fill="#ffffff" stroke="black" points="449,-552 161,-552 161,-480 449,-480 449,-552"/>
 <text text-anchor="start" x="251" y="-526.2" font-family="Helvetica,sans-Serif" font-size="10.00">n1</text>
 <text text-anchor="start" x="261.5" y="-526.2" font-family="Helvetica,sans-Serif" font-size="14.00">: quick next step</text>
-<polygon fill="#c7eaff" stroke="none" points="251,-508.5 251,-523.5 344,-523.5 344,-508.5 251,-508.5"/>
-<text text-anchor="start" x="258.12" y="-510.2" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">t=10 minutes</text>
-<polygon fill="#fcdfef" stroke="none" points="251,-493.5 251,-508.5 344,-508.5 344,-493.5 251,-493.5"/>
-<text text-anchor="start" x="277.25" y="-495.2" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">cost=1</text>
+<polygon fill="#fcdfef" stroke="none" points="251,-508.5 251,-523.5 344,-523.5 344,-508.5 251,-508.5"/>
+<text text-anchor="start" x="277.25" y="-510.2" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">cost=1</text>
+<polygon fill="#c7eaff" stroke="none" points="251,-493.5 251,-508.5 344,-508.5 344,-493.5 251,-493.5"/>
+<text text-anchor="start" x="258.12" y="-495.2" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">t=10 minutes</text>
 </g>
 <!-- n0&#45;&gt;n1 -->
 <g id="edge1" class="edge">
@@ -79,10 +79,10 @@
 <polygon fill="#ffffff" stroke="black" points="288,-213 0,-213 0,-141 288,-141 288,-213"/>
 <text text-anchor="start" x="90.75" y="-187.2" font-family="Helvetica,sans-Serif" font-size="10.00">n3</text>
 <text text-anchor="start" x="101.25" y="-187.2" font-family="Helvetica,sans-Serif" font-size="14.00">: rapid and easy</text>
-<polygon fill="#c7eaff" stroke="none" points="91,-169.5 91,-184.5 183,-184.5 183,-169.5 91,-169.5"/>
-<text text-anchor="start" x="97.62" y="-171.2" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">t=10 minutes</text>
-<polygon fill="#fcdfef" stroke="none" points="91,-154.5 91,-169.5 183,-169.5 183,-154.5 91,-154.5"/>
-<text text-anchor="start" x="116.75" y="-156.2" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">cost=1</text>
+<polygon fill="#fcdfef" stroke="none" points="91,-169.5 91,-184.5 183,-184.5 183,-169.5 91,-169.5"/>
+<text text-anchor="start" x="116.75" y="-171.2" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">cost=1</text>
+<polygon fill="#c7eaff" stroke="none" points="91,-154.5 91,-169.5 183,-169.5 183,-154.5 91,-154.5"/>
+<text text-anchor="start" x="97.62" y="-156.2" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">t=10 minutes</text>
 </g>
 <!-- n2&#45;&gt;n3 -->
 <g id="edge3" class="edge">
