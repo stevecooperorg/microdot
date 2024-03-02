@@ -5,7 +5,6 @@ use regex::Regex;
 use std::collections::HashSet;
 
 #[derive(Debug, PartialEq, Clone, Default)]
-
 pub struct Variables {
     variables: Vec<Variable>,
 }
@@ -185,6 +184,7 @@ mod tests {
         };
         assert_eq!(actual, expected);
     }
+
     #[test]
     fn it_parses_node_label_with_inner_hashtag() {
         let actual = NodeInfo::parse(&Label("a #hashtag in the middle".to_string()));
@@ -196,6 +196,7 @@ mod tests {
         };
         assert_eq!(actual, expected);
     }
+
     #[test]
     fn it_parses_node_label_with_end_hashtag() {
         let actual = NodeInfo::parse(&Label("a #hashtag at the #end".to_string()));
