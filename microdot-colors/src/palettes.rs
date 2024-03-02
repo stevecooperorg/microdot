@@ -83,6 +83,13 @@ impl PaletteReader {
         let colors: Vec<_> = generator.take(20).collect();
         let palette = Palette { colors };
         result.insert("generated", palette);
+
+        // x
+        let large_palette = generate_equal_palette(40);
+        let palette = Palette {
+            colors: large_palette,
+        };
+        result.insert("large", palette);
         Ok(result)
     }
 }
@@ -123,6 +130,18 @@ impl Iterator for ColorIterator {
         let b = to255(rgb.blue);
         Some(Color::from_rgb(r, g, b))
     }
+}
+
+fn generate_equal_palette(n: usize) -> Vec<Color> {
+    let mut palette = Vec::new();
+    for i in 0..n {
+        let hue = (360.0 * i as f64) / n as f64; // Distribute hues evenly
+        let saturation = 75.0; // Adjust as needed for more or less vivid colors (percentage)
+        let lightness = 50.0; // Adjust for lighter or darker colors (percentage)
+        let color = Color::from_hsl(hue, saturation, lightness);
+        palette.push(color);
+    }
+    palette
 }
 
 #[cfg(test)]

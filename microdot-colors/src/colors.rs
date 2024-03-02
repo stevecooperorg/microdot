@@ -20,6 +20,35 @@ impl Color {
         }
     }
 
+    pub fn from_hsl(h: f64, s: f64, l: f64) -> Self {
+        let s = s / 100.0;
+        let l = l / 100.0;
+
+        let c = (1.0 - (2.0 * l - 1.0).abs()) * s;
+        let x = c * (1.0 - (((h / 60.0) % 2.0) - 1.0).abs());
+        let m = l - c / 2.0;
+
+        let (r_prime, g_prime, b_prime) = if (0.0..60.0).contains(&h) {
+            (c, x, 0.0)
+        } else if (60.0..120.0).contains(&h) {
+            (x, c, 0.0)
+        } else if (120.0..180.0).contains(&h) {
+            (0.0, c, x)
+        } else if (180.0..240.0).contains(&h) {
+            (0.0, x, c)
+        } else if (240.0..300.0).contains(&h) {
+            (x, 0.0, c)
+        } else {
+            (c, 0.0, x)
+        };
+
+        let r = ((r_prime + m) * 255.0).round() as u8;
+        let g = ((g_prime + m) * 255.0).round() as u8;
+        let b = ((b_prime + m) * 255.0).round() as u8;
+
+        Self::from_rgb(r, g, b)
+    }
+
     fn r(&self) -> u8 {
         self.inner.red
     }
@@ -100,7 +129,8 @@ pub struct ColorScheme {
 }
 
 // const PALETTE_NAME: &str = "antarctica_evening_v2";
-const PALETTE_NAME: &str = "generated";
+// const PALETTE_NAME: &str = "generated";
+const PALETTE_NAME: &str = "large";
 
 impl ColorScheme {
     const NODE_BORDER_WIDTH: f64 = 3.0f64;

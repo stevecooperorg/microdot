@@ -4,40 +4,9 @@ digraph {
     node [fontname = "helvetica" shape = "box" width=2.5 style=filled];
     edge [fontname = "helvetica" penwidth=3 color="#000000"];
 
-    n0 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
-    <TR>
-        <TD COLSPAN="2"><FONT POINT-SIZE="10">n0</FONT>: init project</TD>
-    </TR>
-    
-        
-           <TR>
-<TD BGCOLOR="#FCDFEF"><FONT COLOR="#000000">cost=5</FONT></TD>
-</TR>
-        
-           <TR>
-<TD BGCOLOR="#C7EAFF"><FONT COLOR="#000000">t=1 day</FONT></TD>
-</TR>
-        
-    
-   </TABLE>
-> fillcolor="#FFFFFF"]
-    n1 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
-    <TR>
-        <TD COLSPAN="2"><FONT POINT-SIZE="10">n1</FONT>: quick next step</TD>
-    </TR>
-    
-        
-           <TR>
-<TD BGCOLOR="#FCDFEF"><FONT COLOR="#000000">cost=1</FONT></TD>
-</TR>
-        
-           <TR>
-<TD BGCOLOR="#C7EAFF"><FONT COLOR="#000000">t=10 minutes</FONT></TD>
-</TR>
-        
-    
-   </TABLE>
-> fillcolor="#FFFFFF"]
+  subgraph cluster_FAST {
+  label="FAST"
+  bgcolor="#8FEFE0"
     n2 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="2"><FONT POINT-SIZE="10">n2</FONT>: rapid but hard</TD>
@@ -45,11 +14,11 @@ digraph {
     
         
            <TR>
-<TD BGCOLOR="#FCDFEF"><FONT COLOR="#000000">cost=9</FONT></TD>
+<TD BGCOLOR="#DFF7C7"><FONT COLOR="#000000">cost=9</FONT></TD>
 </TR>
         
            <TR>
-<TD BGCOLOR="#C7EAFF"><FONT COLOR="#000000">t=10 minutes</FONT></TD>
+<TD BGCOLOR="#D0F7C7"><FONT COLOR="#000000">t=10 minutes</FONT></TD>
 </TR>
         
     
@@ -62,16 +31,20 @@ digraph {
     
         
            <TR>
-<TD BGCOLOR="#FCDFEF"><FONT COLOR="#000000">cost=1</FONT></TD>
+<TD BGCOLOR="#DFF7C7"><FONT COLOR="#000000">cost=1</FONT></TD>
 </TR>
         
            <TR>
-<TD BGCOLOR="#C7EAFF"><FONT COLOR="#000000">t=10 minutes</FONT></TD>
+<TD BGCOLOR="#D0F7C7"><FONT COLOR="#000000">t=10 minutes</FONT></TD>
 </TR>
         
     
    </TABLE>
 > fillcolor="#FFFFFF"]
+  }
+  subgraph cluster_END {
+  label="END"
+  bgcolor="#8FE0EF"
     n4 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="2"><FONT POINT-SIZE="10">n4</FONT>: end</TD>
@@ -79,16 +52,58 @@ digraph {
     
         
            <TR>
-<TD BGCOLOR="#FCDFEF"><FONT COLOR="#000000">cost=1</FONT></TD>
+<TD BGCOLOR="#DFF7C7"><FONT COLOR="#000000">cost=1</FONT></TD>
 </TR>
         
            <TR>
-<TD BGCOLOR="#C7EAFF"><FONT COLOR="#000000">t=1 day</FONT></TD>
+<TD BGCOLOR="#D0F7C7"><FONT COLOR="#000000">t=1 day</FONT></TD>
 </TR>
         
     
    </TABLE>
 > fillcolor="#FFFFFF"]
+  }
+  subgraph cluster_INIT {
+  label="INIT"
+  bgcolor="#EF8FC9"
+    n0 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    <TR>
+        <TD COLSPAN="2"><FONT POINT-SIZE="10">n0</FONT>: init project</TD>
+    </TR>
+    
+        
+           <TR>
+<TD BGCOLOR="#DFF7C7"><FONT COLOR="#000000">cost=5</FONT></TD>
+</TR>
+        
+           <TR>
+<TD BGCOLOR="#D0F7C7"><FONT COLOR="#000000">t=1 day</FONT></TD>
+</TR>
+        
+    
+   </TABLE>
+> fillcolor="#FFFFFF"]
+    n1 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    <TR>
+        <TD COLSPAN="2"><FONT POINT-SIZE="10">n1</FONT>: quick next step</TD>
+    </TR>
+    
+        
+           <TR>
+<TD BGCOLOR="#DFF7C7"><FONT COLOR="#000000">cost=1</FONT></TD>
+</TR>
+        
+           <TR>
+<TD BGCOLOR="#D0F7C7"><FONT COLOR="#000000">t=10 minutes</FONT></TD>
+</TR>
+        
+    
+   </TABLE>
+> fillcolor="#FFFFFF"]
+  }
+  subgraph cluster_SLOW {
+  label="SLOW"
+  bgcolor="#8FA7EF"
     n5 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="2"><FONT POINT-SIZE="10">n5</FONT>: slow and easy</TD>
@@ -96,16 +111,17 @@ digraph {
     
         
            <TR>
-<TD BGCOLOR="#FCDFEF"><FONT COLOR="#000000">cost=1</FONT></TD>
+<TD BGCOLOR="#DFF7C7"><FONT COLOR="#000000">cost=1</FONT></TD>
 </TR>
         
            <TR>
-<TD BGCOLOR="#C7EAFF"><FONT COLOR="#000000">t=1 day</FONT></TD>
+<TD BGCOLOR="#D0F7C7"><FONT COLOR="#000000">t=1 day</FONT></TD>
 </TR>
         
     
    </TABLE>
 > fillcolor="#FFFFFF"]
+  }
 
     "n0" -> "n1" [label="e0"];
     "n1" -> "n2" [label="e1"];

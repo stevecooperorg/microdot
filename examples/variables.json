@@ -29,27 +29,27 @@
   "nodes": [
     {
       "id": "n0",
-      "label": "init project $t=1d $cost=5"
+      "label": "init project $t=1d $cost=5 #SG_INIT"
     },
     {
       "id": "n1",
-      "label": "quick next step $t=10m $cost=1"
+      "label": "quick next step $t=10m $cost=1 #SG_INIT"
     },
     {
       "id": "n2",
-      "label": "rapid but hard $t=10m $cost=9"
+      "label": "rapid but hard $t=10m $cost=9 #SG_FAST"
     },
     {
       "id": "n3",
-      "label": "rapid and easy $t=10m $cost=1"
+      "label": "rapid and easy $t=10m $cost=1 #SG_FAST"
     },
     {
       "id": "n4",
-      "label": "end $t=1d $cost=1"
+      "label": "end $t=1d $cost=1 #SG_END"
     },
     {
       "id": "n5",
-      "label": "slow and easy $t=1d $cost=1"
+      "label": "slow and easy $t=1d $cost=1 #SG_SLOW"
     }
   ]
 }
