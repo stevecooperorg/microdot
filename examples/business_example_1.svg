@@ -14,14 +14,14 @@
 <text text-anchor="middle" x="695.5" y="-101.7" font-family="Helvetica,sans-Serif" font-size="14.00">BLOCKER</text>
 </g>
 <g id="clust2" class="cluster">
-<title>cluster_RESULT</title>
-<polygon fill="#ceb1be" stroke="black" points="1079,-36 1079,-147 1383,-147 1383,-36 1079,-36"/>
-<text text-anchor="middle" x="1231" y="-129.7" font-family="Helvetica,sans-Serif" font-size="14.00">RESULT</text>
-</g>
-<g id="clust3" class="cluster">
 <title>cluster_CURRENT</title>
 <polygon fill="#b1bcce" stroke="black" points="8,-127 8,-238 1026,-238 1026,-127 8,-127"/>
 <text text-anchor="middle" x="517" y="-220.7" font-family="Helvetica,sans-Serif" font-size="14.00">CURRENT</text>
+</g>
+<g id="clust3" class="cluster">
+<title>cluster_RESULT</title>
+<polygon fill="#ceb1be" stroke="black" points="1079,-36 1079,-147 1383,-147 1383,-36 1079,-36"/>
+<text text-anchor="middle" x="1231" y="-129.7" font-family="Helvetica,sans-Serif" font-size="14.00">RESULT</text>
 </g>
 <!-- n4 -->
 <g id="node1" class="node">
@@ -31,7 +31,7 @@
 <text text-anchor="start" x="763.75" y="-47.2" font-family="Helvetica,sans-Serif" font-size="14.00">: shipping labels generated once a day</text>
 </g>
 <!-- n0 -->
-<g id="node3" class="node">
+<g id="node6" class="node">
 <title>n0</title>
 <polygon fill="#ffffff" stroke="black" points="1375,-116 1087,-116 1087,-44 1375,-44 1375,-116"/>
 <text text-anchor="start" x="1118.88" y="-82.7" font-family="Helvetica,sans-Serif" font-size="10.00">n0</text>
@@ -62,7 +62,7 @@
 <text text-anchor="middle" x="695.5" y="-53.7" font-family="Helvetica,sans-Serif" font-size="14.00">e4</text>
 </g>
 <!-- n1 -->
-<g id="node4" class="node">
+<g id="node3" class="node">
 <title>n1</title>
 <polygon fill="#ffffff" stroke="black" points="1018,-207 730,-207 730,-135 1018,-135 1018,-207"/>
 <text text-anchor="start" x="753.25" y="-166.2" font-family="Helvetica,sans-Serif" font-size="10.00">n1</text>
@@ -76,7 +76,7 @@
 <text text-anchor="middle" x="1052.5" y="-126.7" font-family="Helvetica,sans-Serif" font-size="14.00">e0</text>
 </g>
 <!-- n2 -->
-<g id="node5" class="node">
+<g id="node4" class="node">
 <title>n2</title>
 <polygon fill="#ffffff" stroke="black" points="661,-207 373,-207 373,-135 661,-135 661,-207"/>
 <text text-anchor="start" x="383.5" y="-166.2" font-family="Helvetica,sans-Serif" font-size="10.00">n2</text>
@@ -90,7 +90,7 @@
 <text text-anchor="middle" x="695.5" y="-172.7" font-family="Helvetica,sans-Serif" font-size="14.00">e1</text>
 </g>
 <!-- n3 -->
-<g id="node6" class="node">
+<g id="node5" class="node">
 <title>n3</title>
 <polygon fill="#ffffff" stroke="black" points="304,-207 16,-207 16,-135 304,-135 304,-207"/>
 <text text-anchor="start" x="36.25" y="-166.2" font-family="Helvetica,sans-Serif" font-size="10.00">n3</text>

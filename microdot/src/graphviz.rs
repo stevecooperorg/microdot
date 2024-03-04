@@ -12,7 +12,7 @@ use microdot_core::util::generate_hash;
 use microdot_core::{Id, Label};
 use once_cell::sync::OnceCell;
 use regex::Regex;
-use std::collections::HashMap;
+use std::collections::{BTreeMap, HashMap};
 use std::fmt::{Display, Formatter};
 use std::io::Write;
 use std::path::Path;
@@ -133,7 +133,7 @@ pub fn compile(path: &Path, _display_mode: DisplayMode, format: OutputFormat) ->
 
 pub struct GraphVizExporter {
     nodes: Vec<NodeHtmlLabelViewModel>,
-    subgraphs: HashMap<HashTag, Vec<NodeHtmlLabelViewModel>>,
+    subgraphs: BTreeMap<HashTag, Vec<NodeHtmlLabelViewModel>>,
     edges: Vec<EdgeViewModel>,
     is_left_right: bool,
     display_mode: DisplayMode,

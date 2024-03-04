@@ -1,7 +1,7 @@
 use crate::util::generate_hash;
 use std::hash::Hash;
 
-#[derive(PartialEq, Eq, Debug, Hash, Clone)]
+#[derive(PartialEq, Eq, Debug, Hash, Clone, Ord, PartialOrd)]
 pub struct HashTag {
     tag: String,
 }
