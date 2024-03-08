@@ -1,0 +1,9 @@
+i init project $t=1d $cost=5 #SG_INIT
+aft n0 quick next step $t=10m $cost=1 #SG_INIT
+aft n1 rapid but hard $t=10m $cost=9 #SG_FAST
+aft n2 rapid and easy $t=10m $cost=1 #SG_FAST
+aft n3 end $t=1d $cost=1 #SG_END
+aft n1 slow and easy $t=1d $cost=1 #SG_SLOW
+l n5 n4
+crit t
+crit cost

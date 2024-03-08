@@ -499,6 +499,11 @@ Cras ut egestas velit."#;
     }
 
     #[test]
+    fn test_graphviz_compile_bit_of_everything() {
+        compile_input_string_content(git_root().unwrap().join("examples/bit_of_everything.txt"));
+    }
+
+    #[test]
     fn test_graphviz_compile_business() {
         compile_input_string_content(git_root().unwrap().join("examples/business_example_1.txt"));
     }

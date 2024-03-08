@@ -1,0 +1,55 @@
+{
+  "edges": [
+    {
+      "from": "n0",
+      "to": "n1"
+    },
+    {
+      "from": "n1",
+      "to": "n2"
+    },
+    {
+      "from": "n2",
+      "to": "n3"
+    },
+    {
+      "from": "n3",
+      "to": "n4"
+    },
+    {
+      "from": "n1",
+      "to": "n5"
+    },
+    {
+      "from": "n5",
+      "to": "n4"
+    }
+  ],
+  "is_left_right": false,
+  "nodes": [
+    {
+      "id": "n0",
+      "label": "init project $t=1d $cost=5 #SG_INIT"
+    },
+    {
+      "id": "n1",
+      "label": "quick next step $t=10m $cost=1 #SG_INIT"
+    },
+    {
+      "id": "n2",
+      "label": "rapid but hard $t=10m $cost=9 #SG_FAST"
+    },
+    {
+      "id": "n3",
+      "label": "rapid and easy $t=10m $cost=1 #SG_FAST"
+    },
+    {
+      "id": "n4",
+      "label": "end $t=1d $cost=1 #SG_END"
+    },
+    {
+      "id": "n5",
+      "label": "slow and easy $t=1d $cost=1 #SG_SLOW"
+    }
+  ]
+}
