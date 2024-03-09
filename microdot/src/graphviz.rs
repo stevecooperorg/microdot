@@ -70,14 +70,12 @@ pub enum DisplayMode {
 #[derive(Clone, Copy)]
 pub enum OutputFormat {
     Svg,
-    Png,
 }
 
 impl Display for OutputFormat {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         let str = match self {
             OutputFormat::Svg => "svg",
-            OutputFormat::Png => "png",
         };
         write!(f, "{}", str)
     }

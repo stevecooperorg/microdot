@@ -179,19 +179,12 @@ fn compile_dot(interactive_dot_file: PathBuf) -> CommandResult {
         OutputFormat::Svg,
     );
 
-    let png_compile = graphviz::compile(
-        &interactive_dot_file,
-        DisplayMode::Interactive,
-        OutputFormat::Png,
-    );
-
-    let msg = match (svg_compile, png_compile) {
-        (Ok(_), Ok(_)) => format!(
+    let msg = match svg_compile {
+        Ok(_) => format!(
             "compiled interactive dot: {}",
             interactive_dot_file.to_string_lossy()
         ),
-        (Err(e), _) => format!("failed to compile interactive dot to svg: {}", e),
-        (_, Err(e)) => format!("failed to compile interactive dot to png: {}", e),
+        Err(e) => format!("failed to compile interactive dot to svg: {}", e),
     };
 
     CommandResult::new(msg)
