@@ -68,7 +68,7 @@ pub enum DisplayMode {
 }
 
 #[derive(Clone, Copy)]
-pub enum OutputFormat {
+enum OutputFormat {
     Svg,
 }
 
@@ -119,11 +119,11 @@ fn compile_dot_str<S: AsRef<str>>(
         Err(anyhow!(stderr))
     }
 }
-pub fn compile(path: &Path, _display_mode: DisplayMode, format: OutputFormat) -> Result<()> {
+pub fn compile(path: &Path, _display_mode: DisplayMode) -> Result<()> {
     let input_str = std::fs::read_to_string(path)?;
-    let out_file = path.with_extension(format.to_string());
+    let out_file = path.with_extension(OutputFormat::Svg.to_string());
 
-    compile_dot_str(input_str, _display_mode, format).and_then(|string| {
+    compile_dot_str(input_str, _display_mode, OutputFormat::Svg).and_then(|string| {
         write_if_different(out_file, string)?;
         Ok(())
     })
@@ -477,7 +477,7 @@ Cras ut egestas velit."#;
             dot_file.to_string_lossy()
         );
 
-        let compile_result = compile(&dot_file, DisplayMode::Interactive, OutputFormat::Svg);
+        let compile_result = compile(&dot_file, DisplayMode::Interactive);
         assert!(compile_result.is_ok());
     }
 

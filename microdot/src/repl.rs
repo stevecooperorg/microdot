@@ -1,4 +1,4 @@
-use crate::graphviz::{DisplayMode, GraphVizExporter, OutputFormat};
+use crate::graphviz::{DisplayMode, GraphVizExporter};
 use crate::json::JsonExporter;
 use crate::parser::parse_line;
 use crate::util::write_if_different;
@@ -173,11 +173,7 @@ fn save_dot_file(json_file: &Path, graph: &Graph) -> Result<PathBuf> {
 }
 
 fn compile_dot(interactive_dot_file: PathBuf) -> CommandResult {
-    let svg_compile = graphviz::compile(
-        &interactive_dot_file,
-        DisplayMode::Interactive,
-        OutputFormat::Svg,
-    );
+    let svg_compile = graphviz::compile(&interactive_dot_file, DisplayMode::Interactive);
 
     let msg = match svg_compile {
         Ok(_) => format!(
