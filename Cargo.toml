@@ -14,6 +14,7 @@ dirs = "4.0"
 futures = "0.3"
 hex="0.4"
 hyphenation = "0.8"
+layout-rs = { version = "0.1.2" }
 lazy_static = "1.4"
 md5 = "0.7"
 microdot-core= { path="../microdot-core" }
