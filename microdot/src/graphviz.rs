@@ -44,7 +44,7 @@ fn installed_graphviz_version() -> Option<String> {
         .clone()
 }
 
-pub fn installed_graphviz_version_inner() -> Option<String> {
+fn installed_graphviz_version_inner() -> Option<String> {
     // dot - graphviz version 2.49.1 (20210923.0004)
     let stderr = match cmd!(dot("-V")).output().ok() {
         Some(output) => output.stderr,
@@ -281,7 +281,7 @@ impl GraphVizExporter {
         }
     }
 
-    pub fn build(&self) -> String {
+    fn build(&self) -> String {
         let mut built = String::new();
         for node in &self.nodes {
             let line = node.render().unwrap();
