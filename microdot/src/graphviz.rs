@@ -382,6 +382,7 @@ mod dot {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::json::JsonImporter;
     use crate::util::{compile_input_string_content, git_root};
 
     #[test]
@@ -498,5 +499,32 @@ Cras ut egestas velit."#;
             "need a recent version of graphviz - have {}",
             major_version
         );
+    }
+    #[test]
+    fn test_from_env_var() {
+        let json_file = std::env::var("MICRODOT_EXTERNAL_JSON_FILE")
+            .expect("could not find env var MICRODOT_EXTERNAL_JSON_FILE");
+
+        if json_file.is_empty() {
+            return;
+        }
+
+        let json_file = Path::new(&json_file);
+        if !json_file.exists() {
+            panic!("json file does not exist: {}", json_file.to_string_lossy());
+        }
+
+        let graph = JsonImporter::load(json_file).expect("could not load json file");
+
+        // // export the graph to a dot file
+        // let mut dot_exporter = GraphVizExporter::new(DisplayMode::Interactive);
+        // let interactive_dot = dot_exporter.export_dot(&graph);
+        // let interactive_dot_file = json_file.with_extension("dot");
+        // write_if_different(&interactive_dot_file, interactive_dot)
+        //     .context("could not write dot file")
+        //     .unwrap();
+        //
+        // // compile the dot file to an svg
+        // compile_input_string_content(interactive_dot_file);
     }
 }

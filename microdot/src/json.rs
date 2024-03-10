@@ -111,7 +111,8 @@ impl JsonImporter {
         Ok(graph)
     }
 
-    pub fn load(json_file: &Path) -> Result<Graph> {
+    pub fn load(json_file: impl AsRef<Path>) -> Result<Graph> {
+        let json_file = json_file.as_ref();
         let json_content = {
             let mut f = File::open(json_file)?;
             let mut s = "".to_string();
