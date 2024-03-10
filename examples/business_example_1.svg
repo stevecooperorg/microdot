@@ -10,17 +10,17 @@
 <polygon fill="white" stroke="none" points="-4,4 -4,-250 1395,-250 1395,4 -4,4"/>
 <g id="clust1" class="cluster">
 <title>cluster_BLOCKER</title>
-<polygon fill="#dbcd93" stroke="black" points="365,-8 365,-119 1026,-119 1026,-8 365,-8"/>
+<polygon fill="#b27bbc" stroke="black" points="365,-8 365,-119 1026,-119 1026,-8 365,-8"/>
 <text text-anchor="middle" x="695.5" y="-101.7" font-family="Helvetica,sans-Serif" font-size="14.00">BLOCKER</text>
 </g>
 <g id="clust2" class="cluster">
 <title>cluster_CURRENT</title>
-<polygon fill="#c8ca87" stroke="black" points="8,-127 8,-238 1026,-238 1026,-127 8,-127"/>
+<polygon fill="#d99a93" stroke="black" points="8,-127 8,-238 1026,-238 1026,-127 8,-127"/>
 <text text-anchor="middle" x="517" y="-220.7" font-family="Helvetica,sans-Serif" font-size="14.00">CURRENT</text>
 </g>
 <g id="clust3" class="cluster">
 <title>cluster_RESULT</title>
-<polygon fill="#b27bbc" stroke="black" points="1079,-36 1079,-147 1383,-147 1383,-36 1079,-36"/>
+<polygon fill="#d3b277" stroke="black" points="1079,-36 1079,-147 1383,-147 1383,-36 1079,-36"/>
 <text text-anchor="middle" x="1231" y="-129.7" font-family="Helvetica,sans-Serif" font-size="14.00">RESULT</text>
 </g>
 <!-- n4 -->
@@ -36,7 +36,7 @@
 <polygon fill="#ffffff" stroke="black" points="1375,-116 1087,-116 1087,-44 1375,-44 1375,-116"/>
 <text text-anchor="start" x="1118.88" y="-82.7" font-family="Helvetica,sans-Serif" font-size="10.00">n0</text>
 <text text-anchor="start" x="1129.38" y="-82.7" font-family="Helvetica,sans-Serif" font-size="14.00">: #customers get delivery too slowly</text>
-<polygon fill="#f9d4d0" stroke="none" points="1118.88,-65 1118.88,-80 1343.12,-80 1343.12,-65 1118.88,-65"/>
+<polygon fill="#e4efcf" stroke="none" points="1118.88,-65 1118.88,-80 1343.12,-80 1343.12,-65 1118.88,-65"/>
 <text text-anchor="start" x="1195.75" y="-66.7" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">#customers</text>
 </g>
 <!-- n4&#45;&gt;n0 -->

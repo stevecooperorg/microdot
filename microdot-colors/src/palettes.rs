@@ -93,7 +93,7 @@ impl PaletteReader {
 
         // stretch out the colors in one named palette
         if let Some(palette) = result.get("retrometro") {
-            let stretched_fruits_tones = generate_gradient_palette(&palette.colors, 40);
+            let stretched_fruits_tones = generate_gradient_palette(&palette.colors, 60);
             let palette = Palette {
                 colors: stretched_fruits_tones,
             };
@@ -169,12 +169,12 @@ fn generate_gradient_palette(colors: &Vec<Color>, n: usize) -> Vec<Color> {
     let proportions: Vec<f64> = (0..n).map(|i| (i as f64 / nd) * stretch_by).collect();
 
     for t in proportions.iter() {
-        // if t >= &1.0 {
-        //     let last = colors.len() - 1;
-        //     let color = colors[last];
-        //     palette.push(color);
-        //     continue;
-        // }
+        if t >= &1.0 {
+            let last = colors.len() - 1;
+            let color = colors[last];
+            palette.push(color);
+            continue;
+        }
         let part = (colors.len() - 1) as f64 * t;
         let part_left = part.floor() as usize;
         let part_right = part_left + 1;

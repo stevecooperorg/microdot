@@ -6,7 +6,7 @@ digraph {
 
   subgraph cluster_DEV {
   label="DEV"
-  bgcolor="#7AB4C6"
+  bgcolor="#B27CBC"
     n0 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="1"><FONT POINT-SIZE="10">n0</FONT>: developer writes code</TD>
@@ -45,7 +45,7 @@ digraph {
   }
   subgraph cluster_TEST {
   label="TEST"
-  bgcolor="#D3B277"
+  bgcolor="#EBC1C8"
     n4 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="1"><FONT POINT-SIZE="10">n4</FONT>: tester installs PR branch code into dev<br/>environment</TD>
