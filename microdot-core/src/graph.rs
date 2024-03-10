@@ -322,7 +322,8 @@ impl Graph {
             .map(|(idx, _)| idx)
     }
 
-    pub fn to_petgraph(&self, graph: &mut PGraph, get_weights: impl GetWeight<Node>) {
+    pub fn to_petgraph(&self, get_weights: impl GetWeight<Node>) -> PGraph {
+        let mut graph: PGraph = PGraph::new();
         let mut indexes = BTreeMap::new();
         for node in &self.nodes {
             let weight = get_weights.get_weight(node);
@@ -337,6 +338,8 @@ impl Graph {
 
             graph.add_edge(from, to);
         }
+
+        graph
     }
     pub fn export<X: Exporter>(&self, exporter: &mut X) {
         exporter.set_direction(self.is_left_right);

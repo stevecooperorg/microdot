@@ -51,8 +51,7 @@ pub fn find_shortest_path(
     get_weights: impl GetWeight<crate::graph::Node>,
 ) -> Vec<Id> {
     // convert our graph to a petgraph so we can use the algorithms;
-    let mut pgraph: PGraph = PGraph::new();
-    graph.to_petgraph(&mut pgraph, get_weights);
+    let pgraph = graph.to_petgraph(get_weights);
 
     // we're going to gather every possible path through the graph, from all sources to
     // all targets, and then sort.
