@@ -20,78 +20,17 @@ use std::process::{Command, Output, Stdio};
 use textwrap::wrap_algorithms::{wrap_optimal_fit, Penalties};
 use textwrap::{fill, Options, WordSplitter};
 
-fn installed_graphviz_version() -> Option<String> {
-    static INSTANCE: OnceCell<Option<String>> = OnceCell::new();
-    INSTANCE
-        .get_or_init(installed_graphviz_version_inner)
-        .clone()
-}
-
-fn installed_graphviz_version_inner() -> Option<String> {
-    // dot - graphviz version 2.49.1 (20210923.0004)
-    let stderr = match cmd!(dot("-V")).output().ok() {
-        Some(output) => output.stderr,
-        None => return None,
-    };
-    let stderr = String::from_utf8_lossy(&stderr).to_string();
-    let rx = Regex::new(r"^dot - graphviz version (?P<ver>[0-9\.]+)").expect("not a valid rx");
-    let caps = rx.captures(&stderr).map(|c| {
-        c.name("ver")
-            .expect("should have named group")
-            .as_str()
-            .into()
-    });
-    caps
-}
-
 #[derive(Copy, Clone)]
 pub enum DisplayMode {
     Interactive,
     Presentation,
 }
 
-struct DotCompiler {}
-
-impl DotCompiler {
-    fn compile_dot_str<S: AsRef<str>>(input: S) -> Result<String> {
-        if installed_graphviz_version().is_none() {
-            return Err(anyhow::Error::msg("graphviz not installed"));
-        }
-
-        let mut child = Command::new("dot")
-            .arg(format!("-T{}", "svg"))
-            .stdin(Stdio::piped())
-            .stdout(Stdio::piped())
-            .spawn()?;
-
-        let child_stdin = child.stdin.as_mut().unwrap();
-        child_stdin.write_all(input.as_ref().as_bytes())?;
-
-        let output = child.wait_with_output()?;
-
-        let Output {
-            status,
-            stderr,
-            stdout,
-        } = output;
-
-        if status.success() {
-            let stdout = std::str::from_utf8(&stdout)
-                .context("converting graphviz output to utf8")?
-                .to_string();
-            Ok(stdout)
-        } else {
-            let stderr = String::from_utf8_lossy(&stderr).to_string();
-            Err(anyhow!(stderr))
-        }
-    }
-}
-
 pub fn compile(path: &Path) -> Result<()> {
     let input_str = std::fs::read_to_string(path)?;
     let out_file = path.with_extension("svg");
 
-    DotCompiler::compile_dot_str(input_str).and_then(|string| {
+    dot::DotCompiler::compile_dot_str(input_str).and_then(|string| {
         write_if_different(out_file, string)?;
         Ok(())
     })
@@ -375,6 +314,71 @@ struct GraphViewModel {
     width: f32,
 }
 
+mod dot {
+    use super::*;
+
+    pub fn installed_graphviz_version() -> Option<String> {
+        static INSTANCE: OnceCell<Option<String>> = OnceCell::new();
+        INSTANCE
+            .get_or_init(installed_graphviz_version_inner)
+            .clone()
+    }
+
+    fn installed_graphviz_version_inner() -> Option<String> {
+        // dot - graphviz version 2.49.1 (20210923.0004)
+        let stderr = match cmd!(dot("-V")).output().ok() {
+            Some(output) => output.stderr,
+            None => return None,
+        };
+        let stderr = String::from_utf8_lossy(&stderr).to_string();
+        let rx = Regex::new(r"^dot - graphviz version (?P<ver>[0-9\.]+)").expect("not a valid rx");
+        let caps = rx.captures(&stderr).map(|c| {
+            c.name("ver")
+                .expect("should have named group")
+                .as_str()
+                .into()
+        });
+        caps
+    }
+
+    pub struct DotCompiler {}
+
+    impl DotCompiler {
+        pub fn compile_dot_str<S: AsRef<str>>(input: S) -> Result<String> {
+            if installed_graphviz_version().is_none() {
+                return Err(anyhow::Error::msg("graphviz not installed"));
+            }
+
+            let mut child = Command::new("dot")
+                .arg(format!("-T{}", "svg"))
+                .stdin(Stdio::piped())
+                .stdout(Stdio::piped())
+                .spawn()?;
+
+            let child_stdin = child.stdin.as_mut().unwrap();
+            child_stdin.write_all(input.as_ref().as_bytes())?;
+
+            let output = child.wait_with_output()?;
+
+            let Output {
+                status,
+                stderr,
+                stdout,
+            } = output;
+
+            if status.success() {
+                let stdout = std::str::from_utf8(&stdout)
+                    .context("converting graphviz output to utf8")?
+                    .to_string();
+                Ok(stdout)
+            } else {
+                let stderr = String::from_utf8_lossy(&stderr).to_string();
+                Err(anyhow!(stderr))
+            }
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -481,7 +485,7 @@ Cras ut egestas velit."#;
 
     #[test]
     fn test_graphviz_installed() {
-        let version = installed_graphviz_version().expect("could not find graphviz version");
+        let version = dot::installed_graphviz_version().expect("could not find graphviz version");
         let major_version = *version
             .split('.')
             .collect::<Vec<_>>()
