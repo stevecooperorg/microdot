@@ -50,43 +50,48 @@ pub enum DisplayMode {
     Presentation,
 }
 
-fn compile_dot_str<S: AsRef<str>>(input: S) -> Result<String> {
-    if installed_graphviz_version().is_none() {
-        return Err(anyhow::Error::msg("graphviz not installed"));
-    }
+struct DotCompiler {}
 
-    let mut child = Command::new("dot")
-        .arg(format!("-T{}", "svg"))
-        .stdin(Stdio::piped())
-        .stdout(Stdio::piped())
-        .spawn()?;
+impl DotCompiler {
+    fn compile_dot_str<S: AsRef<str>>(input: S) -> Result<String> {
+        if installed_graphviz_version().is_none() {
+            return Err(anyhow::Error::msg("graphviz not installed"));
+        }
 
-    let child_stdin = child.stdin.as_mut().unwrap();
-    child_stdin.write_all(input.as_ref().as_bytes())?;
+        let mut child = Command::new("dot")
+            .arg(format!("-T{}", "svg"))
+            .stdin(Stdio::piped())
+            .stdout(Stdio::piped())
+            .spawn()?;
 
-    let output = child.wait_with_output()?;
+        let child_stdin = child.stdin.as_mut().unwrap();
+        child_stdin.write_all(input.as_ref().as_bytes())?;
 
-    let Output {
-        status,
-        stderr,
-        stdout,
-    } = output;
+        let output = child.wait_with_output()?;
 
-    if status.success() {
-        let stdout = std::str::from_utf8(&stdout)
-            .context("converting graphviz output to utf8")?
-            .to_string();
-        Ok(stdout)
-    } else {
-        let stderr = String::from_utf8_lossy(&stderr).to_string();
-        Err(anyhow!(stderr))
+        let Output {
+            status,
+            stderr,
+            stdout,
+        } = output;
+
+        if status.success() {
+            let stdout = std::str::from_utf8(&stdout)
+                .context("converting graphviz output to utf8")?
+                .to_string();
+            Ok(stdout)
+        } else {
+            let stderr = String::from_utf8_lossy(&stderr).to_string();
+            Err(anyhow!(stderr))
+        }
     }
 }
+
 pub fn compile(path: &Path) -> Result<()> {
     let input_str = std::fs::read_to_string(path)?;
     let out_file = path.with_extension("svg");
 
-    compile_dot_str(input_str).and_then(|string| {
+    DotCompiler::compile_dot_str(input_str).and_then(|string| {
         write_if_different(out_file, string)?;
         Ok(())
     })
