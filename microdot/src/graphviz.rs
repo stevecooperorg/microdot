@@ -14,7 +14,6 @@ use microdot_core::{Id, Label};
 use once_cell::sync::OnceCell;
 use regex::Regex;
 use std::collections::{BTreeMap, HashMap};
-use std::fmt::{Display, Formatter};
 use std::io::Write;
 use std::path::Path;
 use std::process::{Command, Output, Stdio};
@@ -51,29 +50,13 @@ pub enum DisplayMode {
     Presentation,
 }
 
-#[derive(Clone, Copy)]
-enum OutputFormat {
-    Svg,
-}
-
-impl Display for OutputFormat {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        let str = match self {
-            OutputFormat::Svg => "svg",
-        };
-        write!(f, "{}", str)
-    }
-}
-
-fn compile_dot_str<S: AsRef<str>>(input: S, format: OutputFormat) -> Result<String> {
+fn compile_dot_str<S: AsRef<str>>(input: S) -> Result<String> {
     if installed_graphviz_version().is_none() {
         return Err(anyhow::Error::msg("graphviz not installed"));
     }
 
-    let ext = format.to_string();
-
     let mut child = Command::new("dot")
-        .arg(format!("-T{}", ext))
+        .arg(format!("-T{}", "svg"))
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
         .spawn()?;
@@ -101,9 +84,9 @@ fn compile_dot_str<S: AsRef<str>>(input: S, format: OutputFormat) -> Result<Stri
 }
 pub fn compile(path: &Path) -> Result<()> {
     let input_str = std::fs::read_to_string(path)?;
-    let out_file = path.with_extension(OutputFormat::Svg.to_string());
+    let out_file = path.with_extension("svg");
 
-    compile_dot_str(input_str, OutputFormat::Svg).and_then(|string| {
+    compile_dot_str(input_str).and_then(|string| {
         write_if_different(out_file, string)?;
         Ok(())
     })
