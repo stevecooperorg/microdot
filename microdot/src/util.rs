@@ -56,7 +56,7 @@ pub fn compile_input_string_content(text_file: PathBuf) -> PathBuf {
     let log_file = text_file.with_extension("log");
     write_if_different(&log_file, auto_interaction.log()).expect("could not write log file");
 
-    compile(&dot_file, DisplayMode::Interactive)
+    compile(&dot_file)
         .unwrap_or_else(|_| panic!("Could not compile '{}'", dot_file.to_string_lossy()));
 
     log_file

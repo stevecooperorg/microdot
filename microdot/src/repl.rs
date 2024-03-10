@@ -173,7 +173,7 @@ fn save_dot_file(json_file: &Path, graph: &Graph) -> Result<PathBuf> {
 }
 
 fn compile_dot(interactive_dot_file: PathBuf) -> CommandResult {
-    let svg_compile = graphviz::compile(&interactive_dot_file, DisplayMode::Interactive);
+    let svg_compile = graphviz::compile(&interactive_dot_file);
 
     let msg = match svg_compile {
         Ok(_) => format!(

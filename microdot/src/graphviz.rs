@@ -81,11 +81,7 @@ impl Display for OutputFormat {
     }
 }
 
-fn compile_dot_str<S: AsRef<str>>(
-    input: S,
-    _display_mode: DisplayMode,
-    format: OutputFormat,
-) -> Result<String> {
+fn compile_dot_str<S: AsRef<str>>(input: S, format: OutputFormat) -> Result<String> {
     if installed_graphviz_version().is_none() {
         return Err(anyhow::Error::msg("graphviz not installed"));
     }
@@ -119,11 +115,11 @@ fn compile_dot_str<S: AsRef<str>>(
         Err(anyhow!(stderr))
     }
 }
-pub fn compile(path: &Path, _display_mode: DisplayMode) -> Result<()> {
+pub fn compile(path: &Path) -> Result<()> {
     let input_str = std::fs::read_to_string(path)?;
     let out_file = path.with_extension(OutputFormat::Svg.to_string());
 
-    compile_dot_str(input_str, _display_mode, OutputFormat::Svg).and_then(|string| {
+    compile_dot_str(input_str, OutputFormat::Svg).and_then(|string| {
         write_if_different(out_file, string)?;
         Ok(())
     })
@@ -477,7 +473,7 @@ Cras ut egestas velit."#;
             dot_file.to_string_lossy()
         );
 
-        let compile_result = compile(&dot_file, DisplayMode::Interactive);
+        let compile_result = compile(&dot_file);
         assert!(compile_result.is_ok());
     }
 
