@@ -1,6 +1,6 @@
 use clap::{Parser, ValueHint};
 use libmicrodot::helper::{GetNodeLabel, MicrodotHelper};
-use libmicrodot::json::{empty_json_graph, JsonImporter};
+use libmicrodot::json::JsonImporter;
 use libmicrodot::repl::repl;
 use microdot_core::graph::*;
 use microdot_core::*;
@@ -86,17 +86,15 @@ fn main() -> Result<(), anyhow::Error> {
 }
 
 fn load_graph(json_file: &Path) -> Result<Graph, anyhow::Error> {
-    let json_content = if json_file.exists() {
-        println!(
-            "loading existing graph from {}",
-            json_file.to_string_lossy()
-        );
+    if !json_file.exists() {
+        return Ok(Graph::new());
+    }
+
+    let json_content = {
         let mut f = File::open(json_file)?;
         let mut s = "".to_string();
         f.read_to_string(&mut s)?;
         s
-    } else {
-        empty_json_graph()
     };
 
     let importer = JsonImporter::new(json_content);
