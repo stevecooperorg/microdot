@@ -10,13 +10,13 @@
 <polygon fill="white" stroke="none" points="-4,4 -4,-239 2466,-239 2466,4 -4,4"/>
 <g id="clust1" class="cluster">
 <title>cluster_DEV</title>
-<polygon fill="#b27cbc" stroke="black" points="8,-8 8,-227 1383,-227 1383,-8 8,-8"/>
-<text text-anchor="middle" x="695.5" y="-209.7" font-family="Helvetica,sans-Serif" font-size="14.00">DEV</text>
+<polygon fill="#6b2478" stroke="black" points="8,-8 8,-227 1383,-227 1383,-8 8,-8"/>
+<text text-anchor="middle" x="695.5" y="-209.7" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#ffffff">DEV</text>
 </g>
 <g id="clust2" class="cluster">
 <title>cluster_TEST</title>
-<polygon fill="#ebc1c8" stroke="black" points="1436,-111 1436,-222 2454,-222 2454,-111 1436,-111"/>
-<text text-anchor="middle" x="1945" y="-204.7" font-family="Helvetica,sans-Serif" font-size="14.00">TEST</text>
+<polygon fill="#c5112f" stroke="black" points="1436,-111 1436,-222 2454,-222 2454,-111 1436,-111"/>
+<text text-anchor="middle" x="1945" y="-204.7" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#ffffff">TEST</text>
 </g>
 <!-- n0 -->
 <g id="node1" class="node">

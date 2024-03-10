@@ -10,23 +10,23 @@
 <polygon fill="white" stroke="none" points="-4,4 -4,-731 648,-731 648,4 -4,4"/>
 <g id="clust1" class="cluster">
 <title>cluster_END</title>
-<polygon fill="#d99a93" stroke="black" points="36,-8 36,-119 340,-119 340,-8 36,-8"/>
-<text text-anchor="middle" x="188" y="-101.7" font-family="Helvetica,sans-Serif" font-size="14.00">END</text>
+<polygon fill="#a32012" stroke="black" points="36,-8 36,-119 340,-119 340,-8 36,-8"/>
+<text text-anchor="middle" x="188" y="-101.7" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#ffffff">END</text>
 </g>
 <g id="clust2" class="cluster">
 <title>cluster_FAST</title>
-<polygon fill="#b37bbc" stroke="black" points="8,-161 8,-425 312,-425 312,-161 8,-161"/>
-<text text-anchor="middle" x="160" y="-407.7" font-family="Helvetica,sans-Serif" font-size="14.00">FAST</text>
+<polygon fill="#6c2378" stroke="black" points="8,-161 8,-425 312,-425 312,-161 8,-161"/>
+<text text-anchor="middle" x="160" y="-407.7" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#ffffff">FAST</text>
 </g>
 <g id="clust3" class="cluster">
 <title>cluster_INIT</title>
-<polygon fill="#c8ca87" stroke="black" points="201,-467 201,-719 505,-719 505,-467 201,-467"/>
-<text text-anchor="middle" x="353" y="-701.7" font-family="Helvetica,sans-Serif" font-size="14.00">INIT</text>
+<polygon fill="#878a1e" stroke="black" points="201,-467 201,-719 505,-719 505,-467 201,-467"/>
+<text text-anchor="middle" x="353" y="-701.7" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#ffffff">INIT</text>
 </g>
 <g id="clust4" class="cluster">
 <title>cluster_SLOW</title>
-<polygon fill="#dbcd93" stroke="black" points="332,-161 332,-272 636,-272 636,-161 332,-161"/>
-<text text-anchor="middle" x="484" y="-254.7" font-family="Helvetica,sans-Serif" font-size="14.00">SLOW</text>
+<polygon fill="#a78a10" stroke="black" points="332,-161 332,-272 636,-272 636,-161 332,-161"/>
+<text text-anchor="middle" x="484" y="-254.7" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#ffffff">SLOW</text>
 </g>
 <!-- n4 -->
 <g id="node1" class="node">
@@ -35,9 +35,9 @@
 <text text-anchor="start" x="167.75" y="-62.2" font-family="Helvetica,sans-Serif" font-size="10.00">n4</text>
 <text text-anchor="start" x="178.25" y="-62.2" font-family="Helvetica,sans-Serif" font-size="14.00">: end</text>
 <polygon fill="#fcdbe1" stroke="none" points="165.5,-44.5 165.5,-59.5 210.5,-59.5 210.5,-44.5 165.5,-44.5"/>
-<text text-anchor="start" x="167.75" y="-46.2" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">cost=1</text>
+<text text-anchor="start" x="167.75" y="-46.2" font-family="Helvetica,sans-Serif" font-size="14.00">cost=1</text>
 <polygon fill="#fcdbe1" stroke="none" points="165.5,-29.5 165.5,-44.5 210.5,-44.5 210.5,-29.5 165.5,-29.5"/>
-<text text-anchor="start" x="165.5" y="-31.2" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">t=1 day</text>
+<text text-anchor="start" x="165.5" y="-31.2" font-family="Helvetica,sans-Serif" font-size="14.00">t=1 day</text>
 </g>
 <!-- n2 -->
 <g id="node2" class="node">
@@ -46,9 +46,9 @@
 <text text-anchor="start" x="109.38" y="-368.2" font-family="Helvetica,sans-Serif" font-size="10.00">n2</text>
 <text text-anchor="start" x="119.88" y="-368.2" font-family="Helvetica,sans-Serif" font-size="14.00">: rapid but hard</text>
 <polygon fill="#fcdbe1" stroke="none" points="109.5,-350.5 109.5,-365.5 198.5,-365.5 198.5,-350.5 109.5,-350.5"/>
-<text text-anchor="start" x="133.75" y="-352.2" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">cost=9</text>
+<text text-anchor="start" x="133.75" y="-352.2" font-family="Helvetica,sans-Serif" font-size="14.00">cost=9</text>
 <polygon fill="#fcdbe1" stroke="none" points="109.5,-335.5 109.5,-350.5 198.5,-350.5 198.5,-335.5 109.5,-335.5"/>
-<text text-anchor="start" x="114.62" y="-337.2" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">t=10 minutes</text>
+<text text-anchor="start" x="114.62" y="-337.2" font-family="Helvetica,sans-Serif" font-size="14.00">t=10 minutes</text>
 </g>
 <!-- n3 -->
 <g id="node3" class="node">
@@ -57,9 +57,9 @@
 <text text-anchor="start" x="106.75" y="-215.2" font-family="Helvetica,sans-Serif" font-size="10.00">n3</text>
 <text text-anchor="start" x="117.25" y="-215.2" font-family="Helvetica,sans-Serif" font-size="14.00">: rapid and easy</text>
 <polygon fill="#fcdbe1" stroke="none" points="107,-197.5 107,-212.5 199,-212.5 199,-197.5 107,-197.5"/>
-<text text-anchor="start" x="132.75" y="-199.2" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">cost=1</text>
+<text text-anchor="start" x="132.75" y="-199.2" font-family="Helvetica,sans-Serif" font-size="14.00">cost=1</text>
 <polygon fill="#fcdbe1" stroke="none" points="107,-182.5 107,-197.5 199,-197.5 199,-182.5 107,-182.5"/>
-<text text-anchor="start" x="113.62" y="-184.2" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">t=10 minutes</text>
+<text text-anchor="start" x="113.62" y="-184.2" font-family="Helvetica,sans-Serif" font-size="14.00">t=10 minutes</text>
 </g>
 <!-- n2&#45;&gt;n3 -->
 <g id="edge3" class="edge">
@@ -82,9 +82,9 @@
 <text text-anchor="start" x="313.25" y="-662.2" font-family="Helvetica,sans-Serif" font-size="10.00">n0</text>
 <text text-anchor="start" x="323.75" y="-662.2" font-family="Helvetica,sans-Serif" font-size="14.00">: init project</text>
 <polygon fill="#fcdbe1" stroke="none" points="313.5,-644.5 313.5,-659.5 375.5,-659.5 375.5,-644.5 313.5,-644.5"/>
-<text text-anchor="start" x="324.25" y="-646.2" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">cost=5</text>
+<text text-anchor="start" x="324.25" y="-646.2" font-family="Helvetica,sans-Serif" font-size="14.00">cost=5</text>
 <polygon fill="#fcdbe1" stroke="none" points="313.5,-629.5 313.5,-644.5 375.5,-644.5 375.5,-629.5 313.5,-629.5"/>
-<text text-anchor="start" x="322" y="-631.2" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">t=1 day</text>
+<text text-anchor="start" x="322" y="-631.2" font-family="Helvetica,sans-Serif" font-size="14.00">t=1 day</text>
 </g>
 <!-- n1 -->
 <g id="node5" class="node">
@@ -93,9 +93,9 @@
 <text text-anchor="start" x="299" y="-521.2" font-family="Helvetica,sans-Serif" font-size="10.00">n1</text>
 <text text-anchor="start" x="309.5" y="-521.2" font-family="Helvetica,sans-Serif" font-size="14.00">: quick next step</text>
 <polygon fill="#fcdbe1" stroke="none" points="299,-503.5 299,-518.5 392,-518.5 392,-503.5 299,-503.5"/>
-<text text-anchor="start" x="325.25" y="-505.2" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">cost=1</text>
+<text text-anchor="start" x="325.25" y="-505.2" font-family="Helvetica,sans-Serif" font-size="14.00">cost=1</text>
 <polygon fill="#fcdbe1" stroke="none" points="299,-488.5 299,-503.5 392,-503.5 392,-488.5 299,-488.5"/>
-<text text-anchor="start" x="306.12" y="-490.2" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">t=10 minutes</text>
+<text text-anchor="start" x="306.12" y="-490.2" font-family="Helvetica,sans-Serif" font-size="14.00">t=10 minutes</text>
 </g>
 <!-- n0&#45;&gt;n1 -->
 <g id="edge1" class="edge">
@@ -118,9 +118,9 @@
 <text text-anchor="start" x="432.25" y="-215.2" font-family="Helvetica,sans-Serif" font-size="10.00">n5</text>
 <text text-anchor="start" x="442.75" y="-215.2" font-family="Helvetica,sans-Serif" font-size="14.00">: slow and easy</text>
 <polygon fill="#fcdbe1" stroke="none" points="432.5,-197.5 432.5,-212.5 506.5,-212.5 506.5,-197.5 432.5,-197.5"/>
-<text text-anchor="start" x="449.25" y="-199.2" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">cost=1</text>
+<text text-anchor="start" x="449.25" y="-199.2" font-family="Helvetica,sans-Serif" font-size="14.00">cost=1</text>
 <polygon fill="#fcdbe1" stroke="none" points="432.5,-182.5 432.5,-197.5 506.5,-197.5 506.5,-182.5 432.5,-182.5"/>
-<text text-anchor="start" x="447" y="-184.2" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">t=1 day</text>
+<text text-anchor="start" x="447" y="-184.2" font-family="Helvetica,sans-Serif" font-size="14.00">t=1 day</text>
 </g>
 <!-- n1&#45;&gt;n5 -->
 <g id="edge5" class="edge">

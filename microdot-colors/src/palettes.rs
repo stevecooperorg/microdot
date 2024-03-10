@@ -100,8 +100,6 @@ impl PaletteReader {
             result.insert("stretched", palette);
         }
 
-        println!("palettes: {:?}", result.inner.keys().collect::<Vec<_>>());
-
         Ok(result)
     }
 }

@@ -196,6 +196,7 @@ impl GraphVizExporter {
 
         for (subgraph_id, nodes) in self.subgraphs.iter() {
             let bgcolor = subgraph_adjust(ColorScheme::series(subgraph_id.hash()).get_fill_color());
+            let color = Color::from_rgb(255, 255, 255);
             built.push_str(&format!(
                 "  subgraph cluster_{} {{\n",
                 subgraph_id.to_string().replace('#', "")
@@ -203,6 +204,8 @@ impl GraphVizExporter {
             built.push_str(&format!("  label=\"{}\"", subgraph_id.to_string()));
             built.push('\n');
             built.push_str(&format!("  bgcolor=\"{}\"", bgcolor));
+            built.push('\n');
+            built.push_str(&format!("  fontcolor=\"{}\"", color));
             built.push('\n');
             for node in nodes {
                 let line = node.render().unwrap();
@@ -251,7 +254,7 @@ fn tag_adjust(color: Color) -> Color {
 }
 
 fn subgraph_adjust(color: Color) -> Color {
-    color.mute(0.6f64, 1.2f64)
+    color.mute(1.0f64, 0.6f64)
 }
 
 fn escape_label(label: &str) -> String {
