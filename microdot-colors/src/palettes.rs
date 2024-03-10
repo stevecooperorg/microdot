@@ -84,12 +84,24 @@ impl PaletteReader {
         let palette = Palette { colors };
         result.insert("generated", palette);
 
-        // x
+        // palette of equidistant colors by hue
         let large_palette = generate_equal_palette(40);
         let palette = Palette {
             colors: large_palette,
         };
         result.insert("large", palette);
+
+        // stretch out the colors in one named palette
+        if let Some(palette) = result.get("retrometro") {
+            let stretched_fruits_tones = generate_gradient_palette(&palette.colors, 40);
+            let palette = Palette {
+                colors: stretched_fruits_tones,
+            };
+            result.insert("stretched", palette);
+        }
+
+        println!("palettes: {:?}", result.inner.keys().collect::<Vec<_>>());
+
         Ok(result)
     }
 }
@@ -141,6 +153,38 @@ fn generate_equal_palette(n: usize) -> Vec<Color> {
         let color = Color::from_hsl(hue, saturation, lightness);
         palette.push(color);
     }
+    palette
+}
+
+fn generate_gradient_palette(colors: &Vec<Color>, n: usize) -> Vec<Color> {
+    if colors.len() < 2 {
+        panic!("At least two colors are required to generate a gradient palette");
+    }
+
+    let mut palette = Vec::new();
+
+    // proportions of the way through the palette;
+    let nd = n as f64;
+    let stretch_by = nd / (nd - 1.0);
+    let proportions: Vec<f64> = (0..n).map(|i| (i as f64 / nd) * stretch_by).collect();
+
+    for t in proportions.iter() {
+        // if t >= &1.0 {
+        //     let last = colors.len() - 1;
+        //     let color = colors[last];
+        //     palette.push(color);
+        //     continue;
+        // }
+        let part = (colors.len() - 1) as f64 * t;
+        let part_left = part.floor() as usize;
+        let part_right = part_left + 1;
+        let color1 = colors[part_left];
+        let color2 = colors[part_right];
+        let normalised_position_through_part = (part_left as f64 + t) / (colors.len() - 1) as f64;
+        let color = color1.interpolate(color2, normalised_position_through_part);
+        palette.push(color);
+    }
+
     palette
 }
 

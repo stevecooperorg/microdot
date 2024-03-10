@@ -6,7 +6,7 @@ digraph {
 
   subgraph cluster_BLOCKER {
   label="BLOCKER"
-  bgcolor="#B1CEC1"
+  bgcolor="#DBCD93"
     n4 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="1"><FONT POINT-SIZE="10">n4</FONT>: shipping labels generated once a day</TD>
@@ -24,7 +24,7 @@ digraph {
   }
   subgraph cluster_CURRENT {
   label="CURRENT"
-  bgcolor="#B1BCCE"
+  bgcolor="#C8CA87"
     n1 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="1"><FONT POINT-SIZE="10">n1</FONT>: orders need to be processed by hand</TD>
@@ -49,7 +49,7 @@ digraph {
   }
   subgraph cluster_RESULT {
   label="RESULT"
-  bgcolor="#CEB1BE"
+  bgcolor="#B27BBC"
     n0 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="1"><FONT POINT-SIZE="10">n0</FONT>: #customers get delivery too slowly</TD>
@@ -57,7 +57,7 @@ digraph {
     
         
            <TR>
-<TD BGCOLOR="#F7CEC7"><FONT COLOR="#000000">#customers</FONT></TD>
+<TD BGCOLOR="#F9D4D0"><FONT COLOR="#000000">#customers</FONT></TD>
 </TR>
         
     

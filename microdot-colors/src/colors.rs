@@ -49,6 +49,12 @@ impl Color {
         Self::from_rgb(r, g, b)
     }
 
+    pub fn to_rgb(&self) -> (u8, u8, u8) {
+        let r = self.r();
+        let g = self.g();
+        let b = self.b();
+        (r, g, b)
+    }
     pub fn to_hsl(&self) -> (f64, f64, f64) {
         let r = self.r() as f64 / 255.0;
         let g = self.g() as f64 / 255.0;
@@ -96,11 +102,7 @@ impl Color {
     }
 
     pub fn mix(&self, other: Color) -> Color {
-        let r = (self.r() as f64 + other.r() as f64) / 2.0;
-        let g = (self.g() as f64 + other.g() as f64) / 2.0;
-        let b = (self.b() as f64 + other.b() as f64) / 2.0;
-
-        Color::from_rgb(r as u8, g as u8, b as u8)
+        self.interpolate(other, 0.5)
     }
 
     pub fn mute(&self, saturation_decrease: f64, lightness_adjustment: f64) -> Self {
@@ -114,6 +116,18 @@ impl Color {
 
         // Convert back to RGB and return the new color
         Color::from_hsl(h, new_s, new_l)
+    }
+
+    pub fn interpolate(&self, color2: Color, normalised_position_through_part: f64) -> Color {
+        let (r, g, b) = self.to_rgb();
+        let (r2, g2, b2) = color2.to_rgb();
+        let r = (r as f64 * (1.0 - normalised_position_through_part)
+            + r2 as f64 * normalised_position_through_part) as u8;
+        let g = (g as f64 * (1.0 - normalised_position_through_part)
+            + g2 as f64 * normalised_position_through_part) as u8;
+        let b = (b as f64 * (1.0 - normalised_position_through_part)
+            + b2 as f64 * normalised_position_through_part) as u8;
+        Color::from_rgb(r, g, b)
     }
 
     pub fn to_html_string(&self) -> String {
@@ -177,7 +191,8 @@ pub struct ColorScheme {
 
 // const PALETTE_NAME: &str = "antarctica_evening_v2";
 // const PALETTE_NAME: &str = "generated";
-const PALETTE_NAME: &str = "large";
+// const PALETTE_NAME: &str = "large";
+const PALETTE_NAME: &str = "stretched";
 
 impl ColorScheme {
     const NODE_BORDER_WIDTH: f64 = 3.0f64;

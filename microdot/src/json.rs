@@ -122,6 +122,7 @@ impl JsonImporter {
 
         let importer = JsonImporter::new(json_content);
         let graph = importer.import()?;
+        println!("Loaded graph from {}: {}", json_file.display(), graph);
         Ok(graph)
     }
 }

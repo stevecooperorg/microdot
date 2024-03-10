@@ -26,6 +26,17 @@ pub struct Graph {
     current_node: Option<Id>,
 }
 
+impl Display for Graph {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "Graph: {} nodes, {} edges",
+            self.nodes.len(),
+            self.edges.len()
+        )
+    }
+}
+
 pub struct Node {
     id: Id,
     label: Label,
