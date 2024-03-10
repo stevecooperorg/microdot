@@ -56,7 +56,7 @@ fn main() -> Result<(), anyhow::Error> {
         json_file.to_path_buf()
     };
 
-    let graph = load_graph(&json_file)?;
+    let graph = load_graph_if_exists(&json_file)?;
     let graph = Arc::new(RwLock::new(graph));
     let gnl = GraphGetNodeLabel {
         graph: graph.clone(),
@@ -83,7 +83,7 @@ fn main() -> Result<(), anyhow::Error> {
     Ok(())
 }
 
-fn load_graph(json_file: &Path) -> Result<Graph, anyhow::Error> {
+fn load_graph_if_exists(json_file: &Path) -> Result<Graph, anyhow::Error> {
     if !json_file.exists() {
         return Ok(Graph::new());
     }
