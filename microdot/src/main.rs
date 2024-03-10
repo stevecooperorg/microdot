@@ -5,8 +5,6 @@ use libmicrodot::repl::repl;
 use microdot_core::graph::*;
 use microdot_core::*;
 use rustyline::{Config, Editor};
-use std::fs::File;
-use std::io::Read;
 use std::path::{Path, PathBuf};
 use std::sync::{Arc, RwLock};
 
@@ -90,14 +88,5 @@ fn load_graph(json_file: &Path) -> Result<Graph, anyhow::Error> {
         return Ok(Graph::new());
     }
 
-    let json_content = {
-        let mut f = File::open(json_file)?;
-        let mut s = "".to_string();
-        f.read_to_string(&mut s)?;
-        s
-    };
-
-    let importer = JsonImporter::new(json_content);
-    let graph = importer.import()?;
-    Ok(graph)
+    JsonImporter::load(json_file)
 }

@@ -1,9 +1,13 @@
+use anyhow::Result;
 use microdot_core::exporter::{Exporter, NodeHighlight};
 use microdot_core::graph::Graph;
 use microdot_core::{Id, Label};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 use std::collections::HashMap;
+use std::fs::File;
+use std::io::Read;
+use std::path::Path;
 
 #[derive(Default)]
 pub struct JsonExporter {
@@ -104,6 +108,19 @@ impl JsonImporter {
             }
         }
 
+        Ok(graph)
+    }
+
+    pub fn load(json_file: &Path) -> Result<Graph> {
+        let json_content = {
+            let mut f = File::open(json_file)?;
+            let mut s = "".to_string();
+            f.read_to_string(&mut s)?;
+            s
+        };
+
+        let importer = JsonImporter::new(json_content);
+        let graph = importer.import()?;
         Ok(graph)
     }
 }
