@@ -57,7 +57,7 @@ pub fn compile_input_string_content(text_file: PathBuf) -> PathBuf {
     write_if_different(&log_file, auto_interaction.log()).expect("could not write log file");
 
     compile(&dot_file)
-        .unwrap_or_else(|_| panic!("Could not compile '{}'", dot_file.to_string_lossy()));
+        .unwrap_or_else(|e| panic!("Could not compile '{}': {}", dot_file.to_string_lossy(), e));
 
     log_file
 }

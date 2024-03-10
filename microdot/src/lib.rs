@@ -2,6 +2,7 @@ use microdot_core::command::GraphCommand;
 use microdot_core::{Id, Label, Line};
 use rustyline::{Editor, Helper};
 
+pub mod filters;
 pub mod graphviz;
 pub mod helper;
 pub mod json;
