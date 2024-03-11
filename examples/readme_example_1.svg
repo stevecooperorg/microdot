@@ -21,9 +21,9 @@
 <polygon fill="#ffffff" stroke="black" points="288,-72 0,-72 0,0 288,0 288,-72"/>
 <text text-anchor="start" x="68.62" y="-46.2" font-family="Helvetica,sans-Serif" font-size="10.00">n1</text>
 <text text-anchor="start" x="79.12" y="-46.2" font-family="Helvetica,sans-Serif" font-size="14.00">: and then this happens</text>
-<polygon fill="#fae8c8" stroke="none" points="69,-28.5 69,-43.5 165,-43.5 165,-28.5 69,-28.5"/>
+<polygon fill="#f3c36e" stroke="none" points="69,-28.5 69,-43.5 165,-43.5 165,-28.5 69,-28.5"/>
 <text text-anchor="start" x="95.25" y="-30.2" font-family="Helvetica,sans-Serif" font-size="14.00">#TAG1</text>
-<polygon fill="#faf2d0" stroke="none" points="69,-13.5 69,-28.5 165,-28.5 165,-13.5 69,-13.5"/>
+<polygon fill="#f2dc7c" stroke="none" points="69,-13.5 69,-28.5 165,-28.5 165,-13.5 69,-13.5"/>
 <text text-anchor="start" x="95.25" y="-15.2" font-family="Helvetica,sans-Serif" font-size="14.00">#TAG2</text>
 </g>
 <!-- n0&#45;&gt;n1 -->

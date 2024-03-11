@@ -15,11 +15,11 @@ digraph {
     
         
            <TR>
-<TD BGCOLOR="#FCDBE1">cost=1</TD>
+<TD BGCOLOR="#F690A3">cost=1</TD>
 </TR>
         
            <TR>
-<TD BGCOLOR="#FCDBE1">t=1 day</TD>
+<TD BGCOLOR="#F690A1">t=1 day</TD>
 </TR>
         
     
@@ -37,11 +37,11 @@ digraph {
     
         
            <TR>
-<TD BGCOLOR="#FCDBE1">cost=9</TD>
+<TD BGCOLOR="#F690A3">cost=9</TD>
 </TR>
         
            <TR>
-<TD BGCOLOR="#FCDBE1">t=10 minutes</TD>
+<TD BGCOLOR="#F690A1">t=10 minutes</TD>
 </TR>
         
     
@@ -54,11 +54,11 @@ digraph {
     
         
            <TR>
-<TD BGCOLOR="#FCDBE1">cost=1</TD>
+<TD BGCOLOR="#F690A3">cost=1</TD>
 </TR>
         
            <TR>
-<TD BGCOLOR="#FCDBE1">t=10 minutes</TD>
+<TD BGCOLOR="#F690A1">t=10 minutes</TD>
 </TR>
         
     
@@ -76,11 +76,11 @@ digraph {
     
         
            <TR>
-<TD BGCOLOR="#FCDBE1">cost=5</TD>
+<TD BGCOLOR="#F690A3">cost=5</TD>
 </TR>
         
            <TR>
-<TD BGCOLOR="#FCDBE1">t=1 day</TD>
+<TD BGCOLOR="#F690A1">t=1 day</TD>
 </TR>
         
     
@@ -93,11 +93,11 @@ digraph {
     
         
            <TR>
-<TD BGCOLOR="#FCDBE1">cost=1</TD>
+<TD BGCOLOR="#F690A3">cost=1</TD>
 </TR>
         
            <TR>
-<TD BGCOLOR="#FCDBE1">t=10 minutes</TD>
+<TD BGCOLOR="#F690A1">t=10 minutes</TD>
 </TR>
         
     
@@ -115,11 +115,11 @@ digraph {
     
         
            <TR>
-<TD BGCOLOR="#FCDBE1">cost=1</TD>
+<TD BGCOLOR="#F690A3">cost=1</TD>
 </TR>
         
            <TR>
-<TD BGCOLOR="#FCDBE1">t=1 day</TD>
+<TD BGCOLOR="#F690A1">t=1 day</TD>
 </TR>
         
     

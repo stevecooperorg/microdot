@@ -36,7 +36,7 @@
 <polygon fill="#ffffff" stroke="black" points="1375,-116 1087,-116 1087,-44 1375,-44 1375,-116"/>
 <text text-anchor="start" x="1118.88" y="-82.7" font-family="Helvetica,sans-Serif" font-size="10.00">n0</text>
 <text text-anchor="start" x="1129.38" y="-82.7" font-family="Helvetica,sans-Serif" font-size="14.00">: #customers get delivery too slowly</text>
-<polygon fill="#e4efcf" stroke="none" points="1118.88,-65 1118.88,-80 1343.12,-80 1343.12,-65 1118.88,-65"/>
+<polygon fill="#bad782" stroke="none" points="1118.88,-65 1118.88,-80 1343.12,-80 1343.12,-65 1118.88,-65"/>
 <text text-anchor="start" x="1195.75" y="-66.7" font-family="Helvetica,sans-Serif" font-size="14.00">#customers</text>
 </g>
 <!-- n4&#45;&gt;n0 -->

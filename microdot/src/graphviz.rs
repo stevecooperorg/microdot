@@ -250,7 +250,7 @@ fn to_dot_label_string(label: &str) -> String {
 }
 
 fn tag_adjust(color: Color) -> Color {
-    color.mix(Colors::white()).mix(Colors::white())
+    color.mix(Colors::white()).mute(1.0f64, 0.9f64)
 }
 
 fn subgraph_adjust(color: Color) -> Color {
