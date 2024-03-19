@@ -270,7 +270,7 @@ impl Variable {
     }
 
     pub fn variable_rx() -> Regex {
-        Regex::new("\\$([A-Za-z][A-Za-z0-9_-]*)=([A-Za-z0-9_-]+)").expect("not a regex")
+        Regex::new("\\$([A-Za-z][A-Za-z0-9_-]*)=(\\S+)").expect("not a regex")
     }
 
     pub fn parse(input: &str) -> Option<Self> {
@@ -781,5 +781,16 @@ mod time_tests {
 
         let time = Time::Day(1) + Time::Hour(1) + Time::Minute(15);
         assert_eq!(format!("{}", time), "1 day 1 hour 15 minutes");
+    }
+}
+
+#[cfg(test)]
+mod variable_tests {
+    use super::*;
+
+    #[test]
+    fn it_can_parse_a_plus_in_a_variable_string() {
+        let variable = Variable::parse("$foo=x+1");
+        assert_eq!(variable.unwrap().value, VariableValue::string("x+1"));
     }
 }

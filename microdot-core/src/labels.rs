@@ -179,6 +179,14 @@ mod tests {
     }
 
     #[test]
+    fn it_matches_multiple_variables() {
+        let (variables, _) = extract_variables("$var1=variable1 $var2=variable2");
+
+        assert_eq!(variables.get("var1"), Some(&Variable::new("var1", VariableValue::string("variable1"))));
+        assert_eq!(variables.get("var2"), Some(&Variable::new("var2", VariableValue::string("variable2"))));
+    }
+
+    #[test]
     fn it_parses_node_label_with_no_markup() {
         let actual = NodeInfo::parse(&Label("no hashtags".to_string()));
         let expected = NodeInfo {
