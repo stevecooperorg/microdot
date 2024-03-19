@@ -270,7 +270,7 @@ impl Variable {
     }
 
     pub fn variable_rx() -> Regex {
-        Regex::new("\\$([A-Za-z][A-Za-z0-9_-]*)=([A-Za-z0-9+_-]+)").expect("not a regex")
+        Regex::new("\\$([A-Za-z][A-Za-z0-9_-]*)=(\\S+)").expect("not a regex")
     }
 
     pub fn parse(input: &str) -> Option<Self> {
