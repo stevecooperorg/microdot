@@ -8,15 +8,15 @@ use rustyline::{Config, Editor};
 use std::path::{Path, PathBuf};
 use std::sync::{Arc, RwLock};
 
-/// Simple program to greet a person
+/// a REPL and terminal ui for dot and graphviz
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
 struct Opts {
-    /// Sets a custom config file. Could have been an Option<T> with no default too
+    /// Sets the data source file, defaults to ~/.microdot_graph.json
     #[clap(short, long,  value_hint = ValueHint::FilePath)]
     file: Option<PathBuf>,
 
-    /// Sets a custom config file. Could have been an Option<T> with no default too
+    /// Sets a custom history file location, defaults to ~/.microdot_history
     #[clap(short, long, value_hint = ValueHint::FilePath)]
     history: Option<PathBuf>,
 }
