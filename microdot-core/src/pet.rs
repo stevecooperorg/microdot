@@ -142,6 +142,7 @@ impl GetVariableValue<Node> for CostCalculator {
 #[cfg(test)]
 pub mod tests {
     use super::*;
+    use crate::graph::Time;
     use crate::Label;
 
     fn uniform_weight<T>(_node: &T) -> VariableValue {
@@ -157,8 +158,9 @@ pub mod tests {
         graph.link_edge(&a, &b);
         graph.link_edge(&b, &c);
 
-        let path = find_shortest_path(&graph, uniform_weight).ids;
-        assert_eq!(path, vec![a, b, c]);
+        let path = find_shortest_path(&graph, uniform_weight);
+        assert_eq!(path.ids, vec![a, b, c]);
+        assert_eq!(path.cost, VariableValue::number(3.0));
     }
 
     #[test]
@@ -189,8 +191,9 @@ pub mod tests {
                 VariableValue::number(-1.0)
             }
         }
-        let path = find_shortest_path(&graph, s1_is_expensive).ids;
-        assert_eq!(path, vec![q1, s1, q4]);
+        let path = find_shortest_path(&graph, s1_is_expensive);
+        assert_eq!(path.ids, vec![q1, s1, q4]);
+        assert_eq!(path.cost, VariableValue::number(-12.0));
     }
 
     #[test]
@@ -213,10 +216,12 @@ pub mod tests {
         graph.link_edge(&q2, &q3);
         graph.link_edge(&q3, &q4);
 
-        let longest_path = find_shortest_path(&graph, CostCalculator::new("cost", true)).ids;
-        assert_eq!(longest_path, vec![q1.clone(), s1, q4.clone()]);
+        let longest_path = find_shortest_path(&graph, CostCalculator::new("cost", true));
+        assert_eq!(longest_path.ids, vec![q1.clone(), s1, q4.clone()]);
+        assert_eq!(longest_path.cost, VariableValue::time(Time::Minute(-500)));
 
-        let shortest_path = find_shortest_path(&graph, CostCalculator::new("cost", false)).ids;
-        assert_eq!(shortest_path, vec![q1, q2, q3, q4]);
+        let shortest_path = find_shortest_path(&graph, CostCalculator::new("cost", false));
+        assert_eq!(shortest_path.ids, vec![q1, q2, q3, q4]);
+        assert_eq!(shortest_path.cost, VariableValue::time(Time::Minute(40)));
     }
 }

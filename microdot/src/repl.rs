@@ -101,6 +101,11 @@ pub fn repl<I: Interaction>(
                             }
                         }
 
+                        if !shortest_path.ids.is_empty() {
+                            interaction.log("====================");
+                            interaction.log(format!("Total cost: {}", shortest_path.cost));
+                        }
+
                         true
                     }
                     Command::ParseError { .. } => {
