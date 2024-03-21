@@ -46,10 +46,12 @@ impl PGraph {
     }
 }
 
-pub fn find_shortest_path(
-    graph: &Graph,
-    get_weights: impl GetWeight<crate::graph::Node>,
-) -> Vec<Id> {
+pub struct Path {
+    pub ids: Vec<Id>,
+    pub cost: String,
+}
+
+pub fn find_shortest_path(graph: &Graph, get_weights: impl GetWeight<crate::graph::Node>) -> Path {
     // convert our graph to a petgraph so we can use the algorithms;
     let pgraph = graph.to_petgraph(get_weights);
 
@@ -84,7 +86,7 @@ pub fn find_shortest_path(
             .sum::<Weight>()
     });
 
-    if let Some(path) = all_paths.first() {
+    let path = if let Some(path) = all_paths.first() {
         let best_path = path
             .iter()
             .map(|idx| pgraph.index_to_id[idx].clone())
@@ -92,6 +94,11 @@ pub fn find_shortest_path(
         best_path
     } else {
         vec![]
+    };
+
+    Path {
+        ids: path,
+        cost: "unimplemented".to_string(),
     }
 }
 
@@ -147,7 +154,7 @@ pub mod tests {
         graph.link_edge(&a, &b);
         graph.link_edge(&b, &c);
 
-        let path = find_shortest_path(&graph, uniform_weight);
+        let path = find_shortest_path(&graph, uniform_weight).ids;
         assert_eq!(path, vec![a, b, c]);
     }
 
@@ -179,7 +186,7 @@ pub mod tests {
                 -1
             }
         }
-        let path = find_shortest_path(&graph, s1_is_expensive);
+        let path = find_shortest_path(&graph, s1_is_expensive).ids;
         assert_eq!(path, vec![q1, s1, q4]);
     }
 
@@ -203,10 +210,10 @@ pub mod tests {
         graph.link_edge(&q2, &q3);
         graph.link_edge(&q3, &q4);
 
-        let longest_path = find_shortest_path(&graph, CostCalculator::new("cost", true));
+        let longest_path = find_shortest_path(&graph, CostCalculator::new("cost", true)).ids;
         assert_eq!(longest_path, vec![q1.clone(), s1, q4.clone()]);
 
-        let shortest_path = find_shortest_path(&graph, CostCalculator::new("cost", false));
+        let shortest_path = find_shortest_path(&graph, CostCalculator::new("cost", false)).ids;
         assert_eq!(shortest_path, vec![q1, q2, q3, q4]);
     }
 }

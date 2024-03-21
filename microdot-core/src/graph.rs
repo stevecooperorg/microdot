@@ -118,6 +118,15 @@ impl VariableValue {
     pub fn time(value: Time) -> Self {
         VariableValue::Time(value)
     }
+
+    pub fn is_zero(&self) -> bool {
+        match self {
+            VariableValue::Number(n) => *n == 0.0,
+            VariableValue::Time(t) => *t == Time::Minute(0),
+            VariableValue::String(_) => false,
+            VariableValue::Boolean(_) => false,
+        }
+    }
 }
 
 impl Display for VariableValue {

@@ -90,7 +90,7 @@ pub fn repl<I: Interaction>(
                             CostCalculator::new(variable_name.clone(), true),
                         );
 
-                        for (i, node) in shortest_path.iter().enumerate() {
+                        for (i, node) in shortest_path.ids.iter().enumerate() {
                             if let Some(label) = graph.find_node_label(node) {
                                 let val = match graph.find_node_variable_value(node, &variable_name)
                                 {
