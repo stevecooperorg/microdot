@@ -48,7 +48,7 @@ impl Node {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialOrd)]
 pub enum VariableValue {
     String(String),
     Number(f64),
@@ -167,6 +167,12 @@ pub enum Time {
     Day(u32),
     Month(u32),
     Year(u32),
+}
+
+impl PartialOrd for Time {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.to_minutes().cmp(&other.to_minutes()))
+    }
 }
 
 impl Add for Time {

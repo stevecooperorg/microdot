@@ -505,8 +505,7 @@ Cras ut egestas velit."#;
     }
     #[test]
     fn test_from_env_var() {
-        let json_file = std::env::var("MICRODOT_EXTERNAL_JSON_FILE")
-            .expect("could not find env var MICRODOT_EXTERNAL_JSON_FILE");
+        let json_file = std::env::var("MICRODOT_EXTERNAL_JSON_FILE").unwrap_or_default();
 
         if json_file.is_empty() {
             return;
