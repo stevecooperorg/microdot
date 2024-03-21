@@ -1,7 +1,7 @@
 use crate::command::GraphCommand;
 use crate::exporter::{Exporter, NodeHighlight};
 use crate::labels::NodeInfo;
-use crate::pet::{GetWeight, PGraph};
+use crate::pet::{GetVariableValue, PGraph};
 use crate::util::generate_hash;
 use crate::{CommandResult, Id, Label};
 use regex::Regex;
@@ -441,7 +441,7 @@ impl Graph {
             .map(|(idx, _)| idx)
     }
 
-    pub fn to_petgraph(&self, get_weights: impl GetWeight<Node>) -> PGraph {
+    pub fn to_petgraph(&self, get_weights: impl GetVariableValue<Node>) -> PGraph {
         let mut graph: PGraph = PGraph::new();
         let mut indexes = BTreeMap::new();
         for node in &self.nodes {

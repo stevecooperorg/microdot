@@ -6,21 +6,19 @@ use petgraph::algo::all_simple_paths;
 use petgraph::prelude::NodeIndex;
 use std::collections::BTreeMap;
 
-type Weight = VariableValue;
-
-pub trait GetWeight<T> {
-    fn get_weight(&self, item: &T) -> Weight;
+pub trait GetVariableValue<T> {
+    fn get_weight(&self, item: &T) -> VariableValue;
 }
 
-impl<T, F: Fn(&T) -> Weight> GetWeight<T> for F {
-    fn get_weight(&self, item: &T) -> Weight {
+impl<T, F: Fn(&T) -> VariableValue> GetVariableValue<T> for F {
+    fn get_weight(&self, item: &T) -> VariableValue {
         (self)(item)
     }
 }
 
 #[derive(Default)]
 pub struct PGraph {
-    pub graph: petgraph::Graph<Weight, Weight>,
+    pub graph: petgraph::Graph<VariableValue, VariableValue>,
     index_to_id: BTreeMap<NodeIndex, Id>,
     id_to_index: BTreeMap<Id, NodeIndex>,
 }
@@ -30,7 +28,7 @@ impl PGraph {
         PGraph::default()
     }
 
-    pub fn add_node(&mut self, id: Id, weight: Weight) -> petgraph::graph::NodeIndex {
+    pub fn add_node(&mut self, id: Id, weight: VariableValue) -> petgraph::graph::NodeIndex {
         let idx = self.graph.add_node(weight);
         self.id_to_index.insert(id.clone(), idx);
         self.index_to_id.insert(idx, id);
@@ -41,17 +39,20 @@ impl PGraph {
         self.graph.add_edge(from, to, Default::default());
     }
 
-    pub fn find_node_weight(&self, id: petgraph::graph::NodeIndex) -> Option<Weight> {
+    pub fn find_node_weight(&self, id: petgraph::graph::NodeIndex) -> Option<VariableValue> {
         self.graph.node_weight(id).cloned()
     }
 }
 
 pub struct Path {
     pub ids: Vec<Id>,
-    pub cost: String,
+    pub cost: VariableValue,
 }
 
-pub fn find_shortest_path(graph: &Graph, get_weights: impl GetWeight<crate::graph::Node>) -> Path {
+pub fn find_shortest_path(
+    graph: &Graph,
+    get_weights: impl GetVariableValue<crate::graph::Node>,
+) -> Path {
     // convert our graph to a petgraph so we can use the algorithms;
     let pgraph = graph.to_petgraph(get_weights);
 
@@ -83,7 +84,7 @@ pub fn find_shortest_path(graph: &Graph, get_weights: impl GetWeight<crate::grap
     all_paths.sort_by_key(|path| {
         path.iter()
             .map(|idx| pgraph.find_node_weight(*idx).unwrap())
-            .sum::<Weight>()
+            .sum::<VariableValue>()
     });
 
     let path = if let Some(path) = all_paths.first() {
@@ -96,10 +97,15 @@ pub fn find_shortest_path(graph: &Graph, get_weights: impl GetWeight<crate::grap
         vec![]
     };
 
-    Path {
-        ids: path,
-        cost: "unimplemented".to_string(),
-    }
+    let cost = if let Some(path) = all_paths.first() {
+        path.iter()
+            .map(|idx| pgraph.find_node_weight(*idx).unwrap())
+            .sum::<VariableValue>()
+    } else {
+        VariableValue::zero()
+    };
+
+    Path { ids: path, cost }
 }
 
 pub struct CostCalculator {
@@ -116,8 +122,8 @@ impl CostCalculator {
     }
 }
 
-impl GetWeight<Node> for CostCalculator {
-    fn get_weight(&self, item: &Node) -> Weight {
+impl GetVariableValue<Node> for CostCalculator {
+    fn get_weight(&self, item: &Node) -> VariableValue {
         let NodeInfo { variables, .. } = NodeInfo::parse(item.label());
         let cost = if let Some(cost) = variables.get(&self.variable_name) {
             cost.value.clone()
@@ -138,7 +144,7 @@ pub mod tests {
     use super::*;
     use crate::Label;
 
-    fn uniform_weight<T>(_node: &T) -> Weight {
+    fn uniform_weight<T>(_node: &T) -> VariableValue {
         VariableValue::number(1.0)
     }
 
@@ -176,7 +182,7 @@ pub mod tests {
         graph.link_edge(&q3, &q4);
 
         // we're finding the _longest_ path by using a negative weight function
-        fn s1_is_expensive(node: &crate::graph::Node) -> Weight {
+        fn s1_is_expensive(node: &crate::graph::Node) -> VariableValue {
             if node.label().0 == "slow1" {
                 VariableValue::number(-10.0)
             } else {
