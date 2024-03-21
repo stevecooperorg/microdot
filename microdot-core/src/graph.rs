@@ -59,6 +59,12 @@ pub enum VariableValue {
     Time(Time),
 }
 
+impl Default for VariableValue {
+    fn default() -> Self {
+        VariableValue::number(0.0)
+    }
+}
+
 #[allow(clippy::derive_ord_xor_partial_ord)]
 impl Ord for VariableValue {
     fn cmp(&self, other: &Self) -> Ordering {
