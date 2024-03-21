@@ -6,7 +6,7 @@ use petgraph::algo::all_simple_paths;
 use petgraph::prelude::NodeIndex;
 use std::collections::BTreeMap;
 
-type Weight = i32;
+type Weight = VariableValue;
 
 pub trait GetWeight<T> {
     fn get_weight(&self, item: &T) -> Weight;
@@ -38,7 +38,7 @@ impl PGraph {
     }
 
     pub fn add_edge(&mut self, from: petgraph::graph::NodeIndex, to: petgraph::graph::NodeIndex) {
-        self.graph.add_edge(from, to, 0);
+        self.graph.add_edge(from, to, Default::default());
     }
 
     pub fn find_node_weight(&self, id: petgraph::graph::NodeIndex) -> Option<Weight> {
@@ -120,14 +120,11 @@ impl GetWeight<Node> for CostCalculator {
     fn get_weight(&self, item: &Node) -> Weight {
         let NodeInfo { variables, .. } = NodeInfo::parse(item.label());
         let cost = if let Some(cost) = variables.get(&self.variable_name) {
-            match &cost.value {
-                VariableValue::Number(n) => *n as i32,
-                VariableValue::Time(t) => t.to_minutes(),
-                _ => 1,
-            }
+            cost.value.clone()
         } else {
-            1
+            VariableValue::number(1.0)
         };
+
         if self.find_longest {
             -cost
         } else {
@@ -142,7 +139,7 @@ pub mod tests {
     use crate::Label;
 
     fn uniform_weight<T>(_node: &T) -> Weight {
-        1
+        VariableValue::number(1.0)
     }
 
     #[test]
@@ -181,9 +178,9 @@ pub mod tests {
         // we're finding the _longest_ path by using a negative weight function
         fn s1_is_expensive(node: &crate::graph::Node) -> Weight {
             if node.label().0 == "slow1" {
-                -10
+                VariableValue::number(-10.0)
             } else {
-                -1
+                VariableValue::number(-1.0)
             }
         }
         let path = find_shortest_path(&graph, s1_is_expensive).ids;
