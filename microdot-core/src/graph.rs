@@ -5,6 +5,7 @@ use crate::pet::{GetWeight, PGraph};
 use crate::util::generate_hash;
 use crate::{CommandResult, Id, Label};
 use regex::Regex;
+use std::cmp::Ordering;
 use std::collections::{BTreeMap, BTreeSet};
 use std::fmt::{Display, Formatter};
 use std::hash::{Hash, Hasher};
@@ -54,6 +55,30 @@ pub enum VariableValue {
     Number(f64),
     Boolean(bool),
     Time(Time),
+}
+
+#[allow(clippy::derive_ord_xor_partial_ord)]
+impl Ord for VariableValue {
+    fn cmp(&self, other: &Self) -> Ordering {
+        let partial = self.partial_cmp(other);
+        if let Some(ordering) = partial {
+            ordering
+        } else {
+            match (self, other) {
+                // this is for catching the f64 NaN case
+                (VariableValue::Number(n1), VariableValue::Number(n2)) => {
+                    if n1.is_nan() && n2.is_nan() {
+                        Ordering::Equal
+                    } else if n1.is_nan() {
+                        Ordering::Greater
+                    } else {
+                        Ordering::Less
+                    }
+                }
+                _ => Ordering::Equal,
+            }
+        }
+    }
 }
 
 impl Add for VariableValue {
@@ -843,5 +868,24 @@ mod variable_tests {
         let t2 = VariableValue::time(Time::Minute(1));
         let total = n1 + t2;
         assert_eq!(total, VariableValue::string("mixed types"));
+    }
+
+    #[test]
+    fn numbers_order_as_expected() {
+        let n1 = VariableValue::number(1.0);
+        let n2 = VariableValue::number(2.0);
+        assert!(n1 < n2);
+
+        let n1 = VariableValue::number(f64::NAN);
+        let n2 = VariableValue::number(f64::NAN);
+        assert_eq!(n1.cmp(&n2), Ordering::Equal);
+
+        let n1 = VariableValue::number(1.0);
+        let n2 = VariableValue::number(f64::NAN);
+        assert_eq!(n1.cmp(&n2), Ordering::Less);
+
+        let n1 = VariableValue::number(f64::NAN);
+        let n2 = VariableValue::number(1.0);
+        assert_eq!(n1.cmp(&n2), Ordering::Greater);
     }
 }
