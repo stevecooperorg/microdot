@@ -83,6 +83,18 @@ impl Ord for VariableValue {
     }
 }
 
+impl Neg for VariableValue {
+    type Output = Self;
+
+    fn neg(self) -> Self::Output {
+        match self {
+            Self::Number(n) => Self::Number(-n),
+            Self::Time(t) => Self::Time(-t),
+            _ => Self::String("cannot negate".to_string()),
+        }
+    }
+}
+
 impl Add for VariableValue {
     type Output = VariableValue;
 
