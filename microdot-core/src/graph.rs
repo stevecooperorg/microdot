@@ -9,6 +9,8 @@ use std::cmp::Ordering;
 use std::collections::{BTreeMap, BTreeSet};
 use std::fmt::{Display, Formatter};
 use std::hash::{Hash, Hasher};
+use std::iter::Sum;
+// use std::iter::Sum;
 use std::ops::Add;
 
 const HOUR: u32 = 60;
@@ -88,8 +90,27 @@ impl Add for VariableValue {
         match (self, rhs) {
             (Self::Number(n1), Self::Number(n2)) => Self::number(n1 + n2),
             (Self::Time(t1), Self::Time(t2)) => Self::time(t1 + t2),
+            (Self::String(s1), Self::String(s2)) => Self::string(format!("{}{}", s1, s2)),
+            (Self::Boolean(b1), Self::Boolean(b2)) => Self::boolean(b1 || b2),
             (_, _) => Self::string("mixed types"),
         }
+    }
+}
+
+impl<'a> Add<&'a VariableValue> for VariableValue {
+    type Output = VariableValue;
+
+    fn add(self, rhs: &Self) -> Self::Output {
+        let self_clone = self.clone();
+        let rhs_clone = rhs.clone();
+        self_clone + rhs_clone
+    }
+}
+
+impl Sum for VariableValue {
+    fn sum<I: Iterator<Item = Self>>(iter: I) -> Self {
+        iter.reduce(|a, b| a + b)
+            .unwrap_or_else(VariableValue::zero)
     }
 }
 
@@ -146,6 +167,9 @@ impl VariableValue {
 
     pub fn number(value: f64) -> Self {
         VariableValue::Number(value)
+    }
+    pub fn zero() -> Self {
+        VariableValue::Number(0.0f64)
     }
 
     pub fn string(value: impl Into<String>) -> Self {
@@ -847,6 +871,43 @@ mod variable_tests {
     }
 
     #[test]
+    fn it_can_sum_iter_time_values() {
+        let t1 = VariableValue::time(Time::Minute(1));
+        let t2 = VariableValue::time(Time::Minute(1));
+        let v = vec![t1, t2];
+        let total: VariableValue = v.into_iter().sum();
+        assert_eq!(total, VariableValue::time(Time::Minute(2)));
+    }
+
+    #[test]
+    fn it_can_sum_iter_number_values() {
+        let n1 = VariableValue::number(1.0);
+        let n2 = VariableValue::number(1.0);
+        let v = vec![n1, n2];
+        let total: VariableValue = v.into_iter().sum();
+        assert_eq!(total, VariableValue::number(2.0));
+    }
+
+    #[test]
+    fn it_can_sum_iter_string_values() {
+        let n1 = VariableValue::string("x");
+        let n2 = VariableValue::string("y");
+        let v = vec![n1, n2];
+        let total: VariableValue = v.into_iter().sum();
+        assert_eq!(total, VariableValue::string("xy"));
+    }
+
+    #[test]
+    fn it_can_sum_iter_bool_values() {
+        let n1 = VariableValue::boolean(false);
+        let n2 = VariableValue::boolean(false);
+        let n3 = VariableValue::boolean(true);
+        let v = vec![n1, n2, n3];
+        let total: VariableValue = v.into_iter().sum();
+        assert_eq!(total, VariableValue::boolean(true));
+    }
+
+    #[test]
     fn it_can_add_time_values() {
         let t1 = VariableValue::time(Time::Minute(1));
         let t2 = VariableValue::time(Time::Minute(1));
@@ -855,10 +916,38 @@ mod variable_tests {
     }
 
     #[test]
+    fn it_can_add_boolean_values() {
+        assert_eq!(
+            VariableValue::boolean(false) + VariableValue::boolean(false),
+            VariableValue::boolean(false)
+        );
+        assert_eq!(
+            VariableValue::boolean(false) + VariableValue::boolean(true),
+            VariableValue::boolean(true)
+        );
+        assert_eq!(
+            VariableValue::boolean(true) + VariableValue::boolean(false),
+            VariableValue::boolean(true)
+        );
+        assert_eq!(
+            VariableValue::boolean(true) + VariableValue::boolean(true),
+            VariableValue::boolean(true)
+        );
+    }
+
+    #[test]
     fn it_can_add_number_values() {
         let n1 = VariableValue::number(1.0);
         let n2 = VariableValue::number(1.0);
         let total = n1 + n2;
+        assert_eq!(total, VariableValue::number(2.0));
+    }
+
+    #[test]
+    fn it_can_add_number_references() {
+        let n1 = VariableValue::number(1.0);
+        let n2 = VariableValue::number(1.0);
+        let total = n1 + &n2;
         assert_eq!(total, VariableValue::number(2.0));
     }
 
