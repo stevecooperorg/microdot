@@ -11,7 +11,7 @@ use std::fmt::{Display, Formatter};
 use std::hash::{Hash, Hasher};
 use std::iter::Sum;
 // use std::iter::Sum;
-use std::ops::Add;
+use std::ops::{Add, Neg};
 
 const HOUR: i32 = 60;
 const DAY: i32 = HOUR * 8;
@@ -216,6 +216,20 @@ pub enum Time {
     Day(i32),
     Month(i32),
     Year(i32),
+}
+
+impl Neg for Time {
+    type Output = Self;
+
+    fn neg(self) -> Self::Output {
+        match self {
+            Time::Minute(m) => Time::Minute(-m),
+            Time::Hour(h) => Time::Hour(-h),
+            Time::Day(d) => Time::Day(-d),
+            Time::Month(m) => Time::Month(-m),
+            Time::Year(y) => Time::Year(-y),
+        }
+    }
 }
 
 impl PartialOrd for Time {
