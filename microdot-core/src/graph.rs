@@ -56,6 +56,18 @@ pub enum VariableValue {
     Time(Time),
 }
 
+impl Add for VariableValue {
+    type Output = VariableValue;
+
+    fn add(self, rhs: Self) -> Self::Output {
+        match (self, rhs) {
+            (Self::Number(n1), Self::Number(n2)) => Self::number(n1 + n2),
+            (Self::Time(t1), Self::Time(t2)) => Self::time(t1 + t2),
+            (_, _) => Self::string("mixed types"),
+        }
+    }
+}
+
 impl Eq for VariableValue {}
 
 impl PartialEq for VariableValue {
@@ -801,5 +813,29 @@ mod variable_tests {
     fn it_can_parse_a_plus_in_a_variable_string() {
         let variable = Variable::parse("$foo=x+1");
         assert_eq!(variable.unwrap().value, VariableValue::string("x+1"));
+    }
+
+    #[test]
+    fn it_can_add_time_values() {
+        let t1 = VariableValue::time(Time::Minute(1));
+        let t2 = VariableValue::time(Time::Minute(1));
+        let total = t1 + t2;
+        assert_eq!(total, VariableValue::time(Time::Minute(2)));
+    }
+
+    #[test]
+    fn it_can_add_number_values() {
+        let n1 = VariableValue::number(1.0);
+        let n2 = VariableValue::number(1.0);
+        let total = n1 + n2;
+        assert_eq!(total, VariableValue::number(2.0));
+    }
+
+    #[test]
+    fn it_collapses_mixed_values() {
+        let n1 = VariableValue::number(1.0);
+        let t2 = VariableValue::time(Time::Minute(1));
+        let total = n1 + t2;
+        assert_eq!(total, VariableValue::string("mixed types"));
     }
 }
