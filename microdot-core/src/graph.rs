@@ -13,10 +13,10 @@ use std::iter::Sum;
 // use std::iter::Sum;
 use std::ops::Add;
 
-const HOUR: u32 = 60;
-const DAY: u32 = HOUR * 8;
-const MONTH: u32 = DAY * 20;
-const YEAR: u32 = DAY * 260;
+const HOUR: i32 = 60;
+const DAY: i32 = HOUR * 8;
+const MONTH: i32 = DAY * 20;
+const YEAR: i32 = DAY * 260;
 
 #[derive(Default)]
 pub struct Graph {
@@ -211,11 +211,11 @@ impl Display for VariableValue {
 #[derive(Debug, Clone)]
 
 pub enum Time {
-    Minute(u32),
-    Hour(u32),
-    Day(u32),
-    Month(u32),
-    Year(u32),
+    Minute(i32),
+    Hour(i32),
+    Day(i32),
+    Month(i32),
+    Year(i32),
 }
 
 impl PartialOrd for Time {
@@ -290,7 +290,7 @@ impl Display for Time {
 }
 
 impl Time {
-    pub fn to_minutes(&self) -> u32 {
+    pub fn to_minutes(&self) -> i32 {
         match self {
             Time::Minute(m) => *m,
             Time::Hour(h) => h * HOUR,

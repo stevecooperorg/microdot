@@ -122,7 +122,7 @@ impl GetWeight<Node> for CostCalculator {
         let cost = if let Some(cost) = variables.get(&self.variable_name) {
             match &cost.value {
                 VariableValue::Number(n) => *n as i32,
-                VariableValue::Time(t) => t.to_minutes() as i32,
+                VariableValue::Time(t) => t.to_minutes(),
                 _ => 1,
             }
         } else {
