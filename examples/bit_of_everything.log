@@ -20,6 +20,7 @@ Step 3: 1 day: slow and easy $t=1d $cost=1 #SG_SLOW
 Step 4: 1 day: end $t=1d $cost=1 #SG_END
 ====================
 Total cost: 3 days 10 minutes
+Total length: 4
 >> crit cost
 performing critical path analysis using variable cost
 Step 1: 5: init project $t=1d $cost=5 #SG_INIT
@@ -29,4 +30,5 @@ Step 4: 1: rapid and easy $t=10m $cost=1 #SG_FAST
 Step 5: 1: end $t=1d $cost=1 #SG_END
 ====================
 Total cost: 17
+Total length: 5
 CTRL-D

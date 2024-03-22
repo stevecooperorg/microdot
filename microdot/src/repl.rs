@@ -99,14 +99,11 @@ pub fn repl<I: Interaction>(
                         }
 
                         if !longest_path.ids.is_empty() {
+                            interaction.log("====================");
                             if let Some(cost) = longest_path.cost {
-                                interaction.log("====================");
                                 interaction.log(format!("Total cost: {}", cost));
-                            } else {
-                                interaction.log("====================");
-                                interaction
-                                    .log(format!("Total length: {}", longest_path.ids.len()));
                             }
+                            interaction.log(format!("Total length: {}", longest_path.ids.len()));
                         }
 
                         true
