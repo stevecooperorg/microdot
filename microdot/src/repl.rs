@@ -5,7 +5,7 @@ use crate::util::write_if_different;
 use crate::{graphviz, svg, Command, Interaction};
 use anyhow::{anyhow, Result};
 use microdot_core::graph::Graph;
-use microdot_core::pet::{find_shortest_path, CostCalculator};
+use microdot_core::pet::{find_longest_path, CostCalculator};
 use microdot_core::{CommandResult, Line};
 use rustyline::error::ReadlineError;
 use std::path::{Path, PathBuf};
@@ -85,12 +85,9 @@ pub fn repl<I: Interaction>(
                             variable_name
                         ));
 
-                        let shortest_path = find_shortest_path(
-                            &graph,
-                            CostCalculator::new(variable_name.clone(), true),
-                        );
-
-                        for (i, node) in shortest_path.ids.iter().enumerate() {
+                        let longest_path =
+                            find_longest_path(&graph, CostCalculator::new(variable_name.clone()));
+                        for (i, node) in longest_path.ids.iter().enumerate() {
                             if let Some(label) = graph.find_node_label(node) {
                                 let val = match graph.find_node_variable_value(node, &variable_name)
                                 {
@@ -101,9 +98,11 @@ pub fn repl<I: Interaction>(
                             }
                         }
 
-                        if !shortest_path.ids.is_empty() {
-                            interaction.log("====================");
-                            interaction.log(format!("Total cost: {}", shortest_path.cost));
+                        if !longest_path.ids.is_empty() {
+                            if let Some(cost) = longest_path.cost {
+                                interaction.log("====================");
+                                interaction.log(format!("Total cost: {}", cost));
+                            }
                         }
 
                         true

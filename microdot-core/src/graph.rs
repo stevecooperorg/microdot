@@ -441,12 +441,11 @@ impl Graph {
             .map(|(idx, _)| idx)
     }
 
-    pub fn to_petgraph(&self, get_weights: impl GetVariableValue<Node>) -> PGraph {
+    pub fn to_petgraph(&self) -> PGraph {
         let mut graph: PGraph = PGraph::new();
         let mut indexes = BTreeMap::new();
         for node in &self.nodes {
-            let weight = get_weights.get_weight(node);
-            let id = graph.add_node(node.id.clone(), weight);
+            let id = graph.add_node(node.id.clone());
 
             indexes.insert(node.id.clone(), id);
         }
@@ -460,6 +459,20 @@ impl Graph {
 
         graph
     }
+
+    pub fn node_weights(
+        &self,
+        get_weights: impl GetVariableValue<Node>,
+    ) -> BTreeMap<Id, Option<VariableValue>> {
+        self.nodes
+            .iter()
+            .map(|node| {
+                let value = get_weights.get_weight(node);
+                (node.id.clone(), value)
+            })
+            .collect()
+    }
+
     pub fn export<X: Exporter>(&self, exporter: &mut X) {
         exporter.set_direction(self.is_left_right);
 
