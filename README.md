@@ -8,13 +8,36 @@ It might also be useful for business analysis, where we examine how problems in 
 
 ![Business Example](./examples/business_example_1.svg)
 
-This kind of diagram is really useful, but tooling to help you make it is pretty hard to come by. Especially if you're not a programer.
+This kind of diagram is really useful, but tooling to help you make it is pretty hard to come by. Especially if you're not a programmer.
 
 There is a tool called graphviz, which makes these diagrams, which use the [Dot](https://graphviz.org/doc/info/lang.html) language to create these kinds of diagram. It's a system that is widely supported, but frankly becomes really hard to manage once you get above about ten nodes. Beyond that things get tricky: since you write node names and edges using long human names, things like a rename can get really annoyingly complex, with lots of find/replace over a file that's just too noisy.
 
 I've written `microdot` to make this simpler and more interactive. It's a command-line tool you can start to build up the graph node by node, and edge by edge.
 
-For the story example;
+It's a [REPL]() -- a Read-evaluate-print-loop -- kind of program. That means you type a command, and the system READs it, then INTERPRETs it by making changes to the graph, and PRINTs the result -- well, outputs a vector graphics file! You can then LOOP back to the start, typing another command.
+
+So, to insert an item you would use something like this;
+
+```
+$ microdot --file story.json
+>> i Gandalf comes to the shire
+(inserted node n0: 'Gandalf comes to the shire')
+```
+
+So, there is a command, `i` for insert. Then the text of the command you want. 
+
+Now the SVG will be produced at `story.svg` and you can open it in a browser to see the result. Better, if you want it to be interactive, you can use [Gapplin](http://gapplin.wolfrosch.com/) to automatically refresh the SVG as it changes.
+
+Note how you can see a node ID -- `n0` -- which you can use to refer to that node later. This is really useful when you want to link nodes together, or delete them, or rename them.
+
+For example, to delete the node;
+
+```
+>> d n0
+(node n0 removed)
+```
+
+For the full story example;
 
 ```
 $ microdot --file story.json
@@ -88,50 +111,11 @@ See how we're working one line at a time, inserting nodes and linking them toget
 
 This approach can be pretty good for workshops or interactive sessions, where you act as a moderator, and people can call out intructions, like "I think we need to link n3 to n8," and you can add them. Maybe someday I'll make something cooperative, but not today :)
 
----
 
-Enter microdot. A repl-driven system for building graphs. The idea is to use language like so;
+## Installation
 
-```
-$ microdot --file my-graph.json
->> i this happens first
-(inserted node n0: 'this happens first')
->> i and then this happens
-(inserted node n1: 'and then this happens')
->> l n0 n1
-(Added edge e0 from n0 to n1)
->> r n1 and then this happens #TAG1 #TAG2
-(Node n1 renamed to 'and then this happens #TAG1 #TAG2')
-CTRL-D
+Since `microdot` uses the `dot` program from the Graphviz suite, you'll need to have that installed. You can get it from [here](https://graphviz.org/download/), and it can be installed by `brew` on MacOs.
 
-```
+You'll also want to get an SVG viewer, like [Gapplin](http://gapplin.wolfrosch.com/), which will automatically refresh the SVG as it changes.
 
-This REPL-style app makes editing a large graph easy and interactive. It outputs `dot`, and compiles it to `svg` if you have graphviz installed and on your path. Importantly it defaults to a 'draft mode' output so you can see those node IDs;
-
-![Fellowship of the Ring](./examples/readme_example_1.svg)
-
-In draft mode, the IDs of nodes and edges are included. This means we render a version where every node and edge can be referred to by a very short ID, like `n34` or `e16`. This makes it really easy to do things like delete an edge that shouldn't exist, rename a node, or insert a new node onto an edge. The operations that are hard when manually writing dot files.
-
-Once complete, you can render the real artefact; with the right names, for presenting to people. And it's just a switch between, delivered as, say
-
-```
-> int
-(interactive mode)
-> disp
-(display mode)
-```
-
-
---
-
-Color Palettes:
-
-- go to http://khroma.co/train/
-- train it with the 50-color selection
-- on the trained page, pick a bunch of favourites - as many as you want for different node types
-- download trained data (settings cog, download Kharma data button, get json file)
-- copy it into src/my_khroma_data.json
-
-https://applecolors.com/palettes
-
-#ED4145 #F1B02F #EADE84 #A3D064 #11B2AA #177C99
+Lastly, you'll want to check out the source code from github and build it -- it's written in Rust, so you'll need to have that installed. You can get it from [here](https://www.rust-lang.org/tools/install).
