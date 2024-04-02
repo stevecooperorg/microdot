@@ -154,7 +154,7 @@ fn generate_equal_palette(n: usize) -> Vec<Color> {
     palette
 }
 
-fn generate_gradient_palette(colors: &Vec<Color>, n: usize) -> Vec<Color> {
+fn generate_gradient_palette(colors: &[Color], n: usize) -> Vec<Color> {
     if colors.len() < 2 {
         panic!("At least two colors are required to generate a gradient palette");
     }

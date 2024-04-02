@@ -6,11 +6,10 @@ use crate::util::generate_hash;
 use crate::{CommandResult, Id, Label};
 use regex::Regex;
 use std::cmp::Ordering;
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::fmt::{Display, Formatter};
 use std::hash::{Hash, Hasher};
 use std::iter::Sum;
-// use std::iter::Sum;
 use std::ops::{Add, Neg};
 
 const HOUR: i32 = 60;
@@ -57,6 +56,29 @@ pub enum VariableValue {
     Number(f64),
     Boolean(bool),
     Time(Time),
+    Mixed(Vec<VariableValue>),
+}
+
+impl VariableValue {
+    fn typ(&self) -> VariableType {
+        match self {
+            VariableValue::String(_) => VariableType::String,
+            VariableValue::Number(_) => VariableType::Number,
+            VariableValue::Boolean(_) => VariableType::Boolean,
+            VariableValue::Time(_) => VariableType::Time,
+            VariableValue::Mixed(_) => VariableType::Mixed,
+        }
+    }
+}
+
+// An enum representing the type of variants in MyEnum
+#[derive(Debug, PartialEq, Eq, Hash)]
+enum VariableType {
+    String,
+    Number,
+    Boolean,
+    Time,
+    Mixed,
 }
 
 impl Default for VariableValue {
@@ -101,16 +123,51 @@ impl Neg for VariableValue {
     }
 }
 
+impl VariableValue {
+    fn add_mixed_vec(lhs: Vec<Self>, rhs: Vec<Self>) -> Self {
+        // we've got a mixed vector, where the types are primitive.
+        let all_values: Vec<Self> = {
+            let mut all = lhs;
+            let mut rhs = rhs;
+            all.append(&mut rhs);
+            all
+        };
+
+        let mut map: HashMap<VariableType, Self> = HashMap::new();
+
+        for value in &all_values {
+            let type_key = value.typ();
+            map.entry(type_key)
+                .and_modify(|v| {
+                    *v = v.clone() + value.clone();
+                })
+                .or_insert_with(|| value.clone());
+        }
+
+        match map.len() {
+            0 => Self::zero(),
+            1 => map.into_iter().next().unwrap().1,
+            _ => {
+                let mut values: Vec<_> = map.into_values().collect();
+                values.sort();
+                Self::Mixed(values)
+            }
+        }
+    }
+}
 impl Add for VariableValue {
     type Output = VariableValue;
 
     fn add(self, rhs: Self) -> Self::Output {
-        match (self, rhs) {
+        match (self.clone(), rhs.clone()) {
             (Self::Number(n1), Self::Number(n2)) => Self::number(n1 + n2),
             (Self::Time(t1), Self::Time(t2)) => Self::time(t1 + t2),
             (Self::String(s1), Self::String(s2)) => Self::string(format!("{}{}", s1, s2)),
             (Self::Boolean(b1), Self::Boolean(b2)) => Self::boolean(b1 || b2),
-            (_, _) => Self::string("mixed types"),
+            (Self::Mixed(v1), Self::Mixed(v2)) => Self::add_mixed_vec(v1, v2),
+            (Self::Mixed(v1), _) => Self::add_mixed_vec(v1, vec![rhs]),
+            (_, Self::Mixed(v2)) => Self::add_mixed_vec(vec![self], v2),
+            (a, b) => Self::add_mixed_vec(vec![a], vec![b]),
         }
     }
 }
@@ -141,6 +198,7 @@ impl PartialEq for VariableValue {
             (VariableValue::Number(n1), VariableValue::Number(n2)) => n1 == n2,
             (VariableValue::Boolean(b1), VariableValue::Boolean(b2)) => b1 == b2,
             (VariableValue::Time(t1), VariableValue::Time(t2)) => t1 == t2,
+            (VariableValue::Mixed(v1), VariableValue::Mixed(v2)) => v1 == v2,
             _ => false,
         }
     }
@@ -152,6 +210,11 @@ impl Hash for VariableValue {
             VariableValue::Number(n) => n.to_string().hash(state),
             VariableValue::Boolean(b) => b.hash(state),
             VariableValue::Time(t) => t.to_string().hash(state),
+            VariableValue::Mixed(v) => {
+                for value in v {
+                    value.hash(state);
+                }
+            }
         }
     }
 }
@@ -163,6 +226,11 @@ impl VariableValue {
             VariableValue::Number(n) => n.to_string(),
             VariableValue::Boolean(b) => b.to_string(),
             VariableValue::Time(t) => t.to_string(),
+            VariableValue::Mixed(v) => v
+                .iter()
+                .map(|t| t.as_string())
+                .collect::<Vec<_>>()
+                .join(" "),
         }
     }
 
@@ -204,6 +272,7 @@ impl VariableValue {
             VariableValue::Time(t) => *t == Time::Minute(0),
             VariableValue::String(_) => false,
             VariableValue::Boolean(_) => false,
+            VariableValue::Mixed(_) => false,
         }
     }
 }
@@ -221,6 +290,11 @@ impl Display for VariableValue {
                 }
             }
             VariableValue::Time(t) => format!("{}", t),
+            VariableValue::Mixed(v) => v
+                .iter()
+                .map(|v| format!("{}", v))
+                .collect::<Vec<_>>()
+                .join(" "),
         };
         write!(f, "{}", s)
     }
@@ -997,11 +1071,19 @@ mod variable_tests {
     }
 
     #[test]
-    fn it_collapses_mixed_values() {
+    fn it_can_add_mixed_types() {
         let n1 = VariableValue::number(1.0);
         let t2 = VariableValue::time(Time::Minute(1));
-        let total = n1 + t2;
-        assert_eq!(total, VariableValue::string("mixed types"));
+        let n3 = VariableValue::number(1.0);
+        let t4 = VariableValue::time(Time::Minute(1));
+        let total = n1 + t2 + n3 + t4;
+        assert_eq!(
+            total,
+            VariableValue::Mixed(vec![
+                VariableValue::number(2.0),
+                VariableValue::time(Time::Minute(2))
+            ])
+        );
     }
 
     #[test]
