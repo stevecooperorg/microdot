@@ -80,6 +80,10 @@ fn crit<'a>() -> Parser<'a, u8, String> {
     (keyword(b"crit")) * label()
 }
 
+fn cost<'a>() -> Parser<'a, u8, String> {
+    (keyword(b"cost")) * label()
+}
+
 fn exit<'a>() -> Parser<'a, u8, ()> {
     keyword(b"exit").discard()
 }
@@ -278,6 +282,10 @@ pub fn parse_line(line: Line) -> Command {
         return Command::CriticalPathAnalysis { variable_name };
     }
 
+    if let Ok(variable_name) = cost().parse(text) {
+        return Command::CostAnalysis { variable_name };
+    }
+
     Command::ParseError { line }
 }
 
@@ -363,6 +371,7 @@ mod tests {
         assert_consumes_all![print_json(), b"json", ()];
         assert_consumes_all![save(), b"save", ()];
         assert_consumes_all![crit(), b"crit cost", "cost"];
+        assert_consumes_all![cost(), b"cost var", "var"];
         assert_consumes_all![search(), b"/foo", "foo"];
         assert_consumes_all![search(), b"s foo", "foo"];
         assert_consumes_all![search(), b"search foo", "foo"];
@@ -566,6 +575,9 @@ mod tests {
             println!("---- BEGIN CORRECT HELP ----");
             println!("{}", actual_help);
             println!("---- END CORRECT HELP ----");
+            println!("---- BEGIN INCORRECT HELP ----");
+            println!("{}", help_file_content);
+            println!("---- END INCORRECT HELP ----");
             panic!("help text is wrong. Copy-paste the above into the help file");
         }
     }

@@ -22,6 +22,7 @@ pub enum Command {
     RenameNodeUnlabelled { id: Id },
     Save,
     CriticalPathAnalysis { variable_name: String },
+    CostAnalysis { variable_name: String },
     Show,
     Exit,
     ParseError { line: Line },
@@ -49,6 +50,10 @@ impl Command {
             Command::Show => "open the diagram in Gapplin".into(),
             Command::Exit => "exit microdot".into(),
             Command::ParseError { line } => format!("could not parse: \"{}\"", line),
+            Command::CostAnalysis { variable_name } => format!(
+                "sum the cost of all nodes in the grpa using <{}> as the cost",
+                variable_name
+            ),
         }
     }
 }

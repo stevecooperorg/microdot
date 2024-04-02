@@ -8,4 +8,6 @@ crit t
 r n2 rapid but hard $t=10m $cost=9 #SG_FAST
 l n5 n4
 crit t
+cost t
 crit cost
+cost cost

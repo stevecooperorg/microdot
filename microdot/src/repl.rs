@@ -5,7 +5,7 @@ use crate::util::write_if_different;
 use crate::{graphviz, svg, Command, Interaction};
 use anyhow::{anyhow, Result};
 use microdot_core::graph::Graph;
-use microdot_core::pet::{find_longest_path, CostCalculator};
+use microdot_core::pet::{find_cost, find_longest_path, CostCalculator};
 use microdot_core::{CommandResult, Line};
 use rustyline::error::ReadlineError;
 use std::path::{Path, PathBuf};
@@ -106,13 +106,23 @@ pub fn repl<I: Interaction>(
                             interaction.log(format!("Total length: {}", longest_path.ids.len()));
                         }
 
-                        true
+                        false
                     }
                     Command::ParseError { .. } => {
                         interaction.log("could not understand command; try 'h' for help");
                         false
                     }
                     Command::Exit => return Ok(()),
+                    Command::CostAnalysis { variable_name } => {
+                        let graph = graph.read().unwrap();
+                        interaction.log(format!(
+                            "performing cost analysis using variable {}",
+                            variable_name
+                        ));
+                        let cost = find_cost(&graph, CostCalculator::new(variable_name.clone()));
+                        interaction.log(format!("Total cost: {}", cost));
+                        false
+                    }
                 }
             }
             Err(ReadlineError::Interrupted) => {

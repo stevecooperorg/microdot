@@ -20,6 +20,7 @@ Commands:
   - j                   - print the json definition for this graph to the terminal
   - exit                - exit microdot
   - crit varname        - do a critical path analysis on the graph using <varname> as the cost
+  - cost varname        - sum the cost of all nodes in the grpa using <varname> as the cost
 
 Usage:
 

@@ -58,6 +58,7 @@ pub fn find_shortest_path(
 ) -> Path {
     find_path(graph, get_weights, true)
 }
+
 fn find_path(
     graph: &Graph,
     get_weights: impl GetVariableValue<crate::graph::Node>,
@@ -140,6 +141,14 @@ fn find_path(
         .and_then(|path| path_cost(path, &node_weights));
 
     Path { ids: path, cost }
+}
+
+pub fn find_cost(
+    graph: &Graph,
+    get_weights: impl GetVariableValue<crate::graph::Node>,
+) -> VariableValue {
+    let node_weights = graph.node_weights(get_weights);
+    node_weights.values().flatten().cloned().sum()
 }
 
 pub struct CostCalculator {
