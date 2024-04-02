@@ -2,14 +2,26 @@
 (inserted node n0: 'init project $t=1d $cost=5 #SG_INIT')
 >> aft n0 quick next step $t=10m $cost=1 #SG_INIT
 (inserted node n1: 'quick next step $t=10m $cost=1 #SG_INIT' after n0)
->> aft n1 rapid but hard $t=10m $cost=9 #SG_FAST
-(inserted node n2: 'rapid but hard $t=10m $cost=9 #SG_FAST' after n1)
+>> aft n1 rapid but hard $t=1.234 $cost=9 #SG_FAST
+(inserted node n2: 'rapid but hard $t=1.234 $cost=9 #SG_FAST' after n1)
 >> aft n2 rapid and easy $t=10m $cost=1 #SG_FAST
 (inserted node n3: 'rapid and easy $t=10m $cost=1 #SG_FAST' after n2)
 >> aft n3 end $t=1d $cost=1 #SG_END
 (inserted node n4: 'end $t=1d $cost=1 #SG_END' after n3)
 >> aft n1 slow and easy $t=1d $cost=1 #SG_SLOW
 (inserted node n5: 'slow and easy $t=1d $cost=1 #SG_SLOW' after n1)
+>> crit t
+performing critical path analysis using variable t
+Step 1: 1 day: init project $t=1d $cost=5 #SG_INIT
+Step 2: 10 minutes: quick next step $t=10m $cost=1 #SG_INIT
+Step 3: 1.234: rapid but hard $t=1.234 $cost=9 #SG_FAST
+Step 4: 10 minutes: rapid and easy $t=10m $cost=1 #SG_FAST
+Step 5: 1 day: end $t=1d $cost=1 #SG_END
+====================
+Total cost: 1.234, 2 days 20 minutes
+Total length: 5
+>> r n2 rapid but hard $t=10m $cost=9 #SG_FAST
+(Node n2 renamed to 'rapid but hard $t=10m $cost=9 #SG_FAST')
 >> l n5 n4
 (Added edge e5 from n5 to n4)
 >> crit t

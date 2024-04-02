@@ -294,7 +294,7 @@ impl Display for VariableValue {
                 .iter()
                 .map(|v| format!("{}", v))
                 .collect::<Vec<_>>()
-                .join(" "),
+                .join(", "),
         };
         write!(f, "{}", s)
     }
