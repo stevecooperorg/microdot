@@ -11,6 +11,9 @@ setup:
 
 build: target/debug/microdot
 
+clean:
+	cargo clean
+
 fmt:
 	cargo +nightly fmt
 
@@ -48,7 +51,7 @@ docker-run: docker-build
 	mkdir -p "$$HOME/microdot"
 	docker run --rm \
 		--mount type=bind,source="$$HOME/microdot",target=/microdot \
-		-it microdot:latest microdot \
+		-it stevecooperorg/microdot:latest microdot \
 		--file "/microdot/${FILE}"
 
 safe-commit: fmt check test commit

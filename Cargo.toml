@@ -8,17 +8,16 @@ members = [
 [workspace.dependencies]
 anyhow = "1.0"
 askama = "0.11"
-clap = { version="3.1", features=["derive"] }
+clap = { version = "4.5", features = ["derive"] }
 command-macros = "0.2"
-dirs = "4.0"
+dirs = "5.0"
 futures = "0.3"
-hex="0.4"
+hex = "0.4"
 hyphenation = "0.8"
 layout-rs = { version = "0.1.2" }
 lazy_static = "1.4"
 md5 = "0.7"
-microdot-core= { path="../microdot-core" }
-palette="0.6"
+palette = "0.7"
 petgraph = "0.6"
 pom = "3.2"
 once_cell = "1.16"
@@ -31,6 +30,6 @@ serde_json = "1.0"
 strum = "0.24"
 strum_macros = "0.24"
 tempfile = "3.8"
-textwrap = { version="0.15", features = ["hyphenation"] }
-tokio = { version= "1.23",  features= ["rt", "macros"] }
+textwrap = { version = "0.15", features = ["hyphenation"] }
+tokio = { version = "1.23", features = ["rt", "macros"] }
 unfold = "0.2"

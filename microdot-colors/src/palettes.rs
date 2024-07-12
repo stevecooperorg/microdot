@@ -1,5 +1,5 @@
 use crate::colors::{Color, Colors};
-use palette::{FromColor, Hue, IntoColor, Lch, Srgb};
+use palette::{FromColor, IntoColor, Lch, ShiftHue, Srgb};
 use std::collections::{HashMap, VecDeque};
 
 #[derive(Clone)]
