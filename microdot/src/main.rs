@@ -2,6 +2,7 @@ use clap::{Parser, ValueHint};
 use libmicrodot::helper::{GetNodeLabel, MicrodotHelper};
 use libmicrodot::json::JsonImporter;
 use libmicrodot::repl::repl;
+use libmicrodot::web::run_web_server;
 use microdot_core::graph::*;
 use microdot_core::*;
 use rustyline::{Config, Editor};
@@ -17,8 +18,12 @@ struct Opts {
     file: Option<PathBuf>,
 
     /// Sets a custom history file location, defaults to ~/.microdot_history
-    #[clap(short, long, value_hint = ValueHint::FilePath)]
+    #[clap(long, value_hint = ValueHint::FilePath)]
     history: Option<PathBuf>,
+
+    /// Optional port number for the web server
+    #[clap(long)]
+    port: Option<u16>,
 }
 
 impl Opts {
@@ -46,7 +51,9 @@ impl GetNodeLabel for GraphGetNodeLabel {
     }
 }
 
-fn main() -> Result<(), anyhow::Error> {
+#[tokio::main]
+async fn main() -> Result<(), anyhow::Error> {
+    eprintln!("Microdot: a REPL and terminal ui for dot and graphviz.");
     let opts = Opts::parse();
     let history = opts.history();
     let json_file = opts.file();
@@ -74,6 +81,18 @@ fn main() -> Result<(), anyhow::Error> {
             "Loaded previous history from {}.",
             history.to_string_lossy()
         );
+    }
+
+    if let Some(port) = opts.port {
+        let svg_path = json_file.with_extension("svg");
+        let json_path = json_file.clone();
+        tokio::spawn(async move {
+            if let Err(e) = run_web_server(port, svg_path, json_path).await {
+                eprintln!("Failed to start web server: {}", e);
+            }
+        });
+
+        tokio::time::sleep(std::time::Duration::from_millis(100)).await;
     }
 
     repl(&mut rl, &json_file, graph)?;

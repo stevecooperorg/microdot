@@ -1,7 +1,7 @@
 use crate::graphviz::{compile, DisplayMode, GraphVizExporter};
 use crate::repl::repl;
 use crate::Interaction;
-use anyhow::{anyhow, Result};
+use anyhow::{anyhow, Context, Result};
 use microdot_core::graph::Graph;
 use std::collections::VecDeque;
 use std::path::*;
@@ -65,10 +65,7 @@ pub fn compile_input_string_content(text_file: PathBuf) -> PathBuf {
     log_file
 }
 
-pub fn write_if_different<P: AsRef<Path>, C: AsRef<[u8]>>(
-    path: P,
-    contents: C,
-) -> std::io::Result<()> {
+pub fn write_if_different<P: AsRef<Path>, C: AsRef<[u8]>>(path: P, contents: C) -> Result<()> {
     let path = path.as_ref();
     let contents = contents.as_ref();
 
@@ -79,6 +76,7 @@ pub fn write_if_different<P: AsRef<Path>, C: AsRef<[u8]>>(
 
     if needs_write {
         std::fs::write(path, contents)
+            .with_context(|| format!("could not write to file '{}'", path.to_string_lossy()))
     } else {
         Ok(())
     }

@@ -4,38 +4,42 @@ version = "0.1.0"
 edition = "2021"
 
 [[bin]]
-name="microdot"
-path="src/main.rs"
+name = "microdot"
+path = "src/main.rs"
 
 [lib]
-name="libmicrodot"
-path="src/lib.rs"
+name = "libmicrodot"
+path = "src/lib.rs"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-anyhow.workspace=true
-askama.workspace=true
-clap.workspace=true
-command-macros.workspace=true
-dirs.workspace=true
-futures.workspace=true
-hyphenation.workspace=true
-lazy_static.workspace=true
-md5.workspace=true
-microdot-core = { path="../microdot-core" }
-microdot-colors = { path="../microdot-colors" }
-once_cell.workspace=true
-pom.workspace=true
-regex.workspace=true
-resvg.workspace=true
-rustyline-derive.workspace=true
-rustyline.workspace=true
-serde.workspace=true
-serde_json.workspace=true
-textwrap.workspace=true
-tokio.workspace=true
-unfold.workspace=true
+axum.workspace = true
+axum-server.workspace = true
+anyhow.workspace = true
+askama.workspace = true
+clap.workspace = true
+command-macros.workspace = true
+dirs.workspace = true
+futures.workspace = true
+hyphenation.workspace = true
+lazy_static.workspace = true
+md5.workspace = true
+microdot-core = { path = "../microdot-core" }
+microdot-colors = { path = "../microdot-colors" }
+once_cell.workspace = true
+pom.workspace = true
+regex.workspace = true
+resvg.workspace = true
+rustyline-derive.workspace = true
+rustyline.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+textwrap.workspace = true
+tokio.workspace = true
+tower.workspace = true
+tower-http.workspace = true
+unfold.workspace = true
 
 [dev-dependencies]
 tempfile.workspace = true

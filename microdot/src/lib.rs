@@ -11,6 +11,7 @@ pub mod repl;
 mod storage;
 pub mod svg;
 pub mod util;
+pub mod web;
 
 #[derive(PartialEq, Eq, Debug)]
 pub enum Command {

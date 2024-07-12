@@ -1,5 +1,5 @@
 DEFAULT_DOT=$(HOME)/microdot_graph.dot
-DEFAULT_JSON=$(HOME)/microdot_graph.dot
+DEFAULT_JSON=$(HOME)/microdot_graph.json
 DEFAULT_SVG=$(HOME)/microdot_graph.svg
 
 .PHONY: all
@@ -18,7 +18,7 @@ fmt:
 	cargo +nightly fmt
 
 run: target/debug/microdot
-	target/debug/microdot
+	target/debug/microdot --file "$(DEFAULT_JSON)" --port 7777
 
 .PHONY:
 target/debug/microdot:
@@ -53,14 +53,15 @@ docker-push: increment-docker-semver-tag docker-build
 	docker push stevecooperorg/microdot:latest
 	docker push stevecooperorg/microdot:$(shell cat CURRENT_DOCKER_SEMVER_TAG)
 
-FILE=/examples/story.json
-
+FILE=story.json
 docker-run: docker-build
 	mkdir -p "$$HOME/microdot"
 	docker run --rm \
+		-p 7777:7777 \
 		--mount type=bind,source="$$HOME/microdot",target=/microdot \
 		--mount type=bind,source="$$HOME/.microdot_history",target=/root/.microdot_history \
 		-it stevecooperorg/microdot:latest microdot \
-		--file "/microdot/${FILE}"
+		--file "/microdot/${FILE}" \
+		--port 7777
 
 safe-commit: fmt check test commit
