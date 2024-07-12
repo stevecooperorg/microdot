@@ -71,7 +71,7 @@ async fn main() -> Result<(), anyhow::Error> {
 
     let h = MicrodotHelper::new(&gnl);
     let config = Config::default();
-    let mut rl = Editor::with_config(config);
+    let mut rl = Editor::with_config(config)?;
     rl.set_helper(Some(h));
 
     if rl.load_history(&history).is_err() {

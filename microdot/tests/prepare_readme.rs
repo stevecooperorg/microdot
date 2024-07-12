@@ -8,7 +8,6 @@ use std::path::PathBuf;
 struct ReadMe {
     fellowship_content: String,
     business_content: String,
-    example_content: String,
 }
 
 #[test]
@@ -19,8 +18,6 @@ fn prepare_readme() {
         compile_input_string_content(git_root().unwrap().join("examples/fellowship.txt"));
     let business_content =
         compile_input_string_content(git_root().unwrap().join("examples/business_example_1.txt"));
-    let example_content =
-        compile_input_string_content(git_root().unwrap().join("examples/readme_example_1.txt"));
 
     fn content(path: PathBuf) -> String {
         fs::read_to_string(path).expect("couldn't load log file")
@@ -29,7 +26,6 @@ fn prepare_readme() {
     let readme = ReadMe {
         fellowship_content: content(fellowship_content),
         business_content: content(business_content),
-        example_content: content(example_content),
     };
 
     let git_root = git_root().unwrap();

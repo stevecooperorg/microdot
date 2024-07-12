@@ -1,5 +1,6 @@
 use microdot_core::command::GraphCommand;
 use microdot_core::{Id, Label, Line};
+use rustyline::history::History;
 use rustyline::{Editor, Helper};
 
 pub mod filters;
@@ -79,16 +80,17 @@ pub trait Interaction {
     fn should_compile(&self) -> bool;
 }
 
-impl<H> Interaction for Editor<H>
+impl<H, I> Interaction for Editor<H, I>
 where
     H: Helper,
+    I: History,
 {
     fn read(&mut self, prompt: &str) -> rustyline::Result<String> {
         self.readline(prompt)
     }
 
     fn add_history<S: AsRef<str> + Into<String>>(&mut self, history: S) -> bool {
-        self.add_history_entry(history)
+        self.add_history_entry(history).unwrap_or(false)
     }
 
     fn log<S: AsRef<str> + Into<String>>(&mut self, message: S) {
