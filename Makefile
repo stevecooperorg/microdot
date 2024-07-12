@@ -31,6 +31,10 @@ check:
 watch:
 	cargo watch --ignore "examples/*.log" --ignore "examples/*.svg" --ignore "examples/*.dot" --ignore "examples/*.json"  --why -x "test" -x "clippy -- -Dwarnings" -x "build"
 
+.PHONY: increment_docker_semver_tag
+increment-docker-semver-tag:
+	cd manage_semver && cargo run -- --semver-file-path ../CURRENT_DOCKER_SEMVER_TAG > ../CURRENT_DOCKER_SEMVER_TAG.bak && mv ../CURRENT_DOCKER_SEMVER_TAG.bak ../CURRENT_DOCKER_SEMVER_TAG
+
 build: target/debug/microdot
 
 test:
@@ -43,7 +47,11 @@ commit:
 	./bin/auto-commit
 
 docker-build:
-	docker build . --tag microdot:latest
+	docker build . --tag stevecooperorg/microdot:latest --tag stevecooperorg/microdot:$(shell cat CURRENT_DOCKER_SEMVER_TAG)
+
+docker-push: increment_docker_semver_tag docker-build
+	docker push stevecooperorg/microdot:latest
+	docker push stevecooperorg/microdot:$(shell cat CURRENT_DOCKER_SEMVER_TAG)
 
 FILE=/examples/story.json
 

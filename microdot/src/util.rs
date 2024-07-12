@@ -47,7 +47,7 @@ pub fn compile_input_string_content(text_file: PathBuf) -> PathBuf {
 
     let temp_json = std::fs::read_to_string(&tmp_json).expect("could not read json file");
     let final_json_path = text_file.with_extension("json");
-    write_if_different(&final_json_path, temp_json).expect("could not write json file");
+    write_if_different(final_json_path, temp_json).expect("could not write json file");
 
     let mut exporter = GraphVizExporter::new(DisplayMode::Interactive);
     let graph = graph.read().unwrap();

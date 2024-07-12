@@ -2,4 +2,6 @@
 
 !/microdot
 !/microdot-core
+!/microdot-colors
+!/manage_semver
 !/Cargo.toml
