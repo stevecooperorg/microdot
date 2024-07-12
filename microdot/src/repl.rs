@@ -164,6 +164,8 @@ fn compile_graph<I: Interaction>(
     };
     match RENDER_METHOD {
         RenderMethod::GraphViz => {
+            // causes problems in unit tests, because interim results have the file saving partial
+            // results, which tells cargo watch that it should recompile
             let interactive_dot_file = save_dot_file(json_file, &graph)?;
             if interaction.should_compile() {
                 compile_dot(interactive_dot_file);

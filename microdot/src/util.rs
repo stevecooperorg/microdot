@@ -39,12 +39,15 @@ pub fn compile_input_string_content(text_file: PathBuf) -> PathBuf {
     let text_content = std::fs::read_to_string(&text_file).expect("could not read file");
     let lines: VecDeque<_> = text_content.lines().map(|l| l.to_string()).collect();
     let mut auto_interaction = AutoInteraction::new(lines);
-    repl(
-        &mut auto_interaction,
-        &text_file.with_extension("json"),
-        graph.clone(),
-    )
-    .expect("error in repl");
+    let tmp_json = dirs::cache_dir()
+        .unwrap_or_else(|| PathBuf::from("/tmp"))
+        .join(text_file.file_name().unwrap());
+
+    repl(&mut auto_interaction, &tmp_json, graph.clone()).expect("error in repl");
+
+    let temp_json = std::fs::read_to_string(&tmp_json).expect("could not read json file");
+    let final_json_path = text_file.with_extension("json");
+    write_if_different(&final_json_path, temp_json).expect("could not write json file");
 
     let mut exporter = GraphVizExporter::new(DisplayMode::Interactive);
     let graph = graph.read().unwrap();
