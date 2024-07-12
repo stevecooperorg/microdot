@@ -34,8 +34,6 @@ This approach can be pretty good for workshops or interactive sessions, where yo
 
 ---
 
----
-
 ## Installation
 
 It's currently built and published as a [docker container](https://hub.docker.com/repository/docker/stevecooperorg/microdot/general)
@@ -148,8 +146,6 @@ You can add hashtags to the node names, and each tag will add a coloured tag bar
 - i shipping labels generated once a day #SLOW
 ```
 
---
-
 ### Subgraphs
 
 Color Palettes:
@@ -169,5 +165,4 @@ i Mechanic analyses problem #SG_WORKSHOP
 aft n0 Mechanic fixes problem #SG_WORKSHOP
 ```
 
-#ED4145 #F1B02F #EADE84 #A3D064 #11B2AA #177C99
 the two nodes will be shown in a box labelled `WORKSHOP`.
