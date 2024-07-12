@@ -14,6 +14,7 @@ use microdot_core::{Id, Label};
 use once_cell::sync::OnceCell;
 use regex::Regex;
 use std::collections::{BTreeMap, HashMap};
+use std::fmt::Display;
 use std::io::Write;
 use std::path::Path;
 use std::process::{Command, Output, Stdio};
@@ -145,6 +146,12 @@ struct EdgeViewModel {
     id: Id,
     from: Id,
     to: Id,
+}
+
+impl Display for EdgeViewModel {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}: {} -> {}", self.id, self.from, self.to)
+    }
 }
 
 impl Template for EdgeViewModel {
