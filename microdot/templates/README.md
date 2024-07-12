@@ -1,5 +1,7 @@
 # Microdot - a REPL and terminal ui for dot and graphviz
 
+[docs in github pages](https://stevecooperorg.github.io/microdot/)
+
 A surprisingly useful kind of diagram is the dependency diagram - it shows how one thing leads to or causes another. For example, it could be part of a story, showing how one event lays the groundwork for the next;
 
 ![Fellowship of the Ring](./examples/fellowship.svg)
