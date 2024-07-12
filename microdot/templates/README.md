@@ -56,6 +56,26 @@ And then run the container, mapping the directory you just made to the container
 		--file "/microdot/story.json"
 ```
 
+## Serving the graphs in a browser
+
+You can pass a port number, and the current SVG will be served on that port. This is useful for sharing the graph with others, or for viewing it in a browser.
+
+```
+    docker run --rm \
+        -p 7777:7777 \
+        --mount type=bind,source="$$HOME/microdot",target=/microdot \
+        --mount type=bind,source="$$HOME/.microdot_history",target=/root/.microdot_history \
+        -it stevecooperorg/microdot:latest microdot \
+        --file "/microdot/story.json" \
+        --port 7777
+
+```
+
+This is preparatory for two ideas I've not yet implemented;
+
+- exporting the SVG to the public internet using a tunneling approach using something like [ngrok](https://ngrok.com/) or [cloudflare tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/) -- this allows you to develop on your own machine and expose the graph to others. This is useful for remote workshops and meetings.
+- adding a hot reload feature, so that instead of just looking at the SVG you're looking at an html page that reloads when you change the graph; this is useful for workshops and meetings where you're working on the graph interactively.
+
 ## Usage
 
 just type `help` to get a list of commands. Some key ones;
@@ -140,7 +160,7 @@ You can store variables in the nodes, with names like `$cost` or `$is_useful`. V
 
 ### Tags
 
-You can add hashtags to the node names, and each tag will add a coloured tag bar. This is useful for visual grouping. Just add a hashtag to the name of the node; eg
+You can add hashtags to the node names, and each tag will add a coloured tag bar. This is useful for visual grouping. Just add a hashtag to the name of the node; e.g.,
 
 ```
 - i shipping labels generated once a day #SLOW
