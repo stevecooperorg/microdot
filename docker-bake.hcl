@@ -4,14 +4,6 @@ variable "CURRENT_DOCKER_SEMVER_TAG" {
   default = "latest"
 }
 
-variable "rust_image" {
-  default = "docker-image://rust:1-bookworm"
-}
-
-variable "runtime_image" {
-  default = "docker-image://debian:bookworm-slim"
-}
-
 group "default" {
   targets = ["microdot"]
 }
@@ -22,8 +14,4 @@ target "microdot" {
   tags = ["stevecooperorg/microdot:${CURRENT_DOCKER_SEMVER_TAG}", "stevecooperorg/microdot:latest"]
   cache-from = ["type=registry,ref=stevecooperorg/microdot:cache"]
   cache-to = ["type=inline"]
-  contexts = {
-    runtime_image = runtime_image
-    rust_image    = rust_image
-  }
 }

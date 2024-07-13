@@ -1,9 +1,11 @@
 # bring up the Dockerfile in a container called microdot
 services:
   microdot:
-    build: .
+    image: stevecooperorg/microdot:latest
     ports:
       - "7777:7777"
     volumes:
-      - .:/app
-    command: [ "dotnet", "watch", "run" ]
+      # mount the user's home directory to /files in the container
+      - ~/microdot:/files
+      - ~/.microdot_history:/root/.microdot_history
+    tty: true

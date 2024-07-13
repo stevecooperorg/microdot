@@ -11,9 +11,17 @@ pub async fn run_web_server(
     let svg_path = svg_path.as_ref();
     let json_path = json_path.as_ref();
     let addr = SocketAddr::from(([127, 0, 0, 1], port));
-    eprintln!("Serving on http://{}", addr);
-    eprintln!("  http://{}/svg serves {}", addr, svg_path.display());
-    eprintln!("  http://{}/json serves {}", addr, json_path.display());
+    eprintln!("Serving on http://localhost:{}", port);
+    eprintln!(
+        "  http://localhost:{}/svg serves {}",
+        port,
+        svg_path.display()
+    );
+    eprintln!(
+        "  http://localhost:{}/json serves {}",
+        port,
+        json_path.display()
+    );
 
     let app = Router::new()
         .nest_service("/svg", ServeFile::new(svg_path))
