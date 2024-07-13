@@ -7,5 +7,6 @@ services:
     volumes:
       # mount the user's microdot files in their home directory to /files in the container
       - ~/microdot:/files
+      # mount the user's microdot history file for history completion
       - ~/.microdot_history:/root/.microdot_history
     tty: true
