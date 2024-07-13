@@ -50,8 +50,8 @@ docker-build:
 	export $$(cat .env | xargs) && docker buildx bake
 
 docker-push: increment-docker-semver-tag docker-build
-	docker push stevecooperorg/microdot:latest
-	docker push stevecooperorg/microdot:$(shell cat CURRENT_DOCKER_SEMVER_TAG)
+	export $$(cat .env | xargs) && docker push stevecooperorg/microdot:latest
+	export $$(cat .env | xargs) && docker push stevecooperorg/microdot:$$CURRENT_DOCKER_SEMVER_TAG
 
 FILE=story.json
 docker-run: docker-build
