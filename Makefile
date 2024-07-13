@@ -47,7 +47,7 @@ commit:
 	./bin/auto-commit
 
 docker-build:
-	docker build . --tag stevecooperorg/microdot:latest --tag stevecooperorg/microdot:$(shell cat CURRENT_DOCKER_SEMVER_TAG)
+	CURRENT_DOCKER_SEMVER_TAG=$(shell cat CURRENT_DOCKER_SEMVER_TAG) docker buildx bake
 
 docker-push: increment-docker-semver-tag docker-build
 	docker push stevecooperorg/microdot:latest
