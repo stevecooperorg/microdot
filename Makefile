@@ -33,7 +33,7 @@ watch:
 
 .PHONY: increment-docker-semver-tag
 increment-docker-semver-tag:
-	cd manage_semver && cargo run -- --semver-file-path ../CURRENT_DOCKER_SEMVER_TAG > ../CURRENT_DOCKER_SEMVER_TAG.bak && mv ../CURRENT_DOCKER_SEMVER_TAG.bak ../CURRENT_DOCKER_SEMVER_TAG
+	cd manage_semver && cargo run -- --semver-file-path ../.env > ../.env.bak && mv ../.env.bak ../.env
 
 build: target/debug/microdot
 
@@ -47,7 +47,7 @@ commit:
 	./bin/auto-commit
 
 docker-build:
-	CURRENT_DOCKER_SEMVER_TAG=$(shell cat CURRENT_DOCKER_SEMVER_TAG) docker buildx bake
+	export $$(cat .env | xargs) && docker buildx bake
 
 docker-push: increment-docker-semver-tag docker-build
 	docker push stevecooperorg/microdot:latest

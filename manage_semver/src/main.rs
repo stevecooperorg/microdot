@@ -1,4 +1,5 @@
 use clap::Parser;
+use std::collections::BTreeMap;
 use std::path::PathBuf;
 
 #[derive(Parser, Debug)]
@@ -24,10 +25,40 @@ fn main() {
         .trim()
         .to_string();
 
+    let new_semver = increment_in_content(&semver_file_contents, "CURRENT_DOCKER_SEMVER_TAG");
+
+    eprintln!("new_semver: {:?}", new_semver);
+
+    // write to stdout so it can be piped
+    print!("{}", new_semver);
+}
+
+fn increment_in_content(semver_file_contents: &str, semver_key: &str) -> String {
     eprintln!("semver_file_contents: {:?}", semver_file_contents);
 
+    let mut variables = BTreeMap::new();
+
     // Parse the file contents
-    let semver = semver_file_contents.split('.').collect::<Vec<&str>>();
+    for line in semver_file_contents.lines() {
+        let line = line.trim();
+        let parts = line.split('=').collect::<Vec<&str>>();
+        if parts.len() != 2 {
+            panic!("Invalid line: {:?}", line);
+        }
+        let key = parts[0].trim();
+        let value = parts[1].trim();
+        eprintln!("key: {:?}, value: {:?}", key, value);
+        variables.insert(key, value);
+    }
+
+    let semver = match variables.get(semver_key) {
+        Some(semver) => semver,
+        None => {
+            panic!("SEMVER not found in file");
+        }
+    };
+
+    let semver = semver.split('.').collect::<Vec<&str>>();
 
     // should be three integers;
     // major, minor, patch
@@ -44,11 +75,33 @@ fn main() {
     // Increment the patch version
     let new_patch = patch + 1;
 
-    // generate the new string
+    // Replace the old patch version with the new one
     let new_semver = format!("{}.{}.{}", major, minor, new_patch);
+    variables.insert(semver_key, &new_semver);
 
-    eprintln!("new_semver: {:?}", new_semver);
+    let mut new_semver_file_contents = String::new();
+    for (key, value) in variables.iter() {
+        new_semver_file_contents.push_str(&format!("{}={}\n", key, value));
+    }
+    new_semver_file_contents
+}
 
-    // write to stdout so it can be piped
-    print!("{}", new_semver);
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_increment_in_content() {
+        let semver_file_contents = r#"X=Y
+CURRENT_DOCKER_SEMVER_TAG=1.2.3
+A=B
+"#;
+        let expected = r#"A=B
+CURRENT_DOCKER_SEMVER_TAG=1.2.4
+X=Y
+"#;
+
+        let actual = increment_in_content(semver_file_contents, "CURRENT_DOCKER_SEMVER_TAG");
+        assert_eq!(actual, expected);
+    }
 }

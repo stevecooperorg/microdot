@@ -1,6 +1,6 @@
 variable "CURRENT_DOCKER_SEMVER_TAG" {
   # designed to be overridden by an environment variable
-  # e.g., CURRENT_DOCKER_SEMVER_TAG=$(cat CURRENT_DOCKER_SEMVER_TAG) docker buildx bake
+  # e.g., export $$(cat .env | xargs) && docker buildx bake
   default = "latest"
 }
 

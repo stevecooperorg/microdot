@@ -1,0 +1,9 @@
+# bring up the Dockerfile in a container called microdot
+services:
+  microdot:
+    build: .
+    ports:
+      - "7777:7777"
+    volumes:
+      - .:/app
+    command: [ "dotnet", "watch", "run" ]
