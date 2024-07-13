@@ -5,7 +5,7 @@ services:
     ports:
       - "7777:7777"
     volumes:
-      # mount the user's home directory to /files in the container
+      # mount the user's microdot files in their home directory to /files in the container
       - ~/microdot:/files
       - ~/.microdot_history:/root/.microdot_history
     tty: true
