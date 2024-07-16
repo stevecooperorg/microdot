@@ -47,7 +47,7 @@ docker compose up &
 docker-compose exec microdot bash
 ```
 
-You'll now be in the container, and you can run `microdot` to start the program, like this;
+You'll now be in the container, and you can run `microdot` to start the program, like this...
 
 ```
 microdot --file /files/story.json
