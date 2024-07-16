@@ -96,37 +96,29 @@ This approach can be pretty good for workshops or interactive sessions, where yo
 
 It's currently built and published as a [docker container](https://hub.docker.com/repository/docker/stevecooperorg/microdot/general)
 
-which means you can run it with the `docker` command
-
-First you'll want somewhere to store files -- you can make it like this;
+The easiest way is to use the [docker-compose.yaml](docker-compose.yaml) file in this repository. Either clone this repo or just save the raw file to disk, and in the directory where you've saved it run;
 
 ```
-mkdir -p "$HOME/microdot"
+docker compose up &
+docker-compose exec microdot bash
 ```
 
-And then run the container, mapping the directory you just made to the container's `/microdot` directory, and the history file to the container's `/root/.microdot_history` file.
+You'll now be in the container, and you can run `microdot` to start the program, like this...
 
 ```
-	docker run --rm \
-		--mount type=bind,source="$$HOME/microdot",target=/microdot \
-		--mount type=bind,source="$$HOME/.microdot_history",target=/root/.microdot_history \
-		-it stevecooperorg/microdot:latest microdot \
-		--file "/microdot/story.json"
+microdot --file /files/story.json
 ```
+
+Note that the `/files` directory is mapped to `~/microdot` on your host machine, so your files are stored safe there. If you use Gapplin to view the SVGs, you can just open the file from the `~/microdot` directory.
+
+Microdot also includes a history file, which is stored in `~/.microdot_history` on your host machine. This means that you can keep your history between sessions, and you can use the up arrow to recall previous commands.
 
 ## Serving the graphs in a browser
 
-You can pass a port number, and the current SVG will be served on that port. This is useful for sharing the graph with others, or for viewing it in a browser.
+Microdot has a built-in web server, which can serve the SVGs on a port of your choosing. This is useful for sharing the graph with others, or for viewing it in a browser. Just pass the `--port` option, like this;
 
 ```
-    docker run --rm \
-        -p 7777:7777 \
-        --mount type=bind,source="$$HOME/microdot",target=/microdot \
-        --mount type=bind,source="$$HOME/.microdot_history",target=/root/.microdot_history \
-        -it stevecooperorg/microdot:latest microdot \
-        --file "/microdot/story.json" \
-        --port 7777
-
+microdot --file /files/story.json --port 7777
 ```
 
 This is preparatory for two ideas I've not yet implemented;
