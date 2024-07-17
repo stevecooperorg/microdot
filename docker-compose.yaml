@@ -1,12 +1,18 @@
-# bring up the Dockerfile in a container called microdot
 services:
+  # run the microdot container with the user's microdot files
   microdot:
     image: stevecooperorg/microdot:latest
-    ports:
-      - "7777:7777"
     volumes:
       # mount the user's microdot files in their home directory to /files in the container
       - ~/microdot:/files
       # mount the user's microdot history file for history completion
       - ~/.microdot_history:/root/.microdot_history
     tty: true
+  webserver:
+    image: stevecooperorg/live-server:latest
+    ports:
+      - "7777:8080"
+    volumes:
+      - ~/microdot:/files
+    depends_on:
+      - microdot

@@ -30,11 +30,31 @@ pub enum DisplayMode {
 pub fn compile(path: &Path) -> Result<()> {
     let input_str = std::fs::read_to_string(path)?;
     let out_file = path.with_extension("svg");
+    let html_file = path.with_extension("html");
+    let image_url = out_file.file_name().unwrap().to_string_lossy().to_string();
+    let image_title = out_file.file_stem().unwrap().to_string_lossy().to_string();
 
-    dot::DotCompiler::compile_dot_str(input_str).and_then(|string| {
-        write_if_different(out_file, string)?;
-        Ok(())
-    })
+    dot::DotCompiler::compile_dot_str(input_str)
+        .and_then(|string| {
+            write_if_different(out_file, string)?;
+            Ok(())
+        })
+        .and_then(|_| {
+            let html = ImagePage {
+                image_title,
+                image_url,
+            };
+            let html_content = html.render().unwrap();
+            write_if_different(html_file, html_content)?;
+            Ok(())
+        })
+}
+
+#[derive(Template)]
+#[template(path = "image_page.html")]
+struct ImagePage {
+    image_title: String,
+    image_url: String,
 }
 
 pub struct GraphVizExporter {

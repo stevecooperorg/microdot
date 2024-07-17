@@ -3,7 +3,7 @@ DEFAULT_JSON=$(HOME)/microdot_graph.json
 DEFAULT_SVG=$(HOME)/microdot_graph.svg
 
 .PHONY: all
-all: build
+all: build docker-build
 
 .PHONY: setup
 setup:
@@ -18,9 +18,9 @@ fmt:
 	cargo +nightly fmt
 
 run: target/debug/microdot
-	target/debug/microdot --file "$(DEFAULT_JSON)" --port 7777
+	target/debug/microdot --file "$(DEFAULT_JSON)"
 
-.PHONY:
+.PHONY: target/debug/microdot
 target/debug/microdot:
 	cargo --version
 	cargo build
@@ -46,22 +46,18 @@ dot:
 commit:
 	./bin/auto-commit
 
-docker-build:
+docker-build: build
 	export $$(cat .env | xargs) && docker buildx bake
 
 docker-push: increment-docker-semver-tag docker-build
 	export $$(cat .env | xargs) && docker push stevecooperorg/microdot:latest
 	export $$(cat .env | xargs) && docker push stevecooperorg/microdot:$$CURRENT_DOCKER_SEMVER_TAG
+	export $$(cat .env | xargs) && docker push stevecooperorg/live-server:latest
+	export $$(cat .env | xargs) && docker push stevecooperorg/live-server:$$CURRENT_DOCKER_SEMVER_TAG
 
 FILE=story.json
 docker-run: docker-build
 	mkdir -p "$$HOME/microdot"
-	docker run --rm \
-		-p 7777:7777 \
-		--mount type=bind,source="$$HOME/microdot",target=/microdot \
-		--mount type=bind,source="$$HOME/.microdot_history",target=/root/.microdot_history \
-		-it stevecooperorg/microdot:latest microdot \
-		--file "/microdot/${FILE}" \
-		--port 7777
+	docker-compose up
 
 safe-commit: fmt check test commit

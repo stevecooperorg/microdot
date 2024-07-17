@@ -5,13 +5,21 @@ variable "CURRENT_DOCKER_SEMVER_TAG" {
 }
 
 group "default" {
-  targets = ["microdot"]
+  targets = ["microdot", "live-server"]
 }
 
 target "microdot" {
   context    = "."
-  dockerfile = "Dockerfile"
+  dockerfile = "microdot.Dockerfile"
   tags = ["stevecooperorg/microdot:${CURRENT_DOCKER_SEMVER_TAG}", "stevecooperorg/microdot:latest"]
   cache-from = ["type=registry,ref=stevecooperorg/microdot:cache"]
+  cache-to = ["type=inline"]
+}
+
+target "live-server" {
+  context    = "."
+  dockerfile = "live-server.Dockerfile"
+  tags = ["stevecooperorg/live-server:${CURRENT_DOCKER_SEMVER_TAG}", "stevecooperorg/live-server:latest"]
+  cache-from = ["type=registry,ref=stevecooperorg/live-server:cache"]
   cache-to = ["type=inline"]
 }
