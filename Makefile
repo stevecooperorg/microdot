@@ -3,7 +3,7 @@ DEFAULT_JSON=$(HOME)/microdot_graph.json
 DEFAULT_SVG=$(HOME)/microdot_graph.svg
 
 .PHONY: all
-all: build docker-build
+all: build test docker-build
 
 .PHONY: setup
 setup:
@@ -59,5 +59,9 @@ FILE=story.json
 docker-run: docker-build
 	mkdir -p "$$HOME/microdot"
 	docker-compose up
+
+docker-run-public: docker-build
+	mkdir -p "$$HOME/microdot"
+	docker-compose  --profile public up
 
 safe-commit: fmt check test commit

@@ -16,3 +16,13 @@ services:
       - ~/microdot:/files
     depends_on:
       - microdot
+  ngrok:
+    image: ngrok/ngrok:latest
+    volumes:
+      - ~/microdot:/files:ro
+    command: "http webserver:8080 --domain=${NGROK_DOMAIN}"
+    profiles:
+      - public
+    environment:
+      - NGROK_AUTHTOKEN=${NGROK_AUTHTOKEN}
+      - NGROK_DOMAIN=${NGROK_DOMAIN}

@@ -30,11 +30,9 @@ $ microdot --file story.json
 {{business_content}}
 ```
 
-See how we're working one line at a time, inserting nodes and linking them together? Each time you make a change, the diagram is regenerated on disk as an SVG file. SVGs can be opened in a browser, making a cheap and cheerful viewer, or you can use a tool like [Gapplin](http://gapplin.wolfrosch.com/) to automatically refresh the SVG as it changes.
+See how we're working one line at a time, inserting nodes and linking them together? Each time you make a change, the diagram is regenerated on disk as an SVG file. SVGs can be opened in a browser from the embedded web server, where they will be hot-reloaded, or you can use a desktop tool like [Gapplin](http://gapplin.wolfrosch.com/).
 
-This approach can be pretty good for workshops or interactive sessions, where you act as a moderator, and people can call out intructions, like "I think we need to link n3 to n8," and you can add them. Maybe someday I'll make something cooperative, but not today :)
-
----
+This approach can be pretty good for workshops or interactive sessions, where you act as a moderator, and people can call out intructions, like "I think we need to link n3 to n8," and you can add them. Right now you can only have one editor working on the file at a time, but maybe in the future we could have a shared editing mode.
 
 ## Installation
 
@@ -55,22 +53,34 @@ microdot --file /files/story.json
 
 Note that the `/files` directory is mapped to `~/microdot` on your host machine, so your files are stored safe there.
 
-*To view your files* you can open them in a web browser using port 7777. For example, if you are editing `/files/story.json` you can open `http://localhost:7777/story.html`. If you use Gapplin to view the SVGs, you can just open the file from the `~/microdot` directory.
-
-Microdot also includes a history file, which is stored in `~/.microdot_history` on your host machine. This means that you can keep your history between sessions, and you can use the up arrow to recall previous commands.
-
 ## Serving the graphs in a browser
 
-Microdot has a built-in web server, which can serve the SVGs on a port of your choosing. This is useful for sharing the graph with others, or for viewing it in a browser. Just pass the `--port` option, like this;
+*To view your files* you can open them in a web browser using port 7777. For example, if you are editing `/files/story.json` you can open `http://localhost:7777/story.html`. The HTML files are hot-reloaded, so if you update the diagram, the browser will automatically refresh.
+
+If you use Gapplin to view the SVGs, you can just open the file from the `~/microdot` directory.
+
+## Serving the files publicly
+
+During a meeting, it can be useful for the meeting facilitator to share a link to the diagram. If you have an `ngrok` account, you can use it to share your files publicly.
+
+*NOTE THERE IS NO SECURITY AT THIS TIME* so be careful about sharing sensitive information. Your files will be open to the public.
+
+You will need to set up two environment variables on your machine.
+
+- `NGROK_AUTHTOKEN` - your ngrok authtoken
+- `NGROK_DOMAIN` - the domain you want to use, e.g., `mycompany.eu.ngrok.io`
+
+With that set up you can start docker-compose slightly differently;
 
 ```
-microdot --file /files/story.json --port 7777
+docker-compose  --profile public up
 ```
 
-This is preparatory for two ideas I've not yet implemented;
+Your content will now be available publicly at your grok domain.
 
-- exporting the SVG to the public internet using a tunneling approach using something like [ngrok](https://ngrok.com/) or [cloudflare tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/) -- this allows you to develop on your own machine and expose the graph to others. This is useful for remote workshops and meetings.
-- adding a hot reload feature, so that instead of just looking at the SVG you're looking at an html page that reloads when you change the graph; this is useful for workshops and meetings where you're working on the graph interactively.
+## History
+
+Microdot also includes a history file, similar to the one used in `bash`, which is stored in `~/.microdot_history` on your host machine. This means that you can keep your history between sessions, and you can use the up arrow to recall previous commands.
 
 ## Usage
 
