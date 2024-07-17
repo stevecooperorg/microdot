@@ -53,7 +53,9 @@ You'll now be in the container, and you can run `microdot` to start the program,
 microdot --file /files/story.json
 ```
 
-Note that the `/files` directory is mapped to `~/microdot` on your host machine, so your files are stored safe there. If you use Gapplin to view the SVGs, you can just open the file from the `~/microdot` directory.
+Note that the `/files` directory is mapped to `~/microdot` on your host machine, so your files are stored safe there.
+
+*To view your files* you can open them in a web browser using port 7777. For example, if you are editing `/files/story.json` you can open `http://localhost:7777/story.html`. If you use Gapplin to view the SVGs, you can just open the file from the `~/microdot` directory.
 
 Microdot also includes a history file, which is stored in `~/.microdot_history` on your host machine. This means that you can keep your history between sessions, and you can use the up arrow to recall previous commands.
 
