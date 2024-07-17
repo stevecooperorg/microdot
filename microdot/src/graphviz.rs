@@ -44,7 +44,7 @@ pub fn compile(path: &Path) -> Result<()> {
                 image_title,
                 image_url,
             };
-            let html_content = html.render().unwrap();
+            let html_content = html.render()?;
             write_if_different(html_file, html_content)?;
             Ok(())
         })
