@@ -64,4 +64,7 @@ docker-run-public: docker-build
 	mkdir -p "$$HOME/microdot"
 	docker-compose  --profile public up
 
+docker-exec:
+	docker exec -it microdot-microdot-1 bash
+
 safe-commit: fmt check test commit
