@@ -109,10 +109,10 @@ impl Color {
         let (h, s, l) = self.to_hsl(); // Convert RGB to HSL
 
         // Calculate new saturation, ensuring it doesn't go below 0 or above 100
-        let new_s = (s * saturation_decrease).max(0.0).min(100.0);
+        let new_s = (s * saturation_decrease).clamp(0.0, 100.0);
 
         // Adjust lightness, ensuring it stays within bounds
-        let new_l = (l * lightness_adjustment).max(0.0).min(100.0);
+        let new_l = (l * lightness_adjustment).clamp(0.0, 100.0);
 
         // Convert back to RGB and return the new color
         Color::from_hsl(h, new_s, new_l)

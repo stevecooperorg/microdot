@@ -1,4 +1,4 @@
-FROM rust:1-bookworm as builder
+FROM rust:1.81-bookworm as builder
 WORKDIR /usr/src/microdot
 COPY . .
 RUN cargo install --path microdot

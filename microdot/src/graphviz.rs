@@ -228,7 +228,7 @@ impl GraphVizExporter {
                 "  subgraph cluster_{} {{\n",
                 subgraph_id.to_string().replace('#', "")
             ));
-            built.push_str(&format!("  label=\"{}\"", subgraph_id.to_string()));
+            built.push_str(&format!("  label=\"{}\"", subgraph_id));
             built.push('\n');
             built.push_str(&format!("  bgcolor=\"{}\"", bgcolor));
             built.push('\n');

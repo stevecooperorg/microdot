@@ -9,7 +9,7 @@ pub mod helper;
 pub mod json;
 pub mod parser;
 pub mod repl;
-mod storage;
+// mod storage;
 pub mod svg;
 pub mod util;
 pub mod web;

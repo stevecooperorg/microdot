@@ -1,4 +1,5 @@
 use crate::util::generate_hash;
+use std::fmt::Display;
 use std::hash::Hash;
 
 #[derive(PartialEq, Eq, Debug, Hash, Clone, Ord, PartialOrd)]
@@ -16,8 +17,8 @@ impl HashTag {
     }
 }
 
-impl ToString for HashTag {
-    fn to_string(&self) -> String {
-        self.tag.clone()
+impl Display for HashTag {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.tag)
     }
 }
