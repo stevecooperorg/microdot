@@ -58,11 +58,11 @@ docker-push: increment-docker-semver-tag docker-build
 FILE=story.json
 docker-run: docker-build
 	mkdir -p "$$HOME/microdot"
-	docker-compose up
+	docker compose up
 
 docker-run-public: docker-build
 	mkdir -p "$$HOME/microdot"
-	docker-compose  --profile public up
+	docker compose  --profile public up
 
 docker-exec:
 	docker exec -it microdot-microdot-1 bash

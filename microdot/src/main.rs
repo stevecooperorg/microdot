@@ -85,9 +85,10 @@ async fn main() -> Result<(), anyhow::Error> {
 
     if let Some(port) = opts.port {
         let svg_path = json_file.with_extension("svg");
+        let html_path = json_file.with_extension("html");
         let json_path = json_file.clone();
         tokio::spawn(async move {
-            if let Err(e) = run_web_server(port, svg_path, json_path).await {
+            if let Err(e) = run_web_server(port, svg_path, html_path, json_path).await {
                 eprintln!("Failed to start web server: {}", e);
             }
         });

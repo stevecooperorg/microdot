@@ -52,9 +52,18 @@ pub fn compile(path: &Path) -> Result<()> {
 
 #[derive(Template)]
 #[template(path = "image_page.html")]
-struct ImagePage {
+pub struct ImagePage {
     image_title: String,
     image_url: String,
+}
+
+impl ImagePage {
+    pub fn new(image_title: impl Into<String>, image_url: impl Into<String>) -> Self {
+        Self {
+            image_title: image_title.into(),
+            image_url: image_url.into(),
+        }
+    }
 }
 
 pub struct GraphVizExporter {

@@ -98,7 +98,7 @@ The easiest way is to use the [docker-compose.yaml](docker-compose.yaml) file in
 
 ```
 docker compose up &
-docker-compose exec microdot bash
+docker compose exec microdot bash
 ```
 
 You'll now be in the container, and you can run `microdot` to start the program, like this...
