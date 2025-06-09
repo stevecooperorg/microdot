@@ -10,17 +10,19 @@ use microdot_core::{CommandResult, Line};
 use rustyline::error::ReadlineError;
 use std::path::{Path, PathBuf};
 use std::sync::{Arc, RwLock};
+use tokio::sync::mpsc::UnboundedSender;
 
 pub fn repl<I: Interaction>(
     interaction: &mut I,
     json_file: &Path,
     graph: Arc<RwLock<Graph>>,
+    reload_tx: UnboundedSender<()>,
 ) -> Result<()> {
     loop {
         let readline = interaction.read(">> ");
 
         // when we start, make sure the existing pic is up to date.
-        compile_graph(interaction, json_file, &graph)?;
+        compile_graph(interaction, json_file, &graph, Some(&reload_tx))?;
 
         let dirty = match readline {
             Ok(line) => {
@@ -142,7 +144,7 @@ pub fn repl<I: Interaction>(
         };
 
         if dirty {
-            compile_graph(interaction, json_file, &graph)?;
+            compile_graph(interaction, json_file, &graph, Some(&reload_tx))?;
         }
     }
 }
@@ -157,6 +159,7 @@ fn compile_graph<I: Interaction>(
     interaction: &mut I,
     json_file: &Path,
     graph: &Arc<RwLock<Graph>>,
+    reload_tx: Option<&UnboundedSender<()>>,
 ) -> Result<()> {
     let graph = match graph.write() {
         Ok(graph) => graph,
@@ -168,7 +171,7 @@ fn compile_graph<I: Interaction>(
             // results, which tells cargo watch that it should recompile
             let interactive_dot_file = save_dot_file(json_file, &graph)?;
             if interaction.should_compile() {
-                compile_dot(interactive_dot_file);
+                compile_dot(interactive_dot_file, reload_tx);
             }
         }
     }
@@ -189,8 +192,14 @@ fn save_dot_file(json_file: &Path, graph: &Graph) -> Result<PathBuf> {
     Ok(interactive_dot_file)
 }
 
-fn compile_dot(interactive_dot_file: PathBuf) -> CommandResult {
+fn compile_dot(interactive_dot_file: PathBuf, reload_tx: Option<&UnboundedSender<()>>) -> CommandResult {
     let svg_compile = graphviz::compile(&interactive_dot_file);
+
+    if let Ok(_) = svg_compile {
+        if let Some(tx) = reload_tx {
+            let _ = tx.send(());
+        }
+    }
 
     let msg = match svg_compile {
         Ok(_) => format!(

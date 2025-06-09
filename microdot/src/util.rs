@@ -7,6 +7,7 @@ use std::collections::VecDeque;
 use std::path::*;
 use std::sync::{Arc, RwLock};
 use unfold::Unfold;
+use tokio::sync::mpsc;
 
 pub fn git_root() -> Result<PathBuf> {
     let current_dir: &Path = &std::env::current_dir()?;
@@ -43,7 +44,8 @@ pub fn compile_input_string_content(text_file: PathBuf) -> PathBuf {
         .unwrap_or_else(|| PathBuf::from("/tmp"))
         .join(text_file.file_name().unwrap());
 
-    repl(&mut auto_interaction, &tmp_json, graph.clone()).expect("error in repl");
+    let (reload_tx, _reload_rx) = mpsc::unbounded_channel();
+    repl(&mut auto_interaction, &tmp_json, graph.clone(), reload_tx).expect("error in repl");
 
     let temp_json = std::fs::read_to_string(&tmp_json).expect("could not read json file");
     let final_json_path = text_file.with_extension("json");

@@ -8,6 +8,7 @@ use microdot_core::*;
 use rustyline::{Config, Editor};
 use std::path::{Path, PathBuf};
 use std::sync::{Arc, RwLock};
+use tokio::sync::mpsc;
 
 /// a REPL and terminal ui for dot and graphviz
 #[derive(Parser, Debug)]
@@ -74,6 +75,9 @@ async fn main() -> Result<(), anyhow::Error> {
     let mut rl = Editor::with_config(config)?;
     rl.set_helper(Some(h));
 
+    // Create reload channel
+    let (reload_tx, reload_rx) = mpsc::unbounded_channel();
+
     if rl.load_history(&history).is_err() {
         println!("No previous history at {}.", history.to_string_lossy());
     } else {
@@ -87,8 +91,9 @@ async fn main() -> Result<(), anyhow::Error> {
         let svg_path = json_file.with_extension("svg");
         let html_path = json_file.with_extension("html");
         let json_path = json_file.clone();
+        let reload_rx = reload_rx;
         tokio::spawn(async move {
-            if let Err(e) = run_web_server(port, svg_path, html_path, json_path).await {
+            if let Err(e) = run_web_server(port, svg_path, html_path, json_path, reload_rx).await {
                 eprintln!("Failed to start web server: {}", e);
             }
         });
@@ -96,7 +101,7 @@ async fn main() -> Result<(), anyhow::Error> {
         tokio::time::sleep(std::time::Duration::from_millis(100)).await;
     }
 
-    repl(&mut rl, &json_file, graph)?;
+    repl(&mut rl, &json_file, graph, reload_tx)?;
 
     rl.save_history(&history).unwrap();
 

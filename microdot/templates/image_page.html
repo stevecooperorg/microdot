@@ -4,4 +4,19 @@
     </head>
     <body>
         <img src="{{ image_url }}" alt="Image" />
+        <script>
+        (function() {
+            // Use the current location to determine the ws URL
+            var wsProto = (location.protocol === 'https:') ? 'wss://' : 'ws://';
+            var wsPort = location.port ? ':' + location.port : '';
+            var wsUrl = wsProto + location.hostname + wsPort + '/ws';
+            var ws = new WebSocket(wsUrl);
+            ws.onmessage = function(event) {
+                if (event.data === 'reload') {
+                    location.reload();
+                }
+            };
+        })();
+        </script>
+    </body>
     </html>
