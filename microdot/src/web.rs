@@ -15,31 +15,21 @@ pub type Clients = Arc<Mutex<Vec<tokio::sync::mpsc::UnboundedSender<Message>>>>;
 
 pub async fn run_web_server(
     port: u16,
-    svg_path: impl AsRef<Path>,
-    html_path: impl AsRef<Path>,
-    json_path: impl AsRef<Path>,
+    svg_path: &Path,
+    html_path: &Path,
+    json_path: &Path,
     mut reload_rx: UnboundedReceiver<()>,
 ) -> Result<(), anyhow::Error> {
-    let svg_path = svg_path.as_ref();
-    let json_path = json_path.as_ref();
-    let html_path = html_path.as_ref();
+    let svg_path = svg_path.to_path_buf();
+    let json_path = json_path.to_path_buf();
+    let html_path = html_path.to_path_buf();
     let addr = SocketAddr::from(([127, 0, 0, 1], port));
+    
     eprintln!("Serving on http://localhost:{}", port);
-    eprintln!(
-        "  http://localhost:{}/svg serves {}",
-        port,
-        svg_path.display()
-    );
-    eprintln!(
-        "  http://localhost:{}/html serves {}",
-        port,
-        html_path.display()
-    );
-    eprintln!(
-        "  http://localhost:{}/json serves {}",
-        port,
-        json_path.display()
-    );
+    eprintln!("  http://localhost:{}/svg serves {}", port, svg_path.display());
+    eprintln!("  http://localhost:{}/html serves {}", port, html_path.display());
+    eprintln!("  http://localhost:{}/json serves {}", port, json_path.display());
+    eprintln!("  http://localhost:{}/ws - WebSocket endpoint for hot reloading", port);
 
     let clients: Clients = Arc::new(Mutex::new(Vec::new()));
 
@@ -82,7 +72,7 @@ pub async fn run_web_server(
         .map_err(|e| e.into())
 }
 
-async fn handle_socket(mut socket: WebSocket, clients: Clients) {
+async fn handle_socket(socket: WebSocket, clients: Clients) {
     let (mut sender, mut receiver) = socket.split();
     let (tx, mut rx) = tokio::sync::mpsc::unbounded_channel();
 
@@ -99,20 +89,129 @@ async fn handle_socket(mut socket: WebSocket, clients: Clients) {
         }
     });
 
-    // Optionally, handle incoming messages from client (not needed for reload)
+    // Handle incoming messages from client (currently just ignore them)
     let recv_task = tokio::spawn(async move {
         while let Some(Ok(_msg)) = receiver.next().await {
-            // Ignore client messages
+            // Ignore client messages for now
         }
     });
 
     let _ = tokio::join!(send_task, recv_task);
 }
 
-/// Call this to broadcast a reload message to all websocket clients
+/// Broadcast a reload message to all websocket clients
 pub fn broadcast_reload(clients: &Clients) {
     let clients = clients.lock().unwrap();
     for tx in clients.iter() {
-        let _ = tx.send(Message::Text("reload".to_string()));
+        let _ = tx.send(Message::Text("reload-svg".to_string()));
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use tokio_tungstenite::connect_async;
+    use futures::StreamExt;
+    use tempfile::tempdir;
+
+    #[tokio::test]
+    async fn test_websocket_communication() {
+        // Create temporary directory for test files
+        let temp_dir = tempdir().unwrap();
+        let svg_path = temp_dir.path().join("test.svg");
+        let html_path = temp_dir.path().join("test.html");
+        let json_path = temp_dir.path().join("test.json");
+
+        // Create some test content
+        std::fs::write(&svg_path, "<svg>test</svg>").unwrap();
+        std::fs::write(&html_path, "<html>test</html>").unwrap();
+        std::fs::write(&json_path, r#"{"test": "data"}"#).unwrap();
+
+        // Create reload channel
+        let (reload_tx, reload_rx) = tokio::sync::mpsc::unbounded_channel();
+
+        // Start web server on a fixed port for testing
+        let port = 8081;
+        let server_handle = tokio::spawn(async move {
+            run_web_server(port, &svg_path, &html_path, &json_path, reload_rx).await
+        });
+
+        // Give server time to start
+        tokio::time::sleep(tokio::time::Duration::from_millis(200)).await;
+
+        // Connect WebSocket client
+        let ws_url = format!("ws://localhost:{}/ws", port);
+        let (ws_stream, _) = connect_async(ws_url).await.expect("Failed to connect");
+        let (_, mut read) = ws_stream.split();
+
+        // Wait a bit for connection to stabilize
+        tokio::time::sleep(tokio::time::Duration::from_millis(100)).await;
+
+        // Send a reload message through the channel
+        let _ = reload_tx.send(());
+
+        // Wait for the message to be received
+        let message = tokio::time::timeout(
+            tokio::time::Duration::from_secs(5),
+            read.next()
+        ).await.expect("Timeout waiting for message");
+
+        // Verify the message
+        if let Some(Ok(message)) = message {
+            assert_eq!(message.to_text().unwrap(), "reload-svg");
+        } else {
+            panic!("Expected message, got: {:?}", message);
+        }
+
+        // Clean up
+        server_handle.abort();
+        tokio::time::sleep(tokio::time::Duration::from_millis(100)).await;
+    }
+
+    #[tokio::test]
+    async fn test_static_file_serving() {
+        // Create temporary directory for test files
+        let temp_dir = tempdir().unwrap();
+        let svg_path = temp_dir.path().join("test.svg");
+        let html_path = temp_dir.path().join("test.html");
+        let json_path = temp_dir.path().join("test.json");
+
+        // Create some test content
+        let svg_content = "<svg>test</svg>";
+        let json_content = r#"{"test": "data"}"#;
+        std::fs::write(&svg_path, svg_content).unwrap();
+        std::fs::write(&html_path, "<html>test</html>").unwrap();
+        std::fs::write(&json_path, json_content).unwrap();
+
+        // Create reload channel
+        let (_, reload_rx) = tokio::sync::mpsc::unbounded_channel();
+
+        // Start web server
+        let port = 8082;
+        let server_handle = tokio::spawn(async move {
+            run_web_server(port, &svg_path, &html_path, &json_path, reload_rx).await
+        });
+
+        // Give server time to start
+        tokio::time::sleep(tokio::time::Duration::from_millis(200)).await;
+
+        // Test that static files are served correctly
+        let svg_response = reqwest::get(&format!("http://localhost:{}/svg", port))
+            .await
+            .expect("Failed to fetch SVG");
+        assert_eq!(svg_response.status(), 200);
+        let svg_text = svg_response.text().await.unwrap();
+        assert_eq!(svg_text, svg_content);
+
+        let json_response = reqwest::get(&format!("http://localhost:{}/json", port))
+            .await
+            .expect("Failed to fetch JSON");
+        assert_eq!(json_response.status(), 200);
+        let json_text = json_response.text().await.unwrap();
+        assert_eq!(json_text, json_content);
+
+        // Clean up
+        server_handle.abort();
+        tokio::time::sleep(tokio::time::Duration::from_millis(100)).await;
     }
 }

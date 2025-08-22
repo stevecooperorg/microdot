@@ -93,7 +93,7 @@ async fn main() -> Result<(), anyhow::Error> {
         let json_path = json_file.clone();
         let reload_rx = reload_rx;
         tokio::spawn(async move {
-            if let Err(e) = run_web_server(port, svg_path, html_path, json_path, reload_rx).await {
+            if let Err(e) = run_web_server(port, &svg_path, &html_path, &json_path, reload_rx).await {
                 eprintln!("Failed to start web server: {}", e);
             }
         });

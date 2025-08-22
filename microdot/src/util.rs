@@ -145,6 +145,25 @@ macro_rules! hashmap {
     };
 }
 
+#[macro_export]
+macro_rules! btreemap {
+    (@single $($x:tt)*) => (());
+    (@count $($rest:expr),*) => (<[()]>::len(&[$(btreemap!(@single $rest)),*]));
+
+    ($($key:expr => $value:expr,)+) => { btreemap!($($key => $value),+) };
+    ($($key:expr => $value:expr),*) => {
+        {
+            let _cap = btreemap!(@count $($key),*);
+            let mut _map = ::std::collections::BTreeMap::new(); //with_capacity(_cap);
+            $(
+                let _ = _map.insert($key, $value);
+            )*
+            _map
+        }
+    };
+}
+
+
 #[cfg(test)]
 mod test {
     use super::*;

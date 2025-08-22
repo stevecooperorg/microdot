@@ -197,6 +197,7 @@ fn compile_dot(interactive_dot_file: PathBuf, reload_tx: Option<&UnboundedSender
 
     if let Ok(_) = svg_compile {
         if let Some(tx) = reload_tx {
+            // Send a reload message to trigger WebSocket updates
             let _ = tx.send(());
         }
     }

@@ -1,4 +1,4 @@
-use crate::hashmap;
+use crate::btreemap;
 use crate::util::write_if_different;
 use anyhow::{anyhow, Context, Result};
 use askama::Template;
@@ -13,7 +13,7 @@ use microdot_core::util::generate_hash;
 use microdot_core::{Id, Label};
 use once_cell::sync::OnceCell;
 use regex::Regex;
-use std::collections::{BTreeMap, HashMap};
+use std::collections::BTreeMap;
 use std::fmt::Display;
 use std::io::Write;
 use std::path::Path;
@@ -30,9 +30,9 @@ pub enum DisplayMode {
 pub fn compile(path: &Path) -> Result<()> {
     let input_str = std::fs::read_to_string(path)?;
     let out_file = path.with_extension("svg");
-    let html_file = path.with_extension("html");
-    let image_url = out_file.file_name().unwrap().to_string_lossy().to_string();
-    let image_title = out_file.file_stem().unwrap().to_string_lossy().to_string();
+    // let html_file = path.with_extension("html");
+    // let image_url = out_file.file_name().unwrap().to_string_lossy().to_string();
+    // let image_title = out_file.file_stem().unwrap().to_string_lossy().to_string();
 
     dot::DotCompiler::compile_dot_str(input_str)
         .and_then(|string| {
@@ -40,12 +40,12 @@ pub fn compile(path: &Path) -> Result<()> {
             Ok(())
         })
         .and_then(|_| {
-            let html = ImagePage {
-                image_title,
-                image_url,
-            };
-            let html_content = html.render()?;
-            write_if_different(html_file, html_content)?;
+            // let html = ImagePage {
+            //     image_title,
+            //     image_url,
+            // };
+            // let html_content = html.render()?;
+            // write_if_different(html_file, html_content)?;
             Ok(())
         })
 }
@@ -74,7 +74,7 @@ pub struct GraphVizExporter {
     display_mode: DisplayMode,
 }
 
-fn template(template_str: &str, variables: &HashMap<&str, String>) -> String {
+fn template(template_str: &str, variables: &BTreeMap<&str, String>) -> String {
     let mut result = template_str.to_string();
     for (k, v) in variables.iter() {
         let search_for = format!("${{{}}}", k);
@@ -185,7 +185,7 @@ impl Display for EdgeViewModel {
 
 impl Template for EdgeViewModel {
     fn render_into(&self, writer: &mut (impl std::fmt::Write + ?Sized)) -> askama::Result<()> {
-        let edge_params = hashmap! {
+        let edge_params = btreemap! {
             "id" => self.id.to_string(),
             "escaped_id" => escape_id(self.id.to_string()),
             "escaped_from" => escape_id(self.from.to_string()),

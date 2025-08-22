@@ -1,21 +1,217 @@
     <html>
     <head>
         <title>{{ image_title }}</title>
+        <style>
+            .status {
+                position: fixed;
+                top: 10px;
+                right: 10px;
+                padding: 8px 12px;
+                border-radius: 4px;
+                font-family: monospace;
+                font-size: 12px;
+                z-index: 1000;
+            }
+            .status.connected { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+            .status.disconnected { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+            .status.connecting { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+            .loading {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: rgba(0,0,0,0.8);
+                color: white;
+                padding: 20px;
+                border-radius: 8px;
+                display: none;
+                z-index: 1000;
+            }
+        </style>
     </head>
     <body>
-        <img src="{{ image_url }}" alt="Image" />
+        <div id="status" class="status connecting">Connecting...</div>
+        <div id="loading" class="loading">Updating...</div>
+        
+        <img id="graph-image" src="{{ image_url }}" alt="Graph Image" />
+        
         <script>
         (function() {
-            // Use the current location to determine the ws URL
-            var wsProto = (location.protocol === 'https:') ? 'wss://' : 'ws://';
-            var wsPort = location.port ? ':' + location.port : '';
-            var wsUrl = wsProto + location.hostname + wsPort + '/ws';
-            var ws = new WebSocket(wsUrl);
-            ws.onmessage = function(event) {
-                if (event.data === 'reload') {
-                    location.reload();
+            let ws = null;
+            let reconnectAttempts = 0;
+            let maxReconnectAttempts = 5;
+            let reconnectDelay = 1000;
+            let isConnected = false;
+            
+            const statusEl = document.getElementById('status');
+            const loadingEl = document.getElementById('loading');
+            const imageEl = document.getElementById('graph-image');
+            
+            function updateStatus(className, text) {
+                statusEl.className = `status ${className}`;
+                statusEl.textContent = text;
+            }
+            
+            function showLoading() {
+                loadingEl.style.display = 'block';
+            }
+            
+            function hideLoading() {
+                loadingEl.style.display = 'none';
+            }
+            
+            function connect() {
+                if (ws && ws.readyState === WebSocket.OPEN) {
+                    return;
                 }
-            };
+                
+                updateStatus('connecting', 'Connecting...');
+                
+                // Use the current location to determine the ws URL
+                var wsProto = (location.protocol === 'https:') ? 'wss://' : 'ws://';
+                var wsPort = location.port ? ':' + location.port : '';
+                var wsUrl = wsProto + location.hostname + wsPort + '/ws';
+                
+                ws = new WebSocket(wsUrl);
+                
+                ws.onopen = function() {
+                    isConnected = true;
+                    reconnectAttempts = 0;
+                    updateStatus('connected', 'Connected');
+                    console.log('WebSocket connected');
+                };
+                
+                ws.onmessage = function(event) {
+                    try {
+                        const message = event.data;
+                        
+                        if (message === 'reload-svg') {
+                            reloadSvg();
+                        } else if (message === 'reload-json') {
+                            reloadJson();
+                        } else if (message === 'reload-html') {
+                            reloadHtml();
+                        } else if (message === 'reload-all') {
+                            location.reload();
+                        } else {
+                            // Try to parse as JSON for structured messages
+                            try {
+                                const parsed = JSON.parse(message);
+                                handleStructuredMessage(parsed);
+                            } catch (e) {
+                                console.log('Unknown message type:', message);
+                            }
+                        }
+                    } catch (e) {
+                        console.error('Error handling message:', e);
+                    }
+                };
+                
+                ws.onclose = function(event) {
+                    isConnected = false;
+                    updateStatus('disconnected', 'Disconnected');
+                    console.log('WebSocket closed:', event.code, event.reason);
+                    
+                    if (reconnectAttempts < maxReconnectAttempts) {
+                        reconnectAttempts++;
+                        const delay = reconnectDelay * Math.pow(2, reconnectAttempts - 1);
+                        updateStatus('connecting', `Reconnecting in ${Math.ceil(delay/1000)}s...`);
+                        
+                        setTimeout(connect, delay);
+                    } else {
+                        updateStatus('disconnected', 'Connection failed');
+                    }
+                };
+                
+                ws.onerror = function(error) {
+                    console.error('WebSocket error:', error);
+                    updateStatus('disconnected', 'Connection error');
+                };
+            }
+            
+            function handleStructuredMessage(message) {
+                if (message.ReloadSvg) {
+                    reloadSvg();
+                } else if (message.ReloadJson) {
+                    reloadJson();
+                } else if (message.ReloadHtml) {
+                    reloadHtml();
+                } else if (message.ReloadAll) {
+                    location.reload();
+                } else if (message.GraphUpdated) {
+                    console.log('Graph updated:', message.GraphUpdated);
+                    reloadSvg();
+                }
+            }
+            
+            async function reloadSvg() {
+                try {
+                    console.log('Reloading SVG...');
+                    showLoading();
+                    // Since we removed the /api/svg endpoint, we'll reload the image directly
+                    // This will fetch the updated SVG from the /svg endpoint
+                    const newImg = new Image();
+                    newImg.onload = function() {
+                        imageEl.src = newImg.src;
+                        hideLoading();
+                        log('SVG reloaded successfully');
+                    };
+                    newImg.onerror = function() {
+                        log('Failed to load new SVG');
+                        hideLoading();
+                    };
+                    // Add cache-busting parameter to force reload
+                    const timestamp = new Date().getTime();
+                    newImg.src = `/svg?t=${timestamp}`;
+                } catch (error) {
+                    log(`Error reloading SVG: ${error}`);
+                    hideLoading();
+                }
+            }
+            
+            async function reloadJson() {
+                try {
+                    log('Reloading JSON...');
+                    // Since we removed the /api/json endpoint, we'll fetch from the /json endpoint
+                    const response = await fetch('/json');
+                    if (response.ok) {
+                        const jsonContent = await response.json();
+                        log('JSON reloaded successfully');
+                    } else {
+                        log(`Failed to fetch JSON: ${response.status}`);
+                    }
+                } catch (error) {
+                    log(`Error reloading JSON: ${error}`);
+                }
+            }
+            
+            function reloadHtml() {
+                // For now, just reload the page for HTML changes
+                // In the future, this could be more sophisticated
+                location.reload();
+            }
+            
+            // Initial connection
+            connect();
+            
+            // Keep connection alive with heartbeat
+            setInterval(function() {
+                if (ws && ws.readyState === WebSocket.OPEN) {
+                    ws.send('ping');
+                }
+            }, 30000);
+            
+            // Handle page visibility changes
+            document.addEventListener('visibilitychange', function() {
+                if (document.hidden) {
+                    // Page is hidden, could close connection
+                } else {
+                    // Page is visible, ensure connection
+                    if (!isConnected) {
+                        connect();
+                    }
+                }
+            });
         })();
         </script>
     </body>
