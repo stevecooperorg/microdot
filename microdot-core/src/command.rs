@@ -1,4 +1,4 @@
-use crate::{Id, Label};
+use crate::{Direction, Id, Label};
 
 #[derive(PartialEq, Eq, Debug)]
 pub enum GraphCommand {
@@ -10,7 +10,7 @@ pub enum GraphCommand {
     LinkEdge { from: Id, to: Id },
     RenameNode { id: Id, label: Label },
     SelectNode { id: Id },
-    SetDirection { is_left_right: bool },
+    SetDirection { direction: Direction },
     UnlinkEdge { id: Id },
 }
 
@@ -47,14 +47,15 @@ impl GraphCommand {
                 format!("Rename the <{}> node to \"{}\"", id, label)
             }
             GraphCommand::SelectNode { id } => format!("Select the <{}> node and highlight it", id),
-            GraphCommand::SetDirection { is_left_right } => format!(
-                "Change the orientation of the graph to {}",
-                if *is_left_right {
-                    "left to right"
-                } else {
-                    "top to bottom"
-                }
-            ),
+            GraphCommand::SetDirection { direction } => {
+                let desc = match direction {
+                    Direction::LR => "left to right",
+                    Direction::RL => "right to left",
+                    Direction::TB => "top to bottom",
+                    Direction::BT => "bottom to top",
+                };
+                format!("Change the orientation of the graph to {}", desc)
+            },
             GraphCommand::UnlinkEdge { id } => format!("Unlink the <{}> edge", id),
         }
     }

@@ -1,6 +1,6 @@
 use crate::Command;
 use microdot_core::command::GraphCommand;
-use microdot_core::{Id, Label, Line};
+use microdot_core::{Direction, Id, Label, Line};
 use pom::char_class::{alpha, alphanum, multispace};
 use pom::parser::*;
 
@@ -120,8 +120,16 @@ fn lr<'a>() -> Parser<'a, u8, ()> {
     keyword(b"lr")
 }
 
+fn rl<'a>() -> Parser<'a, u8, ()> {
+    keyword(b"rl")
+}
+
 fn tb<'a>() -> Parser<'a, u8, ()> {
     keyword(b"tb")
+}
+
+fn bt<'a>() -> Parser<'a, u8, ()> {
+    keyword(b"bt")
 }
 
 fn link_edge<'a>() -> Parser<'a, u8, (String, String)> {
@@ -209,22 +217,37 @@ pub fn parse_line(line: Line) -> Command {
         .into();
     }
 
-    if let Ok(id) = rename_node_unlabelled().parse(text) {
-        return Command::RenameNodeUnlabelled { id: Id::new(id) };
-    }
-
+    // Check direction commands before rename_node to avoid parsing "rl" as "r" + "l"
     if let Ok(()) = lr().parse(text) {
         return GraphCommand::SetDirection {
-            is_left_right: true,
+            direction: Direction::LR,
+        }
+        .into();
+    }
+
+    if let Ok(()) = rl().parse(text) {
+        return GraphCommand::SetDirection {
+            direction: Direction::RL,
         }
         .into();
     }
 
     if let Ok(()) = tb().parse(text) {
         return GraphCommand::SetDirection {
-            is_left_right: false,
+            direction: Direction::TB,
         }
         .into();
+    }
+
+    if let Ok(()) = bt().parse(text) {
+        return GraphCommand::SetDirection {
+            direction: Direction::BT,
+        }
+        .into();
+    }
+
+    if let Ok(id) = rename_node_unlabelled().parse(text) {
+        return Command::RenameNodeUnlabelled { id: Id::new(id) };
     }
 
     if let Ok((id, label)) = expand_edge().parse(text) {
@@ -365,6 +388,7 @@ mod tests {
         assert_consumes_all![insert_node(), b"i foo bar baz", "foo bar baz"];
         assert_consumes_all![insert_node(), b"i foo", "foo"];
         assert_consumes_all![lr(), b"lr"];
+        assert_consumes_all![rl(), b"rl"];
         assert_consumes_all![print_dot(), b"p", ()];
         assert_consumes_all![print_dot(), b"print", ()];
         assert_consumes_all![print_json(), b"j", ()];
@@ -379,6 +403,7 @@ mod tests {
         assert_consumes_all![show_help(), b"h", ()];
         assert_consumes_all![show_help(), b"help", ()];
         assert_consumes_all![tb(), b"tb"];
+        assert_consumes_all![bt(), b"bt"];
         assert_consumes_all![unlink_edge(), b"u e1", "e1"];
     }
 
@@ -426,14 +451,28 @@ mod tests {
         assert_parse_command!(
             "lr",
             GraphCommand::SetDirection {
-                is_left_right: true
+                direction: Direction::LR
+            }
+            .into()
+        );
+        assert_parse_command!(
+            "rl",
+            GraphCommand::SetDirection {
+                direction: Direction::RL
             }
             .into()
         );
         assert_parse_command!(
             "tb",
             GraphCommand::SetDirection {
-                is_left_right: false
+                direction: Direction::TB
+            }
+            .into()
+        );
+        assert_parse_command!(
+            "bt",
+            GraphCommand::SetDirection {
+                direction: Direction::BT
             }
             .into()
         );

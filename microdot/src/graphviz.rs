@@ -10,7 +10,7 @@ use microdot_core::graph::Graph;
 use microdot_core::hash::HashTag;
 use microdot_core::labels::NodeInfo;
 use microdot_core::util::generate_hash;
-use microdot_core::{Id, Label};
+use microdot_core::{Direction, Id, Label};
 use once_cell::sync::OnceCell;
 use regex::Regex;
 use std::collections::BTreeMap;
@@ -70,7 +70,7 @@ pub struct GraphVizExporter {
     nodes: Vec<NodeHtmlLabelViewModel>,
     subgraphs: BTreeMap<HashTag, Vec<NodeHtmlLabelViewModel>>,
     edges: Vec<EdgeViewModel>,
-    is_left_right: bool,
+    direction: Direction,
     display_mode: DisplayMode,
 }
 
@@ -84,14 +84,14 @@ fn template(template_str: &str, variables: &BTreeMap<&str, String>) -> String {
 }
 
 impl Exporter for GraphVizExporter {
-    fn set_direction(&mut self, is_left_right: bool) {
-        self.is_left_right = is_left_right;
+    fn set_direction(&mut self, direction: Direction) {
+        self.direction = direction;
     }
 
     fn add_node(&mut self, id: &Id, label: &Label, highlight: NodeHighlight) {
         // TODO: probably horrific perf.
 
-        let wrap_size = if self.is_left_right { 40 } else { 25 };
+        let wrap_size = if self.direction.to_bool() { 40 } else { 25 };
         let wrapping_options = {
             let mut dictionary = Standard::from_embedded(Language::EnglishUS).unwrap();
             dictionary.minima = (3, 3);
@@ -214,7 +214,7 @@ impl Template for EdgeViewModel {
 impl GraphVizExporter {
     pub fn new(display_mode: DisplayMode) -> Self {
         Self {
-            is_left_right: false,
+            direction: Direction::TB,
             nodes: Default::default(),
             edges: Default::default(),
             subgraphs: Default::default(),
@@ -265,12 +265,11 @@ impl GraphVizExporter {
     pub fn export_dot(&mut self, graph: &Graph) -> String {
         graph.export(self);
 
-        let rank_dir = if self.is_left_right { "LR" } else { "TB" };
-        let rank_dir = rank_dir.to_string();
+        let rank_dir = self.direction.to_string().to_string();
         let edge_color = ColorScheme::normal().get_stroke_color();
         let inner_content = self.build();
 
-        let width = if self.is_left_right { 4.0f32 } else { 2.5f32 };
+        let width = if self.direction.to_bool() { 4.0f32 } else { 2.5f32 };
         let vm = GraphViewModel {
             rank_dir,
             edge_color,

@@ -1,11 +1,11 @@
 {
+  "direction": "TB",
   "edges": [
     {
       "from": "n0",
       "to": "n1"
     }
   ],
-  "is_left_right": false,
   "nodes": [
     {
       "id": "n0",

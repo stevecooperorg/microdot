@@ -1,4 +1,4 @@
-use crate::{Id, Label};
+use crate::{Direction, Id, Label};
 
 #[derive(Copy, Clone)]
 pub enum NodeHighlight {
@@ -8,7 +8,7 @@ pub enum NodeHighlight {
 }
 
 pub trait Exporter {
-    fn set_direction(&mut self, is_left_right: bool);
+    fn set_direction(&mut self, direction: Direction);
 
     fn add_node(&mut self, id: &Id, label: &Label, highlight: NodeHighlight);
 

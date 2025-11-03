@@ -15,7 +15,9 @@ Commands:
   - s searchterm        - search for <searchterm> and highlight matching nodes
   - /searchterm         - search for <searchterm> and highlight matching nodes
   - lr                  - Change the orientation of the graph to left to right
+  - rl                  - Change the orientation of the graph to right to left
   - tb                  - Change the orientation of the graph to top to bottom
+  - bt                  - Change the orientation of the graph to bottom to top
   - p                   - print the dot definition for this graph to the terminal
   - j                   - print the json definition for this graph to the terminal
   - exit                - exit microdot

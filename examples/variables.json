@@ -1,4 +1,5 @@
 {
+  "direction": "TB",
   "edges": [
     {
       "from": "n0",
@@ -25,7 +26,6 @@
       "to": "n4"
     }
   ],
-  "is_left_right": false,
   "nodes": [
     {
       "id": "n0",

@@ -1,10 +1,13 @@
 pub mod command;
+pub mod direction;
 pub mod exporter;
 pub mod graph;
 pub mod hash;
 pub mod labels;
 pub mod pet;
 pub mod util;
+
+pub use direction::Direction;
 
 macro_rules! new_string_type {
     ($id: ident) => {

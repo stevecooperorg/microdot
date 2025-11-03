@@ -3,7 +3,7 @@ use crate::exporter::{Exporter, NodeHighlight};
 use crate::labels::NodeInfo;
 use crate::pet::{GetVariableValue, PGraph};
 use crate::util::generate_hash;
-use crate::{CommandResult, Id, Label};
+use crate::{CommandResult, Direction, Id, Label};
 use regex::Regex;
 use std::cmp::Ordering;
 use std::collections::{BTreeMap, BTreeSet, HashMap};
@@ -23,7 +23,7 @@ pub struct Graph {
     edge_high_water: usize,
     nodes: Vec<Node>,
     edges: Vec<Edge>,
-    is_left_right: bool,
+    direction: Direction,
     current_search: Option<Label>,
     current_node: Option<Id>,
 }
@@ -548,7 +548,7 @@ impl Graph {
     }
 
     pub fn export<X: Exporter>(&self, exporter: &mut X) {
-        exporter.set_direction(self.is_left_right);
+        exporter.set_direction(self.direction);
 
         for node in &self.nodes {
             let highlight = if self.node_matches_current_search(node) {
@@ -577,7 +577,7 @@ impl Graph {
             GraphCommand::LinkEdge { from, to } => self.link_edge(&from, &to),
             GraphCommand::RenameNode { id, label } => self.rename_node(&id, label),
             GraphCommand::SelectNode { id } => self.select_node(&id),
-            GraphCommand::SetDirection { is_left_right } => self.set_direction(is_left_right),
+            GraphCommand::SetDirection { direction } => self.set_direction(direction),
             GraphCommand::UnlinkEdge { id } => self.unlink_edge(&id),
         }
     }
@@ -640,11 +640,11 @@ impl Graph {
         CommandResult::new(msg)
     }
 
-    pub fn set_direction(&mut self, is_left_right: bool) -> CommandResult {
-        self.is_left_right = is_left_right;
+    pub fn set_direction(&mut self, direction: Direction) -> CommandResult {
+        self.direction = direction;
         CommandResult::new(format!(
             "Direction changed to {}",
-            if is_left_right { "LR" } else { "TB" }
+            direction.to_string()
         ))
     }
 

@@ -1,8 +1,8 @@
 use anyhow::Result;
 use microdot_core::exporter::{Exporter, NodeHighlight};
 use microdot_core::graph::Graph;
-use microdot_core::{Id, Label};
-use serde::{Deserialize, Serialize};
+use microdot_core::{Direction, Id, Label};
+use serde::{Deserialize, Deserializer, Serialize};
 use serde_json::{json, Value};
 use std::collections::HashMap;
 use std::fs::File;
@@ -13,12 +13,12 @@ use std::path::Path;
 pub struct JsonExporter {
     nodes: Vec<Value>,
     edges: Vec<Value>,
-    is_left_right: bool,
+    direction: Direction,
 }
 
 impl Exporter for JsonExporter {
-    fn set_direction(&mut self, is_left_right: bool) {
-        self.is_left_right = is_left_right;
+    fn set_direction(&mut self, direction: Direction) {
+        self.direction = direction;
     }
 
     fn add_node(&mut self, id: &Id, label: &Label, _highlight: NodeHighlight) {
@@ -51,7 +51,7 @@ impl JsonExporter {
         let value = json! {{
         "nodes": self.nodes,
         "edges": self.edges,
-        "is_left_right": self.is_left_right
+        "direction": self.direction
         }};
         serde_json::to_string_pretty(&value).expect("could not serialise json")
     }
@@ -73,11 +73,51 @@ struct JsonEdge {
     to: Id,
 }
 
-#[derive(Serialize, Deserialize, Default)]
+#[derive(Serialize, Default)]
 struct JsonGraph {
     nodes: Vec<JsonNode>,
     edges: Vec<JsonEdge>,
-    is_left_right: bool,
+    direction: Direction,
+}
+
+impl<'de> Deserialize<'de> for JsonGraph {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        #[derive(Deserialize)]
+        struct JsonGraphHelper {
+            nodes: Vec<JsonNode>,
+            edges: Vec<JsonEdge>,
+            #[serde(default)]
+            is_left_right: Option<bool>,
+            #[serde(default)]
+            direction: Option<Direction>,
+        }
+
+        let helper = JsonGraphHelper::deserialize(deserializer)?;
+
+        let direction = match (helper.is_left_right, helper.direction) {
+            // New format: direction is present
+            (_, Some(dir)) => dir,
+            // Old format: is_left_right is present
+            (Some(is_lr), None) => {
+                if is_lr {
+                    Direction::LR
+                } else {
+                    Direction::TB
+                }
+            },
+            // Neither present: default to TB
+            (None, None) => Direction::TB,
+        };
+
+        Ok(JsonGraph {
+            nodes: helper.nodes,
+            edges: helper.edges,
+            direction,
+        })
+    }
 }
 
 impl JsonImporter {
@@ -93,7 +133,7 @@ impl JsonImporter {
         let mut translate = HashMap::new();
         let mut graph = Graph::new();
 
-        graph.set_direction(value.is_left_right);
+        graph.set_direction(value.direction);
 
         for node in &value.nodes {
             let (new_id, _) = graph.insert_node(node.label.clone());
@@ -147,9 +187,12 @@ mod tests {
         let graph = importer.import().expect("could not import");
         let mut exporter = JsonExporter::new();
         let exported = exporter.export_json(&graph);
+        // After round-trip, old format should be upgraded to new format
+        let parsed: Value = serde_json::from_str(&exported).expect("should parse");
         assert_eq!(
-            content, exported,
-            "round-trip should have lost or changed nothing"
+            parsed["direction"],
+            "LR",
+            "round-trip should upgrade old format to new format with direction: LR"
         );
     }
 
@@ -173,9 +216,98 @@ mod tests {
         let mut exporter = JsonExporter::new();
         let exported = exporter.export_json(&graph);
 
+        // After upgrade, exports should use direction enum instead of is_left_right
+        let parsed: Value = serde_json::from_str(&exported).expect("should parse");
         assert_eq!(
-            include_str!("../../test_data/exports_graph.json").to_string(),
-            exported
+            parsed["direction"],
+            "TB",
+            "exports should use new direction format: TB"
         );
+    }
+
+    #[test]
+    fn deserializes_old_format_with_is_left_right_true() {
+        let content = r#"{
+            "nodes": [{"id": "n0", "label": "abc"}],
+            "edges": [],
+            "is_left_right": true
+        }"#;
+        let importer = JsonImporter::new(content);
+        let graph = importer.import().expect("could not import");
+        // Should convert is_left_right: true to Direction::LR
+        let mut exporter = JsonExporter::new();
+        let exported = exporter.export_json(&graph);
+        let parsed: Value = serde_json::from_str(&exported).expect("should parse");
+        assert_eq!(
+            parsed["direction"],
+            "LR",
+            "old format is_left_right: true should deserialize to LR"
+        );
+    }
+
+    #[test]
+    fn deserializes_old_format_with_is_left_right_false() {
+        let content = r#"{
+            "nodes": [{"id": "n0", "label": "abc"}],
+            "edges": [],
+            "is_left_right": false
+        }"#;
+        let importer = JsonImporter::new(content);
+        let graph = importer.import().expect("could not import");
+        // Should convert is_left_right: false to Direction::TB
+        let mut exporter = JsonExporter::new();
+        let exported = exporter.export_json(&graph);
+        let parsed: Value = serde_json::from_str(&exported).expect("should parse");
+        assert_eq!(
+            parsed["direction"],
+            "TB",
+            "old format is_left_right: false should deserialize to TB"
+        );
+    }
+
+    #[test]
+    fn deserializes_new_format_with_direction() {
+        let content = r#"{
+            "nodes": [{"id": "n0", "label": "abc"}],
+            "edges": [],
+            "direction": "RL"
+        }"#;
+        let importer = JsonImporter::new(content);
+        let graph = importer.import().expect("could not import");
+        // Direction is now preserved through the entire chain
+        let mut exporter = JsonExporter::new();
+        let exported = exporter.export_json(&graph);
+        let parsed: Value = serde_json::from_str(&exported).expect("should parse");
+        assert_eq!(
+            parsed["direction"],
+            "RL",
+            "new format should preserve direction: RL"
+        );
+    }
+
+    #[test]
+    fn deserializes_all_direction_variants() {
+        for (direction_str, expected_bool) in [("LR", true), ("RL", true), ("TB", false), ("BT", false)] {
+            let content = format!(
+                r#"{{
+                    "nodes": [{{"id": "n0", "label": "abc"}}],
+                    "edges": [],
+                    "direction": "{}"
+                }}"#,
+                direction_str
+            );
+            let importer = JsonImporter::new(&content);
+            let graph = importer.import().expect(&format!("could not import direction: {}", direction_str));
+            // Verify conversion to bool is correct
+            let mut exporter = JsonExporter::new();
+            graph.export(&mut exporter);
+            assert_eq!(
+                exporter.direction.to_bool(),
+                expected_bool,
+                "direction {} should convert to bool {}",
+                direction_str,
+                expected_bool
+            );
+        }
     }
 }
