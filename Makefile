@@ -43,9 +43,6 @@ test:
 dot:
 	dot "$(DEFAULT_DOT)" -Tsvg -o "$(DEFAULT_SVG)"
 
-commit:
-	./bin/auto-commit
-
 docker-build: build
 	export $$(cat .env | xargs) && docker buildx bake
 
