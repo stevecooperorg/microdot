@@ -66,12 +66,64 @@ impl ImagePage {
     }
 }
 
+#[derive(Clone)]
+pub struct GraphVizRenderOptions {
+    /// Text wrap length for horizontal direction (TB/LR)
+    pub wrap_length_horizontal: usize,
+    /// Text wrap length for vertical direction (TB/RL)
+    pub wrap_length_vertical: usize,
+    /// Minimum node width for horizontal direction
+    pub node_width_horizontal: f32,
+    /// Minimum node width for vertical direction
+    pub node_width_vertical: f32,
+    /// Minimum node height
+    pub node_height: f32,
+    /// Rank separation (spacing between ranks/layers)
+    pub rank_separation: f32,
+    /// Node separation (spacing between nodes in the same rank)
+    pub node_separation: f32,
+    /// Hyphenation minimum word length (before, after)
+    pub hyphenation_minima: (usize, usize),
+}
+
+impl Default for GraphVizRenderOptions {
+    fn default() -> Self {
+        Self {
+            wrap_length_horizontal: 40,
+            wrap_length_vertical: 25,
+            node_width_horizontal: 4.0,
+            node_width_vertical: 2.5,
+            node_height: 1.0,
+            rank_separation: 0.75,
+            node_separation: 0.5,
+            hyphenation_minima: (3, 3),
+        }
+    }
+}
+
+impl GraphVizRenderOptions {
+    pub fn compact() -> Self {
+        Self {
+            wrap_length_horizontal: 25,
+            wrap_length_vertical: 15,
+            node_width_horizontal: 2.0,
+            node_width_vertical: 1.0,
+            node_height: 1.0,
+            rank_separation: 0.5,
+            node_separation: 0.25,
+            hyphenation_minima: (3, 3),
+        }
+    }
+}
+
+
 pub struct GraphVizExporter {
     nodes: Vec<NodeHtmlLabelViewModel>,
     subgraphs: BTreeMap<HashTag, Vec<NodeHtmlLabelViewModel>>,
     edges: Vec<EdgeViewModel>,
     direction: Direction,
     display_mode: DisplayMode,
+    render_options: GraphVizRenderOptions,
 }
 
 fn template(template_str: &str, variables: &BTreeMap<&str, String>) -> String {
@@ -91,10 +143,17 @@ impl Exporter for GraphVizExporter {
     fn add_node(&mut self, id: &Id, label: &Label, highlight: NodeHighlight) {
         // TODO: probably horrific perf.
 
-        let wrap_size = if self.direction.to_bool() { 40 } else { 25 };
+        let wrap_size = if self.direction.to_bool() {
+            self.render_options.wrap_length_horizontal
+        } else {
+            self.render_options.wrap_length_vertical
+        };
         let wrapping_options = {
             let mut dictionary = Standard::from_embedded(Language::EnglishUS).unwrap();
-            dictionary.minima = (3, 3);
+            dictionary.minima = (
+                self.render_options.hyphenation_minima.0,
+                self.render_options.hyphenation_minima.1,
+            );
             let splitter = WordSplitter::Hyphenation(dictionary);
             Options::new(wrap_size).word_splitter(splitter)
         };
@@ -213,12 +272,17 @@ impl Template for EdgeViewModel {
 
 impl GraphVizExporter {
     pub fn new(display_mode: DisplayMode) -> Self {
+        Self::with_options(display_mode, GraphVizRenderOptions::compact())
+    }
+
+    pub fn with_options(display_mode: DisplayMode, render_options: GraphVizRenderOptions) -> Self {
         Self {
             direction: Direction::TB,
             nodes: Default::default(),
             edges: Default::default(),
             subgraphs: Default::default(),
             display_mode,
+            render_options,
         }
     }
 
@@ -269,12 +333,19 @@ impl GraphVizExporter {
         let edge_color = ColorScheme::normal().get_stroke_color();
         let inner_content = self.build();
 
-        let width = if self.direction.to_bool() { 4.0f32 } else { 2.5f32 };
+        let width = if self.direction.to_bool() {
+            self.render_options.node_width_horizontal
+        } else {
+            self.render_options.node_width_vertical
+        };
         let vm = GraphViewModel {
             rank_dir,
             edge_color,
             inner_content,
             width,
+            rank_separation: self.render_options.rank_separation,
+            node_separation: self.render_options.node_separation,
+            node_height: self.render_options.node_height,
         };
         vm.render().unwrap()
     }
@@ -350,6 +421,9 @@ struct GraphViewModel {
     edge_color: Color,
     inner_content: String,
     width: f32,
+    rank_separation: f32,
+    node_separation: f32,
+    node_height: f32,
 }
 
 mod dot {

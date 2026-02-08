@@ -190,9 +190,9 @@ pub struct ColorScheme {
 }
 
 // const PALETTE_NAME: &str = "antarctica_evening_v2";
-// const PALETTE_NAME: &str = "generated";
+const PALETTE_NAME: &str = "generated";
 // const PALETTE_NAME: &str = "large";
-const PALETTE_NAME: &str = "stretched";
+// const PALETTE_NAME: &str = "stretched";
 
 impl ColorScheme {
     const NODE_BORDER_WIDTH: f64 = 3.0f64;

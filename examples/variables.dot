@@ -1,25 +1,25 @@
 digraph {
 
     graph [fontname = "helvetica" rankdir="TB" ranksep=0.75 nodesep=0.5];
-    node [fontname = "helvetica" shape = "box" width=2.5 style=filled];
+    node [fontname = "helvetica" shape = "box" width=2.5 height=1 style=filled];
     edge [fontname = "helvetica" penwidth=3 color="#000000"];
 
   subgraph cluster_END {
   label="END"
-  bgcolor="#A32012"
+  bgcolor="#007154"
   fontcolor="#FFFFFF"
-    n4 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    n4 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="2"><FONT POINT-SIZE="10">n4</FONT>: end</TD>
     </TR>
     
         
            <TR>
-<TD BGCOLOR="#F690A3">cost=1</TD>
+<TD BGCOLOR="#F597CB">cost=1</TD>
 </TR>
         
            <TR>
-<TD BGCOLOR="#F690A1">t=1 day</TD>
+<TD BGCOLOR="#68C7FF">t=1 day</TD>
 </TR>
         
     
@@ -28,37 +28,37 @@ digraph {
   }
   subgraph cluster_FAST {
   label="FAST"
-  bgcolor="#6C2378"
+  bgcolor="#007154"
   fontcolor="#FFFFFF"
-    n2 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    n2 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="2"><FONT POINT-SIZE="10">n2</FONT>: rapid but hard</TD>
     </TR>
     
         
            <TR>
-<TD BGCOLOR="#F690A3">cost=9</TD>
+<TD BGCOLOR="#F597CB">cost=9</TD>
 </TR>
         
            <TR>
-<TD BGCOLOR="#F690A1">t=10 minutes</TD>
+<TD BGCOLOR="#68C7FF">t=10 minutes</TD>
 </TR>
         
     
    </TABLE>
 > fillcolor="#FFFFFF"]
-    n3 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    n3 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="2"><FONT POINT-SIZE="10">n3</FONT>: rapid and easy</TD>
     </TR>
     
         
            <TR>
-<TD BGCOLOR="#F690A3">cost=1</TD>
+<TD BGCOLOR="#F597CB">cost=1</TD>
 </TR>
         
            <TR>
-<TD BGCOLOR="#F690A1">t=10 minutes</TD>
+<TD BGCOLOR="#68C7FF">t=10 minutes</TD>
 </TR>
         
     
@@ -67,37 +67,37 @@ digraph {
   }
   subgraph cluster_INIT {
   label="INIT"
-  bgcolor="#878A1E"
+  bgcolor="#666728"
   fontcolor="#FFFFFF"
-    n0 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    n0 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="2"><FONT POINT-SIZE="10">n0</FONT>: init project</TD>
     </TR>
     
         
            <TR>
-<TD BGCOLOR="#F690A3">cost=5</TD>
+<TD BGCOLOR="#F597CB">cost=5</TD>
 </TR>
         
            <TR>
-<TD BGCOLOR="#F690A1">t=1 day</TD>
+<TD BGCOLOR="#68C7FF">t=1 day</TD>
 </TR>
         
     
    </TABLE>
 > fillcolor="#FFFFFF"]
-    n1 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    n1 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="2"><FONT POINT-SIZE="10">n1</FONT>: quick next step</TD>
     </TR>
     
         
            <TR>
-<TD BGCOLOR="#F690A3">cost=1</TD>
+<TD BGCOLOR="#F597CB">cost=1</TD>
 </TR>
         
            <TR>
-<TD BGCOLOR="#F690A1">t=10 minutes</TD>
+<TD BGCOLOR="#68C7FF">t=10 minutes</TD>
 </TR>
         
     
@@ -106,20 +106,20 @@ digraph {
   }
   subgraph cluster_SLOW {
   label="SLOW"
-  bgcolor="#A78A10"
+  bgcolor="#E3003D"
   fontcolor="#FFFFFF"
-    n5 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    n5 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="2"><FONT POINT-SIZE="10">n5</FONT>: slow and easy</TD>
     </TR>
     
         
            <TR>
-<TD BGCOLOR="#F690A3">cost=1</TD>
+<TD BGCOLOR="#F597CB">cost=1</TD>
 </TR>
         
            <TR>
-<TD BGCOLOR="#F690A1">t=1 day</TD>
+<TD BGCOLOR="#68C7FF">t=1 day</TD>
 </TR>
         
     

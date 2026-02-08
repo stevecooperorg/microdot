@@ -1,28 +1,28 @@
 digraph {
 
     graph [fontname = "helvetica" rankdir="TB" ranksep=0.75 nodesep=0.5];
-    node [fontname = "helvetica" shape = "box" width=2.5 style=filled];
+    node [fontname = "helvetica" shape = "box" width=2.5 height=1 style=filled];
     edge [fontname = "helvetica" penwidth=3 color="#000000"];
 
-    n0 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    n0 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="1"><FONT POINT-SIZE="10">n0</FONT>: this happens first</TD>
     </TR>
     
    </TABLE>
 > fillcolor="#FFFFFF"]
-    n1 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    n1 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="2"><FONT POINT-SIZE="10">n1</FONT>: and then this happens</TD>
     </TR>
     
         
            <TR>
-<TD BGCOLOR="#F3C36E">#TAG1</TD>
+<TD BGCOLOR="#FF9292">#TAG1</TD>
 </TR>
         
            <TR>
-<TD BGCOLOR="#F2DC7C">#TAG2</TD>
+<TD BGCOLOR="#EAB583">#TAG2</TD>
 </TR>
         
     

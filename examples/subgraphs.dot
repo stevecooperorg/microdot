@@ -1,42 +1,42 @@
 digraph {
 
     graph [fontname = "helvetica" rankdir="LR" ranksep=0.75 nodesep=0.5];
-    node [fontname = "helvetica" shape = "box" width=4 style=filled];
+    node [fontname = "helvetica" shape = "box" width=4 height=1 style=filled];
     edge [fontname = "helvetica" penwidth=3 color="#000000"];
 
   subgraph cluster_DEV {
   label="DEV"
-  bgcolor="#6B2478"
+  bgcolor="#C23C0C"
   fontcolor="#FFFFFF"
-    n0 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    n0 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="1"><FONT POINT-SIZE="10">n0</FONT>: developer writes code</TD>
     </TR>
     
    </TABLE>
 > fillcolor="#FFFFFF"]
-    n1 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    n1 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="1"><FONT POINT-SIZE="10">n1</FONT>: developer commits code</TD>
     </TR>
     
    </TABLE>
 > fillcolor="#FFFFFF"]
-    n2 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    n2 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="1"><FONT POINT-SIZE="10">n2</FONT>: developer raises PR</TD>
     </TR>
     
    </TABLE>
 > fillcolor="#FFFFFF"]
-    n3 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    n3 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="1"><FONT POINT-SIZE="10">n3</FONT>: developer2 reviews PR</TD>
     </TR>
     
    </TABLE>
 > fillcolor="#FFFFFF"]
-    n7 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    n7 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="1"><FONT POINT-SIZE="10">n7</FONT>: developer merges PR</TD>
     </TR>
@@ -46,23 +46,23 @@ digraph {
   }
   subgraph cluster_TEST {
   label="TEST"
-  bgcolor="#C5112F"
+  bgcolor="#007268"
   fontcolor="#FFFFFF"
-    n4 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    n4 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="1"><FONT POINT-SIZE="10">n4</FONT>: tester installs PR branch code into dev<br/>environment</TD>
     </TR>
     
    </TABLE>
 > fillcolor="#FFFFFF"]
-    n5 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    n5 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="1"><FONT POINT-SIZE="10">n5</FONT>: tester tests PR branch code</TD>
     </TR>
     
    </TABLE>
 > fillcolor="#FFFFFF"]
-    n6 [width=4 height=1 label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    n6 [label=< <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <TR>
         <TD COLSPAN="1"><FONT POINT-SIZE="10">n6</FONT>: tester approves PR</TD>
     </TR>

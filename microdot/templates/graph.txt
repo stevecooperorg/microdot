@@ -1,7 +1,7 @@
 digraph {
 
-    graph [fontname = "helvetica" rankdir="{{ rank_dir }}" ranksep=0.75 nodesep=0.5];
-    node [fontname = "helvetica" shape = "box" width={{ width }} style=filled];
+    graph [fontname = "helvetica" rankdir="{{ rank_dir }}" ranksep={{ rank_separation }} nodesep={{ node_separation }}];
+    node [fontname = "helvetica" shape = "box" width={{ width }} height={{ node_height }} style=filled];
     edge [fontname = "helvetica" penwidth=3 color="{{ edge_color }}"];
 
 {{ inner_content }}

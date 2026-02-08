@@ -10,17 +10,17 @@
 <polygon fill="white" stroke="none" points="-4,4 -4,-250 1395,-250 1395,4 -4,4"/>
 <g id="clust1" class="cluster">
 <title>cluster_BLOCKER</title>
-<polygon fill="#6c2378" stroke="black" points="365,-8 365,-119 1026,-119 1026,-8 365,-8"/>
+<polygon fill="#006d98" stroke="black" points="365,-8 365,-119 1026,-119 1026,-8 365,-8"/>
 <text xml:space="preserve" text-anchor="middle" x="695.5" y="-101.7" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#ffffff">BLOCKER</text>
 </g>
 <g id="clust2" class="cluster">
 <title>cluster_CURRENT</title>
-<polygon fill="#a32012" stroke="black" points="8,-127 8,-238 1026,-238 1026,-127 8,-127"/>
+<polygon fill="#00708c" stroke="black" points="8,-127 8,-238 1026,-238 1026,-127 8,-127"/>
 <text xml:space="preserve" text-anchor="middle" x="517" y="-220.7" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#ffffff">CURRENT</text>
 </g>
 <g id="clust3" class="cluster">
 <title>cluster_RESULT</title>
-<polygon fill="#99660c" stroke="black" points="1079,-75 1079,-186 1383,-186 1383,-75 1079,-75"/>
+<polygon fill="#006d98" stroke="black" points="1079,-75 1079,-186 1383,-186 1383,-75 1079,-75"/>
 <text xml:space="preserve" text-anchor="middle" x="1231" y="-168.7" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#ffffff">RESULT</text>
 </g>
 <!-- n4 -->
@@ -36,7 +36,7 @@
 <polygon fill="#ffffff" stroke="black" points="1375,-155 1087,-155 1087,-83 1375,-83 1375,-155"/>
 <text xml:space="preserve" text-anchor="start" x="1118.88" y="-121.7" font-family="Helvetica,sans-Serif" font-size="10.00">n0</text>
 <text xml:space="preserve" text-anchor="start" x="1129.38" y="-121.7" font-family="Helvetica,sans-Serif" font-size="14.00">: #customers get delivery too slowly</text>
-<polygon fill="#bad782" stroke="none" points="1118.88,-104 1118.88,-119 1343.12,-119 1343.12,-104 1118.88,-104"/>
+<polygon fill="#63d7b8" stroke="none" points="1118.88,-104 1118.88,-119 1343.12,-119 1343.12,-104 1118.88,-104"/>
 <text xml:space="preserve" text-anchor="start" x="1195.75" y="-105.7" font-family="Helvetica,sans-Serif" font-size="14.00">#customers</text>
 </g>
 <!-- n4&#45;&gt;n0 -->
