@@ -35,7 +35,8 @@ Esc cancels drafts, menus, and confirms.
 
 pub fn draw(frame: &mut Frame, app: &mut App) {
     let area = frame.area();
-    let footer_h = if app.draft.is_some() { 4 } else { 3 };
+    // status · selected label · help/draft
+    let footer_h = if app.draft.is_some() { 5 } else { 4 };
     let chunks = Layout::default()
         .direction(Direction::Vertical)
         .constraints([
@@ -263,20 +264,24 @@ fn draw_footer(frame: &mut Frame, app: &App, area: Rect) {
     let t = app.theme;
     let chunks = Layout::default()
         .direction(Direction::Vertical)
-        .constraints([Constraint::Length(1), Constraint::Min(1)])
+        .constraints([
+            Constraint::Length(1), // status
+            Constraint::Length(1), // selected node label (full width)
+            Constraint::Min(1),    // help / draft
+        ])
         .split(area);
 
     let g = app.graph.read().unwrap();
-    let sel = g
-        .current_node()
-        .map(|id| {
+    let (sel_id, sel_label) = match g.current_node() {
+        Some(id) => {
             let label = g
                 .find_node_label(id)
                 .map(|l| l.to_string())
                 .unwrap_or_default();
-            format!("sel {} \"{}\"", id, truncate(&label, 20))
-        })
-        .unwrap_or_else(|| "sel -".into());
+            (id.to_string(), label)
+        }
+        None => ("-".into(), String::new()),
+    };
     let edge = app
         .selected_edge
         .as_ref()
@@ -284,8 +289,8 @@ fn draw_footer(frame: &mut Frame, app: &App, area: Rect) {
         .unwrap_or_else(|| "edge -".into());
     let dirty = if app.dirty { "dirty" } else { "clean" };
     let status = format!(
-        "{} · {} · {} · {} · {}",
-        sel,
+        "sel {} · {} · {} · {} · {}",
+        sel_id,
         edge,
         g.direction().to_string(),
         dirty,
@@ -296,6 +301,18 @@ fn draw_footer(frame: &mut Frame, app: &App, area: Rect) {
     frame.render_widget(
         Paragraph::new(status).style(Style::default().fg(t.status)),
         chunks[0],
+    );
+
+    let label_line = if sel_label.is_empty() {
+        "node —".to_string()
+    } else {
+        // Prefer the full label; only clip to the footer width if needed.
+        let max = chunks[1].width.saturating_sub(7) as usize; // "node: "
+        format!("node: {}", truncate(&sel_label, max.max(8)))
+    };
+    frame.render_widget(
+        Paragraph::new(label_line).style(Style::default().fg(t.text)),
+        chunks[1],
     );
 
     let help_line = if let Some(confirm) = app.confirm {
@@ -322,7 +339,7 @@ fn draw_footer(frame: &mut Frame, app: &App, area: Rect) {
         Paragraph::new(help_line)
             .style(Style::default().fg(t.text))
             .wrap(Wrap { trim: true }),
-        chunks[1],
+        chunks[2],
     );
 }
 
