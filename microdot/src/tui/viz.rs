@@ -1,13 +1,12 @@
 //! TUI graph preview: Graphviz lays out, microdot-termgraph draws.
 
+use super::theme::Theme;
 use crate::graphviz::{self, DisplayMode, GraphVizExporter, PlainLayout};
 use microdot_core::graph::Graph;
 use microdot_core::Id;
 use microdot_termgraph::{
-    node_box_width, BoxBorder, EdgeStyle, LabelMode, NodeStyle, PlacedEdge, PlacedNode, Scene,
-    NODE_BOX_HEIGHT,
+    node_box_width, BoxBorder, LabelMode, PlacedEdge, PlacedNode, Scene, NODE_BOX_HEIGHT,
 };
-use ratatui::style::Color;
 use std::collections::HashMap;
 
 /// Characters per Graphviz inch when mapping to the terminal grid.
@@ -17,24 +16,24 @@ const ROWS_PER_INCH: f64 = 6.0;
 pub struct VizState {
     pub scene: Option<Scene>,
     pub label_mode: LabelMode,
+    theme: Theme,
     structure_epoch: u64,
     last_built_epoch: u64,
     last_error: Option<String>,
 }
 
-impl Default for VizState {
-    fn default() -> Self {
+impl VizState {
+    pub fn new(theme: Theme) -> Self {
         Self {
             scene: None,
             label_mode: LabelMode::Truncate(24),
+            theme,
             structure_epoch: 0,
             last_built_epoch: u64::MAX,
             last_error: None,
         }
     }
-}
 
-impl VizState {
     pub fn mark_structure_changed(&mut self) {
         self.structure_epoch = self.structure_epoch.wrapping_add(1);
     }
@@ -63,7 +62,12 @@ impl VizState {
 
         match graphviz::layout_dot_plain(&dot) {
             Ok(layout) => {
-                self.scene = Some(scene_from_layout(graph, &layout, self.label_mode));
+                self.scene = Some(scene_from_layout(
+                    graph,
+                    &layout,
+                    self.label_mode,
+                    self.theme,
+                ));
                 self.last_error = None;
             }
             Err(e) => {
@@ -83,27 +87,35 @@ impl VizState {
         let Some(scene) = self.scene.as_mut() else {
             return;
         };
-        scene.reset_styles();
+        let theme = self.theme;
+        let default_node = theme.default_node_style();
+        let default_edge = theme.default_edge_style();
+        for node in &mut scene.nodes {
+            node.style = default_node.clone();
+        }
+        for edge in &mut scene.edges {
+            edge.style = default_edge.clone();
+        }
 
         let hit_ids: std::collections::HashSet<String> =
             search_hits.iter().map(|id| id.to_string()).collect();
 
         for node in &mut scene.nodes {
             if hit_ids.contains(&node.id) {
-                node.style.border_color = Color::DarkGray;
-                node.style.text_color = Color::Gray;
+                node.style.border_color = theme.search_node_border;
+                node.style.text_color = theme.search_node_text;
             }
             if selected_node.is_some_and(|id| id.to_string() == node.id) {
                 node.style.border = BoxBorder::Rounded;
-                node.style.border_color = Color::Green;
-                node.style.text_color = Color::White;
+                node.style.border_color = theme.selected_node_border;
+                node.style.text_color = theme.selected_node_text;
             }
         }
 
         if let Some(eid) = selected_edge {
             if let Some(edge) = scene.edge_mut(&eid.to_string()) {
-                edge.style.line_color = Color::Yellow;
-                edge.style.text_color = Color::Yellow;
+                edge.style.line_color = theme.selected_edge;
+                edge.style.text_color = theme.selected_edge;
             }
         }
     }
@@ -119,7 +131,12 @@ impl VizState {
     }
 }
 
-fn scene_from_layout(graph: &Graph, layout: &PlainLayout, label_mode: LabelMode) -> Scene {
+fn scene_from_layout(
+    graph: &Graph,
+    layout: &PlainLayout,
+    label_mode: LabelMode,
+    theme: Theme,
+) -> Scene {
     let labels: HashMap<String, String> = graph
         .node_snapshots()
         .into_iter()
@@ -139,6 +156,9 @@ fn scene_from_layout(graph: &Graph, layout: &PlainLayout, label_mode: LabelMode)
     scene.label_mode = label_mode;
     scene.padding = 1;
 
+    let node_style = theme.default_node_style();
+    let edge_style = theme.default_edge_style();
+
     for n in &layout.nodes {
         let label = labels.get(&n.id).cloned().unwrap_or_else(|| n.id.clone());
         let display = match label_mode {
@@ -148,13 +168,15 @@ fn scene_from_layout(graph: &Graph, layout: &PlainLayout, label_mode: LabelMode)
                 if count <= max {
                     label.clone()
                 } else {
-                    format!("{}…", label.chars().take(max.saturating_sub(1)).collect::<String>())
+                    format!(
+                        "{}…",
+                        label.chars().take(max.saturating_sub(1)).collect::<String>()
+                    )
                 }
             }
             LabelMode::Ids => n.id.clone(),
         };
         let box_w = node_box_width(&display);
-        // Centre of node in inches → top-left of box in cells.
         let cx = n.x * COLS_PER_INCH;
         let cy = (max_y - n.y) * ROWS_PER_INCH;
         let x = (cx - box_w as f64 / 2.0).round().max(0.0) as usize;
@@ -165,7 +187,7 @@ fn scene_from_layout(graph: &Graph, layout: &PlainLayout, label_mode: LabelMode)
             label,
             x,
             y,
-            style: NodeStyle::default(),
+            style: node_style.clone(),
         });
     }
 
@@ -175,7 +197,7 @@ fn scene_from_layout(graph: &Graph, layout: &PlainLayout, label_mode: LabelMode)
             from: from.to_string(),
             to: to.to_string(),
             label: String::new(),
-            style: EdgeStyle::default(),
+            style: edge_style.clone(),
             parallel_offset: 0,
         });
     }
@@ -205,8 +227,7 @@ stop
         let (b, _) = graph.insert_node(Label::new("B"));
         graph.link_edge(&a, &b);
 
-        // Force ids to match plain sample by rebuilding isn't needed if insert order is n0,n1.
-        let scene = scene_from_layout(&graph, &layout, LabelMode::Full);
+        let scene = scene_from_layout(&graph, &layout, LabelMode::Full, Theme::night());
         assert_eq!(scene.nodes.len(), 2);
         assert_eq!(scene.edges.len(), 1);
     }

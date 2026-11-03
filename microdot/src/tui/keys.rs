@@ -286,6 +286,7 @@ mod tests {
             Arc::new(RwLock::new(Graph::new())),
             std::path::PathBuf::from("/tmp/microdot-tui-test.json"),
             tx,
+            crate::tui::Theme::night(),
         )
     }
 

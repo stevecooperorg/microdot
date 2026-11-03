@@ -1,6 +1,7 @@
 //! Application state for the microdot TUI.
 
 use super::menu::{MenuAction, MenuGroup};
+use super::theme::Theme;
 use super::viz::VizState;
 use crate::dispatch::{dispatch_command, DispatchResult};
 use crate::parser::parse_line;
@@ -76,6 +77,7 @@ pub struct App {
     pub show_help: bool,
     pub last_search: Option<String>,
     pub viz: VizState,
+    pub theme: Theme,
 }
 
 impl App {
@@ -83,6 +85,7 @@ impl App {
         graph: Arc<RwLock<Graph>>,
         json_file: PathBuf,
         reload_tx: UnboundedSender<()>,
+        theme: Theme,
     ) -> Self {
         let mut app = Self {
             graph,
@@ -104,7 +107,8 @@ impl App {
             menu_item: 0,
             show_help: false,
             last_search: None,
-            viz: VizState::default(),
+            viz: VizState::new(theme),
+            theme,
         };
         app.sync_selection_from_graph();
         app.rebuild_viz();

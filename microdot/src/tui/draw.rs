@@ -3,7 +3,7 @@
 use super::app::{App, ConfirmKind, Focus};
 use super::menu::MenuGroup;
 use ratatui::layout::{Constraint, Direction, Layout, Rect};
-use ratatui::style::{Color, Modifier, Style};
+use ratatui::style::{Modifier, Style};
 use ratatui::text::{Line, Span};
 use ratatui::widgets::{Block, Borders, Clear, List, ListItem, Paragraph, Wrap};
 use ratatui::Frame;
@@ -53,34 +53,36 @@ pub fn draw(frame: &mut Frame, app: &mut App) {
         draw_menu_dropdown(frame, app, chunks[0], chunks[1]);
     }
     if app.show_help {
-        draw_help(frame, area);
+        draw_help(frame, app, area);
     }
 }
 
 fn draw_menubar(frame: &mut Frame, app: &App, area: Rect) {
+    let t = app.theme;
     let mut spans = Vec::new();
     for (i, group) in MenuGroup::ALL.iter().enumerate() {
         let selected = app.menu_open && app.menu_group == i;
         let style = if selected {
             Style::default()
-                .fg(Color::Black)
-                .bg(Color::Cyan)
+                .fg(t.menu_sel_fg)
+                .bg(t.menu_sel_bg)
                 .add_modifier(Modifier::BOLD)
         } else {
-            Style::default().fg(Color::White)
+            Style::default().fg(t.menu_fg)
         };
         spans.push(Span::styled(format!(" {} ", group.label()), style));
     }
     if !app.menu_open {
         spans.push(Span::styled(
             "  [`] menu",
-            Style::default().fg(Color::DarkGray),
+            Style::default().fg(t.muted),
         ));
     }
     frame.render_widget(Paragraph::new(Line::from(spans)), area);
 }
 
 fn draw_menu_dropdown(frame: &mut Frame, app: &App, menubar: Rect, body: Rect) {
+    let t = app.theme;
     let items = app.active_menu_items();
     let width = items
         .iter()
@@ -106,11 +108,11 @@ fn draw_menu_dropdown(frame: &mut Frame, app: &App, menubar: Rect, body: Rect) {
         .map(|(i, action)| {
             let style = if i == app.menu_item {
                 Style::default()
-                    .fg(Color::Black)
-                    .bg(Color::Yellow)
+                    .fg(t.menu_sel_fg)
+                    .bg(t.menu_sel_bg)
                     .add_modifier(Modifier::BOLD)
             } else {
-                Style::default()
+                Style::default().fg(t.text)
             };
             ListItem::new(Span::styled(format!(" {} ", action.label()), style))
         })
@@ -118,6 +120,7 @@ fn draw_menu_dropdown(frame: &mut Frame, app: &App, menubar: Rect, body: Rect) {
     let list = List::new(list_items).block(
         Block::default()
             .borders(Borders::ALL)
+            .border_style(Style::default().fg(t.focus_border))
             .title(MenuGroup::ALL[app.menu_group].label()),
     );
     frame.render_widget(list, area);
@@ -140,6 +143,7 @@ fn draw_main(frame: &mut Frame, app: &mut App, area: Rect) {
 }
 
 fn draw_nodes(frame: &mut Frame, app: &App, area: Rect) {
+    let t = app.theme;
     let nodes = app.node_list();
     let focused = app.focus == Focus::Nodes;
     let title = format!("Nodes ({})", nodes.len());
@@ -147,11 +151,7 @@ fn draw_nodes(frame: &mut Frame, app: &App, area: Rect) {
         .iter()
         .enumerate()
         .map(|(i, (id, label))| {
-            let hit = app
-                .graph
-                .read()
-                .unwrap()
-                .node_matches_search(id);
+            let hit = app.graph.read().unwrap().node_matches_search(id);
             let mark = if focused && i == app.node_cursor {
                 ">"
             } else {
@@ -161,21 +161,21 @@ fn draw_nodes(frame: &mut Frame, app: &App, area: Rect) {
             let text = format!("{mark}{star}{}  {}", id, truncate(&label.to_string(), 24));
             let style = if focused && i == app.node_cursor {
                 Style::default()
-                    .fg(Color::Black)
-                    .bg(Color::Green)
+                    .fg(t.node_sel_fg)
+                    .bg(t.node_sel_bg)
                     .add_modifier(Modifier::BOLD)
             } else if hit {
-                Style::default().fg(Color::DarkGray)
+                Style::default().fg(t.search_hit)
             } else {
-                Style::default()
+                Style::default().fg(t.text)
             };
             ListItem::new(Span::styled(text, style))
         })
         .collect();
     let border = if focused {
-        Style::default().fg(Color::Green)
+        Style::default().fg(t.node_sel_bg)
     } else {
-        Style::default()
+        Style::default().fg(t.muted)
     };
     let list = List::new(items).block(
         Block::default()
@@ -187,6 +187,7 @@ fn draw_nodes(frame: &mut Frame, app: &App, area: Rect) {
 }
 
 fn draw_edges(frame: &mut Frame, app: &App, area: Rect) {
+    let t = app.theme;
     let edges = app.incident_edges();
     let focused = app.focus == Focus::Edges;
     let sel = app
@@ -206,19 +207,19 @@ fn draw_edges(frame: &mut Frame, app: &App, area: Rect) {
             let text = format!("{mark}{}  {} -> {}", id, from, to);
             let style = if focused && i == app.edge_cursor {
                 Style::default()
-                    .fg(Color::Black)
-                    .bg(Color::Yellow)
+                    .fg(t.edge_sel_fg)
+                    .bg(t.edge_sel_bg)
                     .add_modifier(Modifier::BOLD)
             } else {
-                Style::default()
+                Style::default().fg(t.text)
             };
             ListItem::new(Span::styled(text, style))
         })
         .collect();
     let border = if focused {
-        Style::default().fg(Color::Yellow)
+        Style::default().fg(t.edge_sel_bg)
     } else {
-        Style::default()
+        Style::default().fg(t.muted)
     };
     let list = List::new(items).block(
         Block::default()
@@ -230,11 +231,12 @@ fn draw_edges(frame: &mut Frame, app: &App, area: Rect) {
 }
 
 fn draw_graph(frame: &mut Frame, app: &mut App, area: Rect) {
+    let t = app.theme;
     let focused = app.focus == Focus::Graph;
     let border = if focused {
-        Style::default().fg(Color::Cyan)
+        Style::default().fg(t.focus_border)
     } else {
-        Style::default()
+        Style::default().fg(t.muted)
     };
     let block = Block::default()
         .borders(Borders::ALL)
@@ -250,11 +252,15 @@ fn draw_graph(frame: &mut Frame, app: &mut App, area: Rect) {
             .viz
             .last_error()
             .unwrap_or("empty graph — press i to insert a node");
-        frame.render_widget(Paragraph::new(msg), inner);
+        frame.render_widget(
+            Paragraph::new(msg).style(Style::default().fg(t.muted)),
+            inner,
+        );
     }
 }
 
 fn draw_footer(frame: &mut Frame, app: &App, area: Rect) {
+    let t = app.theme;
     let chunks = Layout::default()
         .direction(Direction::Vertical)
         .constraints([Constraint::Length(1), Constraint::Min(1)])
@@ -288,7 +294,7 @@ fn draw_footer(frame: &mut Frame, app: &App, area: Rect) {
     drop(g);
 
     frame.render_widget(
-        Paragraph::new(status).style(Style::default().fg(Color::Cyan)),
+        Paragraph::new(status).style(Style::default().fg(t.status)),
         chunks[0],
     );
 
@@ -313,12 +319,15 @@ fn draw_footer(frame: &mut Frame, app: &App, area: Rect) {
     };
 
     frame.render_widget(
-        Paragraph::new(help_line).wrap(Wrap { trim: true }),
+        Paragraph::new(help_line)
+            .style(Style::default().fg(t.text))
+            .wrap(Wrap { trim: true }),
         chunks[1],
     );
 }
 
-fn draw_help(frame: &mut Frame, area: Rect) {
+fn draw_help(frame: &mut Frame, app: &App, area: Rect) {
+    let t = app.theme;
     let width = 60u16.min(area.width.saturating_sub(4));
     let height = 22u16.min(area.height.saturating_sub(2));
     let x = area.x + (area.width.saturating_sub(width)) / 2;
@@ -331,10 +340,12 @@ fn draw_help(frame: &mut Frame, area: Rect) {
     };
     frame.render_widget(Clear, popup);
     let p = Paragraph::new(HELP_TEXT)
+        .style(Style::default().fg(t.text))
         .wrap(Wrap { trim: false })
         .block(
             Block::default()
                 .borders(Borders::ALL)
+                .border_style(Style::default().fg(t.focus_border))
                 .title("Help — Esc to close"),
         );
     frame.render_widget(p, popup);

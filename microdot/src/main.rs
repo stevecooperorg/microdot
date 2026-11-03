@@ -29,6 +29,14 @@ struct Opts {
     /// Full-screen ratatui graph editor instead of the rustyline REPL
     #[clap(long)]
     tui: bool,
+
+    /// TUI light colour scheme (dark ink on a light terminal)
+    #[clap(long, conflicts_with = "night")]
+    day: bool,
+
+    /// TUI dark colour scheme (light ink on a dark terminal; default with --tui)
+    #[clap(long, conflicts_with = "day")]
+    night: bool,
 }
 
 impl Opts {
@@ -89,7 +97,13 @@ async fn main() -> Result<(), anyhow::Error> {
     }
 
     if opts.tui {
-        libmicrodot::tui::run(graph, json_file, reload_tx)?;
+        let theme = if opts.day {
+            libmicrodot::tui::Theme::day()
+        } else {
+            // --night or neither: dark scheme
+            libmicrodot::tui::Theme::night()
+        };
+        libmicrodot::tui::run(graph, json_file, reload_tx, theme)?;
         return Ok(());
     }
 

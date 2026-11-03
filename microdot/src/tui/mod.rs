@@ -4,7 +4,10 @@ mod app;
 mod draw;
 mod keys;
 mod menu;
+mod theme;
 mod viz;
+
+pub use theme::{Theme, ThemeKind};
 
 use app::App;
 use anyhow::{Context, Result};
@@ -37,6 +40,7 @@ pub fn run(
     graph: Arc<RwLock<Graph>>,
     json_file: PathBuf,
     reload_tx: UnboundedSender<()>,
+    theme: Theme,
 ) -> Result<()> {
     enable_raw_mode().context("raw mode")?;
     let mut stdout = io::stdout();
@@ -45,7 +49,7 @@ pub fn run(
     let mut terminal = Terminal::new(backend).context("terminal")?;
     let _restore = Restore;
 
-    let mut app = App::new(graph, json_file, reload_tx);
+    let mut app = App::new(graph, json_file, reload_tx, theme);
     // Initial persist so SVG/json exist for optional --port preview.
     app.persist(true);
 
