@@ -1,0 +1,10 @@
+[package]
+name = "microdot-termgraph"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "Terminal graph renderer for microdot (extracted from ascii-petgraph rendering; layout is external)"
+readme = "README.md"
+
+[dependencies]
+ratatui.workspace = true

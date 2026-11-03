@@ -27,27 +27,17 @@ pub enum DisplayMode {
     Presentation,
 }
 
+/// Lay out DOT source with Graphviz (`-Tplain`) and return node positions.
+pub fn layout_dot_plain(dot_source: &str) -> Result<PlainLayout> {
+    dot::DotCompiler::layout_plain(dot_source)
+}
+
 pub fn compile(path: &Path) -> Result<()> {
     let input_str = std::fs::read_to_string(path)?;
     let out_file = path.with_extension("svg");
-    // let html_file = path.with_extension("html");
-    // let image_url = out_file.file_name().unwrap().to_string_lossy().to_string();
-    // let image_title = out_file.file_stem().unwrap().to_string_lossy().to_string();
-
-    dot::DotCompiler::compile_dot_str(input_str)
-        .and_then(|string| {
-            write_if_different(out_file, string)?;
-            Ok(())
-        })
-        .and_then(|_| {
-            // let html = ImagePage {
-            //     image_title,
-            //     image_url,
-            // };
-            // let html_content = html.render()?;
-            // write_if_different(html_file, html_content)?;
-            Ok(())
-        })
+    let svg = dot::DotCompiler::compile_dot_str(input_str)?;
+    write_if_different(out_file, svg)?;
+    Ok(())
 }
 
 #[derive(Template)]
@@ -457,12 +447,17 @@ mod dot {
 
     impl DotCompiler {
         pub fn compile_dot_str<S: AsRef<str>>(input: S) -> Result<String> {
+            Self::compile_format(input, "svg")
+        }
+
+        /// Run `dot -T{format}` on a DOT document and return stdout as UTF-8.
+        pub fn compile_format<S: AsRef<str>>(input: S, format: &str) -> Result<String> {
             if installed_graphviz_version().is_none() {
                 return Err(anyhow::Error::msg("graphviz not installed"));
             }
 
             let mut child = Command::new("dot")
-                .arg(format!("-T{}", "svg"))
+                .arg(format!("-T{}", format))
                 .stdin(Stdio::piped())
                 .stdout(Stdio::piped())
                 .spawn()?;
@@ -488,7 +483,110 @@ mod dot {
                 Err(anyhow!(stderr))
             }
         }
+
+        /// Lay out a DOT document with Graphviz and parse `-Tplain` positions.
+        pub fn layout_plain<S: AsRef<str>>(input: S) -> Result<super::PlainLayout> {
+            let plain = Self::compile_format(input, "plain")?;
+            super::parse_plain(&plain)
+        }
     }
+}
+
+/// Node position from Graphviz `-Tplain` (inches; centre of the node).
+#[derive(Debug, Clone)]
+pub struct PlainNode {
+    pub id: String,
+    pub x: f64,
+    pub y: f64,
+    pub width: f64,
+    pub height: f64,
+}
+
+/// Graph bounding box from Graphviz `-Tplain` (inches).
+#[derive(Debug, Clone)]
+pub struct PlainLayout {
+    pub width: f64,
+    pub height: f64,
+    pub nodes: Vec<PlainNode>,
+}
+
+/// Parse Graphviz plain output (`dot -Tplain`).
+pub fn parse_plain(plain: &str) -> Result<PlainLayout> {
+    let mut width = 0.0;
+    let mut height = 0.0;
+    let mut nodes = Vec::new();
+
+    for line in plain.lines() {
+        let parts = tokenize_plain_line(line);
+        if parts.is_empty() {
+            continue;
+        }
+        match parts[0].as_str() {
+            "graph" => {
+                // graph scale width height
+                if parts.len() >= 4 {
+                    width = parts[2].parse().unwrap_or(0.0);
+                    height = parts[3].parse().unwrap_or(0.0);
+                }
+            }
+            "node" => {
+                // node name x y xsize ysize label style color fillcolor
+                if parts.len() < 6 {
+                    continue;
+                }
+                let id = parts[1].clone();
+                let x: f64 = parts[2].parse().context("plain node x")?;
+                let y: f64 = parts[3].parse().context("plain node y")?;
+                let w: f64 = parts[4].parse().context("plain node width")?;
+                let h: f64 = parts[5].parse().context("plain node height")?;
+                nodes.push(PlainNode {
+                    id,
+                    x,
+                    y,
+                    width: w,
+                    height: h,
+                });
+            }
+            "edge" | "stop" => {}
+            _ => {}
+        }
+    }
+
+    Ok(PlainLayout {
+        width,
+        height,
+        nodes,
+    })
+}
+
+/// Split a plain-format line, respecting double-quoted fields.
+fn tokenize_plain_line(line: &str) -> Vec<String> {
+    let mut out = Vec::new();
+    let mut cur = String::new();
+    let mut in_quotes = false;
+    let mut chars = line.chars().peekable();
+    while let Some(c) = chars.next() {
+        match c {
+            '"' => {
+                in_quotes = !in_quotes;
+            }
+            ' ' | '\t' if !in_quotes => {
+                if !cur.is_empty() {
+                    out.push(std::mem::take(&mut cur));
+                }
+            }
+            '\\' if in_quotes => {
+                if let Some(n) = chars.next() {
+                    cur.push(n);
+                }
+            }
+            _ => cur.push(c),
+        }
+    }
+    if !cur.is_empty() {
+        out.push(cur);
+    }
+    out
 }
 
 #[cfg(test)]
@@ -612,6 +710,23 @@ Cras ut egestas velit."#;
             major_version
         );
     }
+
+    #[test]
+    fn parses_plain_layout() {
+        let plain = "\
+graph 1 1.5 2.0
+node n0 0.5 1.5 0.75 0.5 hello solid black lightgrey
+node n1 0.5 0.5 0.75 0.5 world solid black lightgrey
+stop
+";
+        let layout = parse_plain(plain).expect("plain");
+        assert!((layout.width - 1.5).abs() < 1e-9);
+        assert!((layout.height - 2.0).abs() < 1e-9);
+        assert_eq!(layout.nodes.len(), 2);
+        assert_eq!(layout.nodes[0].id, "n0");
+        assert!((layout.nodes[0].x - 0.5).abs() < 1e-9);
+    }
+
     #[test]
     fn test_from_env_var() {
         let json_file = std::env::var("MICRODOT_EXTERNAL_JSON_FILE").unwrap_or_default();

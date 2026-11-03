@@ -40,6 +40,9 @@ tokio.workspace = true
 tower.workspace = true
 tower-http.workspace = true
 unfold.workspace = true
+ratatui.workspace = true
+crossterm.workspace = true
+microdot-termgraph = { path = "../microdot-termgraph" }
 
 [dev-dependencies]
 reqwest = "0.12.23"

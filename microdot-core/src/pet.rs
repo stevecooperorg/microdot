@@ -84,8 +84,12 @@ fn find_path(
                 // calculate all the paths from the source to the sink and add it to the collection.
                 let source_idx = *source_idx;
                 let sink_idx = *sink_idx;
-                let pgraph_paths: Vec<Vec<NodeIndex>> =
-                    all_simple_paths(&pgraph.graph, source_idx, sink_idx, 0, None).collect();
+                let pgraph_paths: Vec<Vec<NodeIndex>> = all_simple_paths::<
+                    Vec<NodeIndex>,
+                    _,
+                    std::collections::hash_map::RandomState,
+                >(&pgraph.graph, source_idx, sink_idx, 0, None)
+                .collect();
                 for path in pgraph_paths {
                     let path: Vec<Id> = path
                         .into_iter()

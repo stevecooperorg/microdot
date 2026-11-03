@@ -50,7 +50,7 @@ impl Node {
     }
 }
 
-#[derive(Debug, Clone, PartialOrd)]
+#[derive(Debug, Clone)]
 pub enum VariableValue {
     String(String),
     Number(f64),
@@ -72,7 +72,7 @@ impl VariableValue {
 }
 
 // An enum representing the type of variants in MyEnum
-#[derive(Debug, PartialEq, Eq, Hash)]
+#[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 enum VariableType {
     String,
     Number,
@@ -87,26 +87,30 @@ impl Default for VariableValue {
     }
 }
 
-#[allow(clippy::derive_ord_xor_partial_ord)]
+impl PartialOrd for VariableValue {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
 impl Ord for VariableValue {
     fn cmp(&self, other: &Self) -> Ordering {
-        let partial = self.partial_cmp(other);
-        if let Some(ordering) = partial {
-            ordering
-        } else {
-            match (self, other) {
-                // this is for catching the f64 NaN case
-                (VariableValue::Number(n1), VariableValue::Number(n2)) => {
-                    if n1.is_nan() && n2.is_nan() {
-                        Ordering::Equal
-                    } else if n1.is_nan() {
-                        Ordering::Greater
-                    } else {
-                        Ordering::Less
-                    }
+        use VariableValue::*;
+        match (self, other) {
+            (String(a), String(b)) => a.cmp(b),
+            (Number(a), Number(b)) => a.partial_cmp(b).unwrap_or_else(|| {
+                // Total order for NaN: NaN == NaN, NaN > non-NaN
+                match (a.is_nan(), b.is_nan()) {
+                    (true, true) => Ordering::Equal,
+                    (true, false) => Ordering::Greater,
+                    (false, true) => Ordering::Less,
+                    (false, false) => Ordering::Equal,
                 }
-                _ => Ordering::Equal,
-            }
+            }),
+            (Boolean(a), Boolean(b)) => a.cmp(b),
+            (Time(a), Time(b)) => a.cmp(b),
+            (Mixed(a), Mixed(b)) => a.cmp(b),
+            _ => self.typ().cmp(&other.typ()),
         }
     }
 }
@@ -172,7 +176,7 @@ impl Add for VariableValue {
     }
 }
 
-impl<'a> Add<&'a VariableValue> for VariableValue {
+impl Add<&VariableValue> for VariableValue {
     type Output = VariableValue;
 
     fn add(self, rhs: &Self) -> Self::Output {
@@ -326,7 +330,13 @@ impl Neg for Time {
 
 impl PartialOrd for Time {
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-        Some(self.to_minutes().cmp(&other.to_minutes()))
+        Some(self.cmp(other))
+    }
+}
+
+impl Ord for Time {
+    fn cmp(&self, other: &Self) -> Ordering {
+        self.to_minutes().cmp(&other.to_minutes())
     }
 }
 
@@ -346,6 +356,8 @@ impl PartialEq for Time {
         self.to_minutes() == other.to_minutes()
     }
 }
+
+impl Eq for Time {}
 
 impl Display for Time {
     fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
@@ -483,6 +495,50 @@ impl Graph {
         Graph::default()
     }
 
+    pub fn current_node(&self) -> Option<&Id> {
+        self.current_node.as_ref()
+    }
+
+    pub fn current_search(&self) -> Option<&Label> {
+        self.current_search.as_ref()
+    }
+
+    pub fn direction(&self) -> Direction {
+        self.direction
+    }
+
+    /// Snapshot of all nodes as `(id, label)` in insertion order.
+    pub fn node_snapshots(&self) -> Vec<(Id, Label)> {
+        self.nodes
+            .iter()
+            .map(|n| (n.id.clone(), n.label.clone()))
+            .collect()
+    }
+
+    /// Snapshot of all edges as `(id, from, to)` in insertion order.
+    pub fn edge_snapshots(&self) -> Vec<(Id, Id, Id)> {
+        self.edges
+            .iter()
+            .map(|e| (e.id.clone(), e.from.clone(), e.to.clone()))
+            .collect()
+    }
+
+    /// Edges that touch `id` (as from or to), as `(id, from, to)`.
+    pub fn edges_incident_to(&self, id: &Id) -> Vec<(Id, Id, Id)> {
+        self.edges
+            .iter()
+            .filter(|e| &e.from == id || &e.to == id)
+            .map(|e| (e.id.clone(), e.from.clone(), e.to.clone()))
+            .collect()
+    }
+
+    pub fn node_matches_search(&self, id: &Id) -> bool {
+        self.find_node_idx(id)
+            .and_then(|idx| self.nodes.get(idx))
+            .map(|n| self.node_matches_current_search(n))
+            .unwrap_or(false)
+    }
+
     fn next_node_id(&mut self) -> Id {
         let id = format!("n{}", self.node_high_water);
 
@@ -600,10 +656,7 @@ impl Graph {
     }
 
     pub fn find_node_variable_value(&self, id: &Id, variable_name: &str) -> Option<VariableValue> {
-        let label = match self.find_node_label(id) {
-            Some(label) => label,
-            None => return None,
-        };
+        let label = self.find_node_label(id)?;
         let NodeInfo {
             label: _,
             tags: _,

@@ -3,14 +3,17 @@ use microdot_core::{Id, Label, Line};
 use rustyline::history::History;
 use rustyline::{Editor, Helper};
 
+pub mod dispatch;
 pub mod filters;
 pub mod graphviz;
 pub mod helper;
 pub mod json;
 pub mod parser;
+pub mod persist;
 pub mod repl;
 // mod storage;
 pub mod svg;
+pub mod tui;
 pub mod util;
 pub mod web;
 

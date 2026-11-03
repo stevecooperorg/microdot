@@ -25,6 +25,10 @@ struct Opts {
     /// Optional port number for the web server
     #[clap(long)]
     port: Option<u16>,
+
+    /// Full-screen ratatui graph editor instead of the rustyline REPL
+    #[clap(long)]
+    tui: bool,
 }
 
 impl Opts {
@@ -66,26 +70,9 @@ async fn main() -> Result<(), anyhow::Error> {
 
     let graph = load_graph_if_exists(&json_file)?;
     let graph = Arc::new(RwLock::new(graph));
-    let gnl = GraphGetNodeLabel {
-        graph: graph.clone(),
-    };
-
-    let h = MicrodotHelper::new(&gnl);
-    let config = Config::default();
-    let mut rl = Editor::with_config(config)?;
-    rl.set_helper(Some(h));
 
     // Create reload channel
     let (reload_tx, reload_rx) = mpsc::unbounded_channel();
-
-    if rl.load_history(&history).is_err() {
-        println!("No previous history at {}.", history.to_string_lossy());
-    } else {
-        println!(
-            "Loaded previous history from {}.",
-            history.to_string_lossy()
-        );
-    }
 
     if let Some(port) = opts.port {
         let svg_path = json_file.with_extension("svg");
@@ -99,6 +86,29 @@ async fn main() -> Result<(), anyhow::Error> {
         });
 
         tokio::time::sleep(std::time::Duration::from_millis(100)).await;
+    }
+
+    if opts.tui {
+        libmicrodot::tui::run(graph, json_file, reload_tx)?;
+        return Ok(());
+    }
+
+    let gnl = GraphGetNodeLabel {
+        graph: graph.clone(),
+    };
+
+    let h = MicrodotHelper::new(&gnl);
+    let config = Config::default();
+    let mut rl = Editor::with_config(config)?;
+    rl.set_helper(Some(h));
+
+    if rl.load_history(&history).is_err() {
+        println!("No previous history at {}.", history.to_string_lossy());
+    } else {
+        println!(
+            "Loaded previous history from {}.",
+            history.to_string_lossy()
+        );
     }
 
     repl(&mut rl, &json_file, graph, reload_tx)?;

@@ -297,7 +297,9 @@ mod tests {
                 direction_str
             );
             let importer = JsonImporter::new(&content);
-            let graph = importer.import().expect(&format!("could not import direction: {}", direction_str));
+            let graph = importer
+                .import()
+                .unwrap_or_else(|_| panic!("could not import direction: {}", direction_str));
             // Verify conversion to bool is correct
             let mut exporter = JsonExporter::new();
             graph.export(&mut exporter);
