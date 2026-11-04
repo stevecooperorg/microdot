@@ -66,8 +66,16 @@ fn event_loop(
     app: &mut App,
 ) -> Result<()> {
     let mut dirty_ticks: u32 = 0;
+    // Draw on demand: only on the first frame, after a processed key event or a
+    // window resize, and once after a debounced save clears the dirty flag.
+    // Previously draw() ran on every poll cycle, redrawing the whole screen
+    // ~5x/sec even when idle and keeping the CPU busy.
+    let mut needs_redraw = true;
     loop {
-        terminal.draw(|frame| draw::draw(frame, app)).context("draw")?;
+        if needs_redraw {
+            terminal.draw(|frame| draw::draw(frame, app)).context("draw")?;
+            needs_redraw = false;
+        }
 
         if !event::poll(Duration::from_millis(200)).context("poll")? {
             if app.dirty {
@@ -76,6 +84,9 @@ fn event_loop(
                 if dirty_ticks >= 5 {
                     app.persist(true);
                     dirty_ticks = 0;
+                    // persist() clears `dirty` and logs a message; redraw so the
+                    // status line flips "dirty" -> "clean".
+                    needs_redraw = true;
                 }
             }
             continue;
@@ -90,8 +101,13 @@ fn event_loop(
                 if keys::handle_key(app, key) {
                     break;
                 }
+                // Any processed key may change UI state (note, menu, draft,
+                // focus, selection), so redraw on the next iteration.
+                needs_redraw = true;
             }
-            Event::Resize(_, _) => {}
+            Event::Resize(_, _) => {
+                needs_redraw = true;
+            }
             _ => {}
         }
     }
