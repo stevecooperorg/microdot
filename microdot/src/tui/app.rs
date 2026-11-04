@@ -29,6 +29,14 @@ impl Focus {
             Focus::Graph => Focus::Nodes,
         }
     }
+
+    pub fn previous(self) -> Self {
+        match self {
+            Focus::Nodes => Focus::Graph,
+            Focus::Edges => Focus::Nodes,
+            Focus::Graph => Focus::Edges,
+        }
+    }
 }
 
 #[derive(Clone, Debug)]

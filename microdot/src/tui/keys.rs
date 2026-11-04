@@ -199,6 +199,10 @@ fn handle_normal(app: &mut App, key: KeyEvent) -> bool {
             app.focus = app.focus.next();
             false
         }
+        KeyCode::BackTab => {
+            app.focus = app.focus.previous();
+            false
+        }
         KeyCode::Left => {
             app.focus = Focus::Nodes;
             false
@@ -320,6 +324,18 @@ mod tests {
         handle_key(&mut app, KeyEvent::from(KeyCode::Tab));
         assert_eq!(app.focus, Focus::Graph);
         handle_key(&mut app, KeyEvent::from(KeyCode::Tab));
+        assert_eq!(app.focus, Focus::Nodes);
+    }
+
+    #[test]
+    fn backtab_cycles_focus_in_reverse() {
+        let mut app = test_app();
+        assert_eq!(app.focus, Focus::Nodes);
+        handle_key(&mut app, KeyEvent::from(KeyCode::BackTab));
+        assert_eq!(app.focus, Focus::Graph);
+        handle_key(&mut app, KeyEvent::from(KeyCode::BackTab));
+        assert_eq!(app.focus, Focus::Edges);
+        handle_key(&mut app, KeyEvent::from(KeyCode::BackTab));
         assert_eq!(app.focus, Focus::Nodes);
     }
 
