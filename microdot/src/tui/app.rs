@@ -211,6 +211,11 @@ impl App {
     }
 
     pub fn move_edge_cursor(&mut self, delta: isize) {
+        // The edge panel (draw::draw_edges) lists the edges incident to the
+        // current node, so arrows move within that list. Select the edge under
+        // the cursor but leave the current node untouched: the previous
+        // implementation re-selecting each edge's source node caused the
+        // incident list — and therefore the cursor — to lurch mid-navigation.
         let edges = self.incident_edges();
         if edges.is_empty() {
             return;
@@ -223,13 +228,8 @@ impl App {
             idx = len - 1;
         }
         self.edge_cursor = idx as usize;
-        let (eid, from, _) = edges[self.edge_cursor].clone();
-        self.select_node_quiet(&from);
+        let (eid, _, _) = edges[self.edge_cursor].clone();
         self.selected_edge = Some(eid.clone());
-        let edges = self.incident_edges();
-        if let Some(i) = edges.iter().position(|(id, _, _)| id == &eid) {
-            self.edge_cursor = i;
-        }
         self.refresh_viz_highlights();
     }
 

@@ -322,4 +322,35 @@ mod tests {
         handle_key(&mut app, KeyEvent::from(KeyCode::Tab));
         assert_eq!(app.focus, Focus::Nodes);
     }
+
+    #[test]
+    fn edge_panel_arrows_select_edges_without_changing_node() {
+        let mut graph = Graph::new();
+        let (node, _) = graph.insert_node(microdot_core::Label::new("node"));
+        let (first_target, _) = graph.insert_node(microdot_core::Label::new("first"));
+        let (second_target, _) = graph.insert_node(microdot_core::Label::new("second"));
+        graph.link_edge(&node, &first_target);
+        graph.link_edge(&node, &second_target);
+        graph.select_node(&node);
+
+        let (tx, _rx) = mpsc::unbounded_channel();
+        let graph = Arc::new(RwLock::new(graph));
+        let mut app = App::new(
+            graph,
+            std::path::PathBuf::from("/tmp/microdot-tui-edge-test.json"),
+            tx,
+            crate::tui::Theme::night(),
+        );
+        let edges = app.incident_edges();
+        assert_eq!(edges.len(), 2);
+        assert_eq!(app.current_node_id(), Some(node.clone()));
+        assert_eq!(app.selected_edge, Some(edges[0].0.clone()));
+
+        app.focus = Focus::Edges;
+        assert!(!handle_key(&mut app, KeyEvent::from(KeyCode::Down)));
+
+        assert_eq!(app.current_node_id(), Some(node));
+        assert_eq!(app.edge_cursor, 1);
+        assert_eq!(app.selected_edge, Some(edges[1].0.clone()));
+    }
 }
