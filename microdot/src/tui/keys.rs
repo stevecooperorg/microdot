@@ -344,9 +344,12 @@ mod tests {
         let edges = app.incident_edges();
         assert_eq!(edges.len(), 2);
         assert_eq!(app.current_node_id(), Some(node.clone()));
-        assert_eq!(app.selected_edge, Some(edges[0].0.clone()));
+        assert_eq!(app.selected_edge, None);
+        assert!(!app.unlink_current());
 
         app.focus = Focus::Edges;
+        assert!(!handle_key(&mut app, KeyEvent::from(KeyCode::Down)));
+        assert_eq!(app.selected_edge, Some(edges[0].0.clone()));
         assert!(!handle_key(&mut app, KeyEvent::from(KeyCode::Down)));
 
         assert_eq!(app.current_node_id(), Some(node));

@@ -182,8 +182,11 @@ impl App {
                 return;
             }
         }
+        // Do not implicitly select the first edge just because a node is
+        // selected. Edge commands require an explicit selection in the edge
+        // panel; arrow navigation is what establishes selected_edge.
         self.edge_cursor = 0;
-        self.selected_edge = Some(edges[0].0.clone());
+        self.selected_edge = None;
     }
 
     fn select_node_quiet(&mut self, id: &Id) {
@@ -221,7 +224,13 @@ impl App {
             return;
         }
         let len = edges.len() as isize;
-        let mut idx = self.edge_cursor as isize + delta;
+        // The first arrow press establishes the edge under the cursor. Once
+        // selected, subsequent presses move relative to it.
+        let mut idx = if self.selected_edge.is_none() {
+            self.edge_cursor as isize
+        } else {
+            self.edge_cursor as isize + delta
+        };
         if idx < 0 {
             idx = 0;
         } else if idx >= len {
@@ -360,8 +369,7 @@ impl App {
                 }))
             }
             DraftKind::Expand => {
-                let Some(eid) = self.selected_edge.clone() else {
-                    self.note("no edge selected");
+                let Some(eid) = self.edge_command_selection() else {
                     return false;
                 };
                 if text.is_empty() {
@@ -465,11 +473,22 @@ impl App {
     }
 
     pub fn unlink_current(&mut self) -> bool {
-        let Some(eid) = self.selected_edge.clone() else {
-            self.note("no edge selected");
+        let Some(eid) = self.edge_command_selection() else {
             return false;
         };
         self.apply_command(Command::GraphCommand(GraphCommand::UnlinkEdge { id: eid }))
+    }
+
+    fn edge_command_selection(&mut self) -> Option<Id> {
+        if self.focus != Focus::Edges {
+            self.note("focus the edge panel and select an edge first");
+            return None;
+        }
+        let Some(eid) = self.selected_edge.clone() else {
+            self.note("no edge selected");
+            return None;
+        };
+        Some(eid)
     }
 
     pub fn delete_current(&mut self, keep_edges: bool) -> bool {
